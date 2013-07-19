@@ -1,0 +1,46 @@
+<%= check_box_tag(:archaea, 'archaea', true) %>
+<%= label_tag(:archaea, "Archaea") %>
+<br>
+<%= check_box_tag(:bacteria, 'bacteria', true) %>
+<%= label_tag(:bacteria, "Bacteria") %>
+<br>
+<%= check_box_tag(:eukarya, 'eukarya', true) %>
+<%= label_tag(:eukarya, "Eukarya") %>
+<br>
+<%= check_box_tag(:organelle, 'organelle', true) %>
+<%= label_tag(:organelle, "Organelle") %>
+<br>
+<%= check_box_tag(:unknown, 'unknown', true) %>
+<%= label_tag(:unknown, "Unknown") %>
+<br>
+<br>Use NAs in output?<br>
+<%= radio_button_tag(:nas, 'yes',  true) %>
+<%= label_tag(:nas_yes, "Yes") %>
+<br>
+<%= radio_button_tag(:nas, 'no') %>
+<%= label_tag(:nas_no, "No") %>
+<br>
+<br>
+<%= radio_button_tag(:tax_depth, 'domain') %>
+<%= label_tag(:tax_domain, "Domain") %>
+<br>
+<%= radio_button_tag(:tax_depth, 'phylum', true) %>
+<%= label_tag(:tax_phylum, "Phylum") %>
+<br>
+<%= radio_button_tag(:tax_depth, 'class') %>
+<%= label_tag(:tax_class, "Class") %>
+<br>
+<%= radio_button_tag(:tax_depth, 'order') %>
+<%= label_tag(:tax_order, "Order") %>
+<br>
+<%= radio_button_tag(:tax_depth, 'family') %>
+<%= label_tag(:tax_family, "Family") %>
+<br>
+<%= radio_button_tag(:tax_depth, 'genus') %>
+<%= label_tag(:tax_genus, "Genus") %>
+<br>
+<%= radio_button_tag(:tax_depth, 'species') %>
+<%= label_tag(:tax_species, "Species") %>
+<br>
+<%= radio_button_tag(:tax_depth, 'strain') %>
+<%= label_tag(:tax_strain, "Strain") %>

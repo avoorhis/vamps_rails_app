@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>VampsApp6</title>
+  <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+<div id="headerBar">VAMPS</div>
+
+<div id="contentWrapper">
+
+
+	<ul class="left_menu">
+
+	  <li class=""><%= render 'devise/menu/login_items' %></li>
+	  <li class=""><%= link_to "VAMPS Home", root_path %></li>
+	  <li class=""><%= link_to "Overview", overview_path %></li>
+	  <li class=""><a href="http://www.mbl.edu/jbpc/">JBPC Home</a></li>
+	  <li class=""><%= link_to "Community Visualization", visualization_index_path %></li>
+	  <li class=""><a href="#">Search</a></li>
+	  <li class=""><a href="#">Uploads</a></li>
+	  <li class=""><a href="#">Downloads</a></li>
+	</ul>
+
+<ul class="hmenu">
+	  <p class="notice"><%= notice %></p>
+	  <p class="alert"><%= alert %></p>
+	  <%= render 'devise/menu/registration_items' %>
+</ul>
+
+	<%= yield %>
+
+</div>
+
+
+<div id='footerBar'>
+  <div align="center" class="standard" style='font-size:9px;'>
+    <hr>
+	The VAMPS project is under the direction of Mitchell Sogin, David Mark Welch, and Susan Huse 
+	<br />
+	and is funded through the <a href="http://www.sloan.org/" target="_blank">
+	Alfred P. Sloan Foundation</a>, the <a href="http://www.nsf.gov/">National Science Foundation</a>,<br />
+	and the <a href="http://astrobiology.nasa.gov/nai/" target="_blank">NASA Astrobiology Institute</a>.
+	<br />
+	Unless otherwise stated, all material &copy;2009 Bay Paul Center, MBL. 
+	<br />
+	<br />
+	<br />
+  </div>
+</div>
+
+
+</body>
+</html>

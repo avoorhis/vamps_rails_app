@@ -1,0 +1,54 @@
+<p id="notice"><%= notice %></p>
+
+<h1><center>Project Page: <%= @project.project%></center></h1>
+<p>
+  <strong>Name:</strong>
+  <%= @project.project%>
+</p>
+<p>
+  <strong>Owner:</strong>
+  <% if @project.user %>
+    <%= @project.user.username %>
+  <% else %>
+    Public
+  <% end %>
+</p>
+<p>
+  <strong>Title:</strong>
+  <%= @project.title %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @project.project_description %>
+</p>
+
+<p>
+  <strong>Dataset Count:</strong>
+  
+  <%= @datasets.count %>
+</p>
+
+<p>
+  <strong>Datasets:</strong>
+  <div class='simple_table_div'>
+  <% if @project.datasets.count == 0 %>
+    No Datasets
+  <% else %>
+
+    <table class='simple_table' border='1'>
+    <tr><th>Name</th>
+  	  <th>Description</th>
+    </tr>
+  
+    <% @project.datasets.each do |d| %>
+	    <tr><td><%= d.dataset %></td>
+		  <td><%= d.dataset_description %></td></tr>
+    <% end %>
+    </table>
+  <% end %>
+  </div>   
+</p>
+
+
+
