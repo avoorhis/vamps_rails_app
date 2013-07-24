@@ -11,9 +11,11 @@ VampsApp6::Application.routes.draw do
   get  'pages/faq', as: :faq
   get  'pages/contact', as: :contact
 
-  get 'visualization/tax_table', as: :tax_table
-  get 'visualization/heatmap', as: :heatmap
-  get 'visualization/bar_charts', as: :bar_charts
+  post 'visualization/tax_table', as: :tax_table
+  #get 'visualization/heatmap', as: :heatmap
+  post 'visualization/heatmap', as: :heatmap
+  post 'visualization/bar_charts', as: :bar_charts
+  post 'visualization/parse_view'
   resources :visualization
   
   

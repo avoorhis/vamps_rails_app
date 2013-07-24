@@ -1,1 +1,22 @@
 <h1>Tax Table</h1>
+
+
+<%= render "debug" %>
+<table class='standard_table' border='1'>
+<tr><th>Taxonomy</th>
+<% @myarray[0][:datasets].each do |d| %>
+    <th><%= d[0] %></th>
+<% end %>
+</tr>
+<% @myarray.each do |i| %>
+	<tr><td> <%= i[:taxonomy] %> </td>
+	<% i[:datasets].each do |d| %>
+    	<td><%= i[:datasets][d[0]] %></td>
+	<% end %>
+    </tr>
+<% end %>
+
+
+</table>
+
+

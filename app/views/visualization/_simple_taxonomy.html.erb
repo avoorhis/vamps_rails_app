@@ -1,19 +1,26 @@
-<%= check_box_tag(:archaea, 'archaea', true) %>
+<%= radio_button_tag 'toggle' , 'toggle', false, :onclick =>
+	"toggleAll('domain_select');return false;"%>Toggle Domains
+<br>
+<%= check_box_tag("domains[]", 'archaea', true, :class=>'domain_select') %>
 <%= label_tag(:archaea, "Archaea") %>
 <br>
-<%= check_box_tag(:bacteria, 'bacteria', true) %>
+<%= check_box_tag("domains[]", 'bacteria', true, :class=>'domain_select') %>
 <%= label_tag(:bacteria, "Bacteria") %>
 <br>
-<%= check_box_tag(:eukarya, 'eukarya', true) %>
+<%= check_box_tag("domains[]", 'eukarya', true, :class=>'domain_select') %>
 <%= label_tag(:eukarya, "Eukarya") %>
 <br>
-<%= check_box_tag(:organelle, 'organelle', true) %>
+<%= check_box_tag("domains[]", 'organelle', true, :class=>'domain_select') %>
 <%= label_tag(:organelle, "Organelle") %>
 <br>
-<%= check_box_tag(:unknown, 'unknown', true) %>
+<%= check_box_tag("domains[]", 'unknown', true, :class=>'domain_select') %>
 <%= label_tag(:unknown, "Unknown") %>
+
+
 <br>
-<br>Use NAs in output?<br>
+<br>
+Keep NAs in output?
+<br>
 <%= radio_button_tag(:nas, 'yes',  true) %>
 <%= label_tag(:nas_yes, "Yes") %>
 <br>
@@ -21,26 +28,28 @@
 <%= label_tag(:nas_no, "No") %>
 <br>
 <br>
-<%= radio_button_tag(:tax_depth, 'domain') %>
+Taxonomic Rank:
+<br>
+<%= radio_button_tag(:tax_rank, 'domain') %>
 <%= label_tag(:tax_domain, "Domain") %>
 <br>
-<%= radio_button_tag(:tax_depth, 'phylum', true) %>
+<%= radio_button_tag(:tax_rank, 'phylum', true) %>
 <%= label_tag(:tax_phylum, "Phylum") %>
 <br>
-<%= radio_button_tag(:tax_depth, 'class') %>
+<%= radio_button_tag(:tax_rank, 'class') %>
 <%= label_tag(:tax_class, "Class") %>
 <br>
-<%= radio_button_tag(:tax_depth, 'order') %>
+<%= radio_button_tag(:tax_rank, 'order') %>
 <%= label_tag(:tax_order, "Order") %>
 <br>
-<%= radio_button_tag(:tax_depth, 'family') %>
+<%= radio_button_tag(:tax_rank, 'family') %>
 <%= label_tag(:tax_family, "Family") %>
 <br>
-<%= radio_button_tag(:tax_depth, 'genus') %>
+<%= radio_button_tag(:tax_rank, 'genus') %>
 <%= label_tag(:tax_genus, "Genus") %>
 <br>
-<%= radio_button_tag(:tax_depth, 'species') %>
+<%= radio_button_tag(:tax_rank, 'species') %>
 <%= label_tag(:tax_species, "Species") %>
 <br>
-<%= radio_button_tag(:tax_depth, 'strain') %>
+<%= radio_button_tag(:tax_rank, 'strain') %>
 <%= label_tag(:tax_strain, "Strain") %>

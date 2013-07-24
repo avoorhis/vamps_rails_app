@@ -1,0 +1,18 @@
+<% debug=1 %>
+
+<% if debug==1 then %>
+	<div style='background:black;color:lightgrey;padding:5px;'>
+  DEBUG:
+  <table class='standard_table' border='1'>
+  <tr><td>Domains:</td><td><%= session[:domains] %></td></tr>
+  
+  <tr><td>Rank:</td><td><%= session[:rank_num] %> - <%= session[:tax_rank]  %></td></tr>
+  
+  <tr><td>NAs:</td><td><%= session[:nas] %></td></tr>
+  
+  <tr><td>Datasets:</td><td><%= session[:datasets] %></td></tr>
+  
+  <tr><td>Query:</td><td><%= @taxQuery %></td></tr>
+  </table>
+  </div>
+<% end %>

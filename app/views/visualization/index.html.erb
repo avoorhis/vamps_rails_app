@@ -1,7 +1,7 @@
 <h1><center>Community Visualization</center></h1>
 
 
-<%= form_tag do %>
+<%= form_tag({controller: "visualization", action: "parse_view"}, method: "post") do %>
 
 <center>
 <table>
@@ -12,18 +12,24 @@
         <%= radio_button_tag(:view, 'heatmap') %>
 		<%= label_tag(:view_heatmap, "Heatmap") %>
 		<br>
-        <%= radio_button_tag(:view, 'tax_table') %>
+        <%= radio_button_tag(:view, 'tax_table', true) %>
 		<%= label_tag(:view_tax_table, "Tax Table") %>
 		<br>
         <%= radio_button_tag(:view, 'bar_charts') %>
 		<%= label_tag(:view_bar_charts, "Bar Charts") %>
+    <br><hr>
+
+    <%= button_tag("Submit",  :onclick =>  "getDatasets(this.form);return false;") %>
+    
     </div>
   	</td>
+<!--
     <td>Projects - XML 
       <div id='xml_sample_treebox' 
   		style="width:250px; height:400px;background-color:#f5f5f5;border :1px solid red; overflow:auto;">
   	  </div>
     </td>
+-->
     <td>Projects - JSON
       <div id='json_sample_treebox' 
   		style="width:250px; height:400px;background-color:#f5f5f5;border :1px solid red; overflow:auto;">
@@ -38,14 +44,14 @@
   </tr>
 </table>
 </center>
-<%= submit_tag("Submit") %>
+
 
 <% end %>
 
 
 <script type="text/javascript" charset="utf-8">
   get_json_project_tree()
-  get_xml_project_tree()
+  //get_xml_project_tree()
   
 </script>
 <br>

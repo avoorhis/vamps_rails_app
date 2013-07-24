@@ -23,13 +23,25 @@ html, body { margin: 0; padding: 0 }
 }
 #headerBar {
     height: 60px;
-    background: #00CCFF
+    background: #00CCFF;
+}
+#vamps_name  {
+    font-family:"Comic Sans MS", cursive, sans-serif;
+    font-size:40px;
+    position:absolute;
+    padding:10px 0 0 0;
+    color:navy;
+
 }
 #footerBar {
     height: 50px;
     background: #FFCC00
 }
 
+.standard_table {
+    font-size:12px;
+    border-collapse:collapse;
+}
 
 /* left_menu */
 .left_menu {
