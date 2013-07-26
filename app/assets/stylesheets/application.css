@@ -31,14 +31,13 @@ html, body {
     width:8000px;
     background: #00CCFF;
 }
-#vamps_name  {
-    font-family:"Comic Sans MS", cursive, sans-serif;
-    font-size:40px;
+#headerBar span{
     position:absolute;
-    padding:10px 0 0 0;
+    margin:20px 0 0 3px;
     color:navy;
-
+    
 }
+
 #footerBar {
     height: 50px;
     background: #FFCC00;
@@ -53,7 +52,7 @@ html, body {
 /* left_menu */
 .left_menu {
     list-style: none;
-    margin: 0  0 10px 350px;
+    margin: 0  0 10px 416px;
     position: relative;
     right: 286px;
     z-index: 9;

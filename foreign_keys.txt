@@ -1,0 +1,61 @@
+datasets		datasets_ibfk_1				projects				project_id				vamps2
+project_dataset	project_dataset_ibfk_1		projects				project_id				vamps2
+project_dataset	project_dataset_ibfk_2		datasets				dataset_id				vamps2
+projects		projects_ibfk_1				contacts				contact_id				vamps2
+projects		projects_ibfk_2				env_sample_source		env_sample_source_id	vamps2
+rank_number		rank_number_ibfk_1			ranks					rank_id					vamps2
+rank_number		rank_number_ibfk_2			ranks					rank_id					vamps2
+read_ids		read_ids_ibfk_2				sequences				sequence_id				vamps2
+SELECT TABLE_NAME, CONSTRAINT_NAME, REFERENCEd_table_name, referenced_column_name, referenced_table_schema FROM information_schema.KEY_COLUMN_USAGE WHERE REFERENCED_TABLE_NAME != "" and referenced_table_schema='vamps2'
+TABLE_NAME      CONSTRAINT_NAME             REFERENCEd_table_name   referenced_column_name  referenced_table_schema
+read_ids		read_ids_ibfk_3				new_dataset_previous	dataset_id				vamps2
+read_ids		read_ids_ibfk_4				new_project_previous	project_id				vamps2
+sequence_infos	sequence_infos_ibfk_1		sequences				sequence_id				vamps2
+summed_data_cube	summed_data_cube_ibfk_1	taxon_string			taxon_string_id			vamps2
+summed_data_cube	summed_data_cube_ibfk_2	projects				project_id				vamps2
+summed_data_cube	summed_data_cube_ibfk_3	datasets				dataset_id				vamps2
+summed_data_cube	summed_data_cube_ibfk_4	project_dataset			project_dataset_id		vamps2
+taxon_string	taxon_string_ibfk_1			rank_number				rank_number				vamps2
+taxonomies		taxonomies_ibfk_1			superkingdoms			superkingdom_id			vamps2
+taxonomies		taxonomies_ibfk_10			ranks					rank_id					vamps2
+taxonomies		taxonomies_ibfk_2			taxon_string			taxon_string_id			vamps2
+taxonomies		taxonomies_ibfk_3			phyla					phylum_id				vamps2
+taxonomies		taxonomies_ibfk_4			classes					class_id				vamps2
+taxonomies		taxonomies_ibfk_5			orders					orderx_id				vamps2
+taxonomies		taxonomies_ibfk_6			families				family_id				vamps2
+taxonomies		taxonomies_ibfk_7			genuses					genus_id				vamps2
+taxonomies		taxonomies_ibfk_8			species					species_id				vamps2
+taxonomies		taxonomies_ibfk_9			strains					strain_id				vamps2
+user_contacts	user_contacts_ibfk_1		users					user_id					vamps2
+user_contacts	user_contacts_ibfk_2		contacts				contact_id				vamps2
+
+Hi Andy,
+
+1) SELECT table_name FROM information_schema.KEY_COLUMN_USAGE WHERE REFERENCED_TABLE_NAME = 'X' AND REFERENCED_COLUMN_NAME = 'X_id';
+
+That will show you in which table this foreign key exists.
+
+Or get all of them:
+SELECT TABLE_NAME, CONSTRAINT_NAME, REFERENCEd_table_name, referenced_column_name, referenced_table_schema FROM information_schema.KEY_COLUMN_USAGE WHERE REFERENCED_TABLE_NAME != ""
+
+2) Then you want to copy a definition of this key and keep it.
+
+3) DROP FOREIGN KEY:
+ALTER TABLE user_contact DROP FOREIGN KEY user_contacts_ibfk_2;
+
+4) rename you table id:
+ALTER TABLE tbl_name 
+CHANGE field_name field_name description
+
+for example:
+ALTER TABLE `user_contacts` CHANGE `user_contact_id` `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT
+
+
+5) create foreign key again, for that change only reference in what your copied:
+
+now:
+
+ALTER TABLE user_contacts ADD
+CONSTRAINT `user_contacts_ibfk_2` FOREIGN KEY (`contact_id`) REFERENCES `contacts` (`contact_id`) ON UPDATE CASCADE
+That should do the trick.
+Anya
