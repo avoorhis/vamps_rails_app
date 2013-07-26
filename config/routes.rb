@@ -16,8 +16,13 @@ VampsApp6::Application.routes.draw do
   post 'visualization/heatmap', as: :heatmap
   post 'visualization/bar_charts', as: :bar_charts
   post 'visualization/parse_view'
+  #get 'visualization/generate_data_download'
+  #match /visualization/generate_data_download/:id => "visualization#generate_data_download"
   resources :visualization
+  get "downloads/generate_data_download"
   
+  resources :sequence
+  resources :project_dataset
   
   
 

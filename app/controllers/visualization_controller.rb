@@ -9,18 +9,37 @@ class VisualizationController < ApplicationController
 	  #@my_json = @myarray.to_json	
 
 	  
-	  session[:nas] 	= params[:nas]
+	  @nas 		= params[:nas]
 	  #domains	= Array[params[:bacteria], params[:archaea], params[:eukarya], params[:organelle], params[:unknown]]
-	  domains 			= params[:domains]
-	  session[:domains] = domains.compact
-	  session[:tax_rank]= params[:tax_rank]
-	  session[:rank_num]= get_rank_num()
-	  session[:view] 	= params[:view]
+	  domains 	= params[:domains]
+	  @domains 	= domains.compact
+	  @tax_rank	= params[:tax_rank]
+	  @rank_number= get_rank_num()
+	  @view 	= params[:view]
 	  # params[:datasets] are created in visualization.js::getDatasets()
-	  session[:datasets]= clean_datasets( params[:datasets] )
-      
+	  #session[:datasets]= clean_datasets( params[:datasets] )
+      @datasets = clean_datasets( params[:datasets] )
       @taxQuery 		= create_tax_query()
-	  
+	  @result = Project.find_by_sql(@taxQuery)
+	  taxonomy_by_site = {}	  
+
+	  for res in @result
+	  	pd = res["project_dataset"]
+	  	ts = res["taxon_string"]
+	  	knt = res["knt"]
+	  	if taxonomy_by_site.has_key?(ts) then
+	  		# append
+	  		taxonomy_by_site[ts].merge!(pd => knt)
+	  	else
+	  		# add array to hash
+	  		taxonomy_by_site[ts] = {pd=>knt}
+	  	end		  	
+	  end
+	  # sort taxonomically alpha
+	  taxonomy_by_site = taxonomy_by_site.sort
+      # change to array of hashes and fill in zeros
+      @taxonomy_by_site = fill_in_zeros(taxonomy_by_site)
+     #session[:taxonomy_by_site] = @taxonomy_by_site
 
 	# select SQL_CACHE project_dataset, taxon_string, knt, classifier, frequency, dataset_count FROM new_summed_data_cube  
     # join new_project_dataset using(project_dataset_id)   
@@ -38,6 +57,12 @@ class VisualizationController < ApplicationController
 
 	end
 
+	def get_taxonomy_by_site
+		return @taxonomy_by_site
+	end
+	def get_datasets
+		return @datasets
+	end
 
 	def index
 
@@ -62,32 +87,50 @@ class VisualizationController < ApplicationController
 	def tax_table
 
 	end
-
+################################################################################
 	private
+
+	
+
+	def fill_in_zeros(tax_hash)
+		new_tax_array = []
+		tax_hash.each do |tax, v|			
+			@datasets.each do |ds|
+				if not v.include?(ds) then
+					#tax_hash[tax].merge!(ds => 0)
+					v.merge!(ds => 0)
+				end
+			end
+			new_tax_array.push({:taxonomy=>tax,:datasets=>v})
+		end
+		#return tax_hash
+		return new_tax_array
+	end
+
 
 	def create_tax_query()
 
-	  sql_datasets 		= session[:datasets].join("','")
+	  sql_datasets 		= @datasets.join("','")
 	  # superkingdoms has to match what is in db table
 	  superkingdom	= {"archaea"=>1,"bacteria"=>2, "organelle"=>3,"unknown"=>4,"eukarya"=>5}
 	  sql_superkingdom = ''
 
 	  taxQuery = "select project_dataset, taxon_string, knt, sdc.classifier, frequency, dataset_count
-	  FROM summed_data_cube as sdc"
+	  				FROM summed_data_cube as sdc"
 	  join = " JOIN project_dataset using(project_dataset_id)
 	  			JOIN taxon_string using(taxon_string_id, rank_number)"
 
 	  where = " WHERE project_dataset in ('#{sql_datasets}')
-	  			AND rank_number='#{session[:rank_num]}'"
+	  			AND rank_number='#{@rank_number}'"
 	  ##DOMAINS
-	  if session[:domains].length == 1 then
+	  if @domains.length == 1 then
 	  	join  += " JOIN taxonomies using(taxon_string_id)"
-	  	where += " AND superkingdom_id='#{superkingdom[session[:domains][0]]}'"
-	  elsif session[:domains].length == 5 then
+	  	where += " AND superkingdom_id='#{superkingdom[@domains[0]]}'"
+	  elsif @domains.length == 5 then
 	  	# nothing extra here
 	  else 
 	  	sk_num = []
-	  	session[:domains].each do |d|
+	  	@domains.each do |d|
 	  		sk_num << superkingdom[d].to_s()
 	  	end
 	  	sql_superkingdom_ids 		= sk_num.join("','")
@@ -96,7 +139,7 @@ class VisualizationController < ApplicationController
 	  	where += " AND superkingdom_id in ('#{sql_superkingdom_ids}')"
 	  end
 	  ##NAs
-	  if session[:nas] == 'no' then
+	  if @nas == 'no' then
 	  	# TODO
 	  	# and  taxon_string not like 'no_%' 
         # and taxon_string not like 'NA%'
@@ -110,6 +153,7 @@ class VisualizationController < ApplicationController
 	  
 
 	end
+
 	def clean_datasets(ds_string)
 		project_datasets_array = []
 		# 0;AB_PRI_Ev9,0;AB_PRI_Ev9;PRI_0037,0;AB_PRI_Ev9;PRI_0038,0;AB_SAND_Bv6;HS122,0;AB_SAND_Bv6 
@@ -131,7 +175,7 @@ class VisualizationController < ApplicationController
 
 	def get_rank_num()
 		tax_num = { "domain"=>0,"phylum"=>1,"class"=>2,"order"=>3,"family"=>4,"genus"=>5,"species"=>6,"strain"=>7 }
-		return tax_num[session[:tax_rank]]
+		return tax_num[@tax_rank]
 	end
 
 	def get_test_matrix

@@ -10,7 +10,7 @@ gem 'devise', '3.0.0.rc'
 gem 'nokogiri'
 
 
-
+gem 'colorize'
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 

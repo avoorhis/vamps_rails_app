@@ -2,14 +2,15 @@
 
 
 <%= render "debug" %>
+
 <table class='standard_table' border='1'>
 <tr><th>Taxonomy</th>
-<% @myarray[0][:datasets].each do |d| %>
-    <th><%= d[0] %></th>
+<% @taxonomy_by_site[0][:datasets].each do |d| %>
+    <th><%= link_to d[0], "ds_pie" %></th>
 <% end %>
 </tr>
-<% @myarray.each do |i| %>
-	<tr><td> <%= i[:taxonomy] %> </td>
+<% @taxonomy_by_site.each do |i| %>
+	<tr><td> <%= link_to i[:taxonomy], "tax_pie" %> </td>
 	<% i[:datasets].each do |d| %>
     	<td><%= i[:datasets][d[0]] %></td>
 	<% end %>

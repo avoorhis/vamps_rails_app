@@ -2,3 +2,38 @@
   Place all the styles related to the matching controller here.
   They will automatically be included in application.css.
 */
+
+#bars_table_div{
+	font-size:10px;
+	padding:10px;
+	border:1px solid green;
+	width:1000px;
+	background:white;
+}
+#bars_table{
+	border-collapse:collapse;
+}
+#bars_table td {
+	line-height:0px;
+	width:900px;
+}
+#bars_each_div{
+	height:0px;
+	border:none;
+	margin:11px 0 0 0px;
+}
+
+#json_sample_treebox{
+	width:250px; 
+	height:400px;
+	background-color:#f5f5f5;
+	border :1px solid red; 
+	overflow:auto;
+}
+#basic_taxonomy_selector{
+	width:250px; 
+	height:400px;
+	background-color:#f5f5f5;
+	border :1px solid red;
+	font-size:small;
+}

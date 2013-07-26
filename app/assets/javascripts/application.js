@@ -13,4 +13,10 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
+//= require_tree ./dhtmlx
+//= require ./mootools/mootools-beta-1.2b2
+//= require ./mootools/moocanvas
+//= require ./barchart
+//= require ./dhtmlx_trees
 //= require_tree .
+

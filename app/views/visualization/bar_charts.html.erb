@@ -1,3 +1,34 @@
 <h1>Bar Charts</h1>
 
 <%= render "debug" %>
+<%= render "downloads" %>
+
+<div  id='bars_table_div' >
+<table id ='bars_table'>
+<% @datasets.each do |ds|	%>
+<tr id=''><td nowrap='nowrap'><%= ds %></td>
+	<td>
+	<% ds_info = get_retmat(ds)  %>	 
+	<div id='bars_each_div' >
+
+	<table class='barChart' >
+	<% ds_info[:retmat].each do |tax, value| %>
+	  <% if (value*100 / ds_info[:total]) > 0.1 then %>							
+		<tr>
+			<td><%= tax %></td>
+			<td><%= value %></td>
+			<td><%= string_2_color(tax) %></td>
+			<td><%= "http://www.google.com" %></td>
+			<td><%= ds_info[:total] %></td>
+			<td><%= ds %></td>
+		</tr>
+	  <% end %>			
+	<% end %>
+	</table>
+	</div>
+	</td>
+</tr>
+<% end %>	
+</table>	
+</div>	   
+		

@@ -13,14 +13,17 @@ function toggleAll(name)
 function getDatasets(form)
 {
 
-	all = json_project_tree.getAllCheckedBranches()
-  	//alert(form["nas"].value)
-  	//alert(all)
+	checked_datasets = json_project_tree.getAllCheckedBranches()
+  	
+  	if(checked_datasets==''){
+  		alert("Select some datasets.")
+  		return
+  	}
 
   	var hiddenField1 = document.createElement("input"); 
 	hiddenField1.setAttribute("type", 'hidden');
 	hiddenField1.setAttribute("name", "datasets");
-	hiddenField1.setAttribute("value", all);	
+	hiddenField1.setAttribute("value", checked_datasets);	
 	form.appendChild(hiddenField1);
 
   	$(form).submit();
