@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130806184432) do
+ActiveRecord::Schema.define(version: 20130806195219) do
 
   create_table "contacts", force: true do |t|
     t.string   "contact",     limit: 32
@@ -34,5 +34,13 @@ ActiveRecord::Schema.define(version: 20130806184432) do
   end
 
   add_index "sequences", ["sequence_comp"], name: "sequence_comp", unique: true, length: {"sequence_comp"=>400}, using: :btree
+
+  create_table "taxonomies", force: true do |t|
+    t.string   "taxonomy",   limit: 300
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "taxonomies", ["taxonomy"], name: "taxonomy", unique: true, length: {"taxonomy"=>255}, using: :btree
 
 end
