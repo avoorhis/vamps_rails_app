@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130806200229) do
+ActiveRecord::Schema.define(version: 20130806201905) do
 
   create_table "contacts", force: true do |t|
     t.string   "contact",     limit: 32
@@ -48,5 +48,14 @@ ActiveRecord::Schema.define(version: 20130806200229) do
   end
 
   add_index "taxonomies", ["taxonomy"], name: "taxonomy", unique: true, length: {"taxonomy"=>255}, using: :btree
+
+  create_table "users", force: true do |t|
+    t.string  "user",           limit: 20
+    t.string  "passwd",         limit: 50
+    t.integer "active",         limit: 2
+    t.integer "security_level", limit: 2
+  end
+
+  add_index "users", ["user"], name: "user", unique: true, using: :btree
 
 end
