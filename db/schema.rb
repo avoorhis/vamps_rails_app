@@ -11,7 +11,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130806180452) do
+ActiveRecord::Schema.define(version: 20130806184432) do
+
+  create_table "contacts", force: true do |t|
+    t.string   "contact",     limit: 32
+    t.string   "email",       limit: 64
+    t.string   "institution", limit: 128
+    t.string   "vamps_name",  limit: 20
+    t.string   "first_name",  limit: 20
+    t.string   "last_name",   limit: 20
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "contacts", ["contact", "email", "institution"], name: "contact_email_inst", unique: true, using: :btree
+  add_index "contacts", ["institution"], name: "institution", length: {"institution"=>15}, using: :btree
 
   create_table "sequences", force: true do |t|
     t.binary   "sequence_comp", limit: 2147483647
