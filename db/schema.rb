@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130806195219) do
+ActiveRecord::Schema.define(version: 20130806200229) do
 
   create_table "contacts", force: true do |t|
     t.string   "contact",     limit: 32
@@ -26,6 +26,12 @@ ActiveRecord::Schema.define(version: 20130806195219) do
 
   add_index "contacts", ["contact", "email", "institution"], name: "contact_email_inst", unique: true, using: :btree
   add_index "contacts", ["institution"], name: "institution", length: {"institution"=>15}, using: :btree
+
+  create_table "dna_regions", force: true do |t|
+    t.string "dna_region", limit: 32
+  end
+
+  add_index "dna_regions", ["dna_region"], name: "dna_region", unique: true, using: :btree
 
   create_table "sequences", force: true do |t|
     t.binary   "sequence_comp", limit: 2147483647
