@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130806201905) do
+ActiveRecord::Schema.define(version: 20130807153448) do
 
   create_table "contacts", force: true do |t|
     t.string   "contact",     limit: 32
@@ -27,11 +27,25 @@ ActiveRecord::Schema.define(version: 20130806201905) do
   add_index "contacts", ["contact", "email", "institution"], name: "contact_email_inst", unique: true, using: :btree
   add_index "contacts", ["institution"], name: "institution", length: {"institution"=>15}, using: :btree
 
+  create_table "contacts_users", id: false, force: true do |t|
+    t.integer "contact_id", null: false
+    t.integer "user_id",    null: false
+  end
+
+  add_index "contacts_users", ["contact_id", "user_id"], name: "contact_id_user_id", unique: true, using: :btree
+  add_index "contacts_users", ["user_id"], name: "user_id", using: :btree
+
   create_table "dna_regions", force: true do |t|
     t.string "dna_region", limit: 32
   end
 
   add_index "dna_regions", ["dna_region"], name: "dna_region", unique: true, using: :btree
+
+  create_table "env_sample_sources", force: true do |t|
+    t.string "env_source_name", limit: 50
+  end
+
+  add_index "env_sample_sources", ["env_source_name"], name: "env_source_name", unique: true, using: :btree
 
   create_table "sequences", force: true do |t|
     t.binary   "sequence_comp", limit: 2147483647
