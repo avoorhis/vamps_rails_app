@@ -110,8 +110,8 @@ ActiveRecord::Schema.define(version: 20130808154923) do
   create_table "users", force: true do |t|
     t.string  "user",           limit: 20
     t.string  "passwd",         limit: 50
-    t.integer "active",         limit: 2
-    t.integer "security_level", limit: 2
+    t.integer "active",         limit: 1,  default: 0,  null: false
+    t.integer "security_level", limit: 1,  default: 50, null: false
   end
 
   add_index "users", ["user"], name: "user", unique: true, using: :btree
