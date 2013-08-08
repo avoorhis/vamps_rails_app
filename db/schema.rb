@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130808182837) do
+ActiveRecord::Schema.define(version: 20130808184526) do
 
   create_table "contacts", force: true do |t|
     t.string   "contact",     limit: 32
@@ -157,6 +157,23 @@ ActiveRecord::Schema.define(version: 20130808182837) do
 
   add_index "sequence_pdr_infos", ["run_info_id", "sequence_id"], name: "uniq_seq_pdr", unique: true, using: :btree
   add_index "sequence_pdr_infos", ["sequence_id"], name: "sequence_pdr_info_fk_sequence_id", using: :btree
+
+  create_table "sequence_uniq_infos", force: true do |t|
+    t.integer  "sequence_id",                                       null: false
+    t.integer  "taxonomy_id",                                       null: false
+    t.decimal  "gast_distance", precision: 7, scale: 5,             null: false
+    t.integer  "refssu_id",                                         null: false
+    t.integer  "refssu_count",                          default: 0, null: false
+    t.integer  "rank_id",                                           null: false
+    t.text     "refhvr_ids",                                        null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "sequence_uniq_infos", ["rank_id"], name: "sequence_uniq_info_fk_rank_id", using: :btree
+  add_index "sequence_uniq_infos", ["refssu_id"], name: "refssu_id", using: :btree
+  add_index "sequence_uniq_infos", ["sequence_id"], name: "sequence_id", unique: true, using: :btree
+  add_index "sequence_uniq_infos", ["taxonomy_id"], name: "sequence_uniq_info_fk_taxonomy_id", using: :btree
 
   create_table "sequences", force: true do |t|
     t.binary   "sequence_comp", limit: 2147483647
