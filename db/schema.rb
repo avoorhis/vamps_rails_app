@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130808171712) do
+ActiveRecord::Schema.define(version: 20130808181637) do
 
   create_table "contacts", force: true do |t|
     t.string   "contact",     limit: 32
@@ -104,6 +104,40 @@ ActiveRecord::Schema.define(version: 20130808171712) do
   end
 
   add_index "ranks", ["rank"], name: "rank", unique: true, using: :btree
+
+  create_table "run_infos", force: true do |t|
+    t.integer  "run_key_id",                                  null: false
+    t.integer  "run_id",                                      null: false
+    t.integer  "lane",            limit: 1,  default: 0,      null: false
+    t.integer  "dataset_id",                                  null: false
+    t.integer  "project_id",                                  null: false
+    t.string   "tubelabel",       limit: 32, default: "",     null: false
+    t.string   "barcode",         limit: 4,  default: "",     null: false
+    t.string   "adaptor",         limit: 3,  default: "",     null: false
+    t.integer  "dna_region_id",                               null: false
+    t.string   "amp_operator",    limit: 5,  default: "",     null: false
+    t.string   "seq_operator",    limit: 5,  default: "",     null: false
+    t.string   "barcode_index",   limit: 12, default: "",     null: false
+    t.string   "overlap",         limit: 8,  default: "none", null: false
+    t.integer  "insert_size",     limit: 2,  default: 0,      null: false
+    t.integer  "read_length",     limit: 2,                   null: false
+    t.integer  "primer_suite_id",                             null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "run_infos", ["dataset_id"], name: "run_info_fk_dataset_id", using: :btree
+  add_index "run_infos", ["dna_region_id"], name: "run_info_fk_dna_region_id", using: :btree
+  add_index "run_infos", ["primer_suite_id"], name: "run_info_fk_primer_suite_id", using: :btree
+  add_index "run_infos", ["project_id"], name: "run_info_fk_project_id", using: :btree
+  add_index "run_infos", ["run_id", "run_key_id", "barcode_index", "lane"], name: "uniq_key", unique: true, using: :btree
+  add_index "run_infos", ["run_key_id"], name: "run_info_fk_run_key_id", using: :btree
+
+  create_table "run_keys", force: true do |t|
+    t.string "run_key", limit: 25, default: "", null: false
+  end
+
+  add_index "run_keys", ["run_key"], name: "run_key", unique: true, using: :btree
 
   create_table "runs", force: true do |t|
     t.string "run",          limit: 16, default: "", null: false
