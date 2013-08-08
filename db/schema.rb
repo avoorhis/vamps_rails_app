@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130807153448) do
+ActiveRecord::Schema.define(version: 20130808150601) do
 
   create_table "contacts", force: true do |t|
     t.string   "contact",     limit: 32
@@ -46,6 +46,36 @@ ActiveRecord::Schema.define(version: 20130807153448) do
   end
 
   add_index "env_sample_sources", ["env_source_name"], name: "env_source_name", unique: true, using: :btree
+
+  create_table "primer_suites", force: true do |t|
+    t.string "primer_suite", limit: 25, default: "", null: false
+  end
+
+  add_index "primer_suites", ["primer_suite"], name: "primer_suite", unique: true, using: :btree
+
+  create_table "primers", force: true do |t|
+    t.string "primer",       limit: 16, default: "", null: false
+    t.string "direction",    limit: 1,               null: false
+    t.string "sequence",     limit: 64, default: "", null: false
+    t.string "region",       limit: 16, default: "", null: false
+    t.string "original_seq", limit: 64, default: "", null: false
+    t.string "domain",       limit: 8
+  end
+
+  add_index "primers", ["primer"], name: "primer", unique: true, using: :btree
+
+  create_table "projects", force: true do |t|
+    t.string  "project",             limit: 32, default: "", null: false
+    t.string  "title",               limit: 64, default: "", null: false
+    t.string  "project_description",            default: "", null: false
+    t.string  "rev_project_name",    limit: 32, default: "", null: false
+    t.string  "funding",             limit: 64, default: "", null: false
+    t.integer "contact_id"
+  end
+
+  add_index "projects", ["contact_id"], name: "contact_id", using: :btree
+  add_index "projects", ["project"], name: "project", unique: true, using: :btree
+  add_index "projects", ["rev_project_name"], name: "rev_project_name", unique: true, using: :btree
 
   create_table "sequences", force: true do |t|
     t.binary   "sequence_comp", limit: 2147483647
