@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  sequence_id: 
+  taxonomy_id: 
+  gast_distance: 
+  refssu_id: 
+  refssu_count: 
+  rank_id: 
+  refhvr_ids: MyText
+
+two:
+  sequence_id: 
+  taxonomy_id: 
+  gast_distance: 
+  refssu_id: 
+  refssu_count: 
+  rank_id: 
+  refhvr_ids: MyText
