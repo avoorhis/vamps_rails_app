@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130808152306) do
+ActiveRecord::Schema.define(version: 20130808154923) do
 
   create_table "contacts", force: true do |t|
     t.string   "contact",     limit: 32
@@ -52,6 +52,14 @@ ActiveRecord::Schema.define(version: 20130808152306) do
   end
 
   add_index "primer_suites", ["primer_suite"], name: "primer_suite", unique: true, using: :btree
+
+  create_table "primer_suites_primers", id: false, force: true do |t|
+    t.integer "primer_id",       null: false
+    t.integer "primer_suite_id", null: false
+  end
+
+  add_index "primer_suites_primers", ["primer_id"], name: "primer_suites_primer_fk_primer_id", using: :btree
+  add_index "primer_suites_primers", ["primer_suite_id"], name: "primer_suites_primer_fk_primer_suite_id", using: :btree
 
   create_table "primers", force: true do |t|
     t.string "primer",       limit: 16, default: "", null: false
@@ -97,7 +105,7 @@ ActiveRecord::Schema.define(version: 20130808152306) do
     t.datetime "updated_at"
   end
 
-  add_index "taxonomies", ["taxonomy"], name: "taxonomy", unique: true, length: {"taxonomy"=>255}, using: :btree
+  add_index "taxonomies", ["taxonomy"], name: "taxonomy", unique: true, using: :btree
 
   create_table "users", force: true do |t|
     t.string  "user",           limit: 20

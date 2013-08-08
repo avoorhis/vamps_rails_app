@@ -10,7 +10,7 @@
 #   http://dev.mysql.com/doc/refman/5.0/en/old-client.html
 development:
   adapter: mysql2
-  encoding: utf8
+  encoding: latin1
   #database: vamps_app_development
   database: vamps2
   pool: 5
@@ -29,7 +29,7 @@ test:
 
 production:
   adapter: mysql2
-  encoding: utf8
+  encoding: latin1
   database: vamps_app_production
   pool: 5
   username: root
