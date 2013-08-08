@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130808154923) do
+ActiveRecord::Schema.define(version: 20130808170836) do
 
   create_table "contacts", force: true do |t|
     t.string   "contact",     limit: 32
@@ -34,6 +34,20 @@ ActiveRecord::Schema.define(version: 20130808154923) do
 
   add_index "contacts_users", ["contact_id", "user_id"], name: "contact_id_user_id", unique: true, using: :btree
   add_index "contacts_users", ["user_id"], name: "user_id", using: :btree
+
+  create_table "datasets", force: true do |t|
+    t.string  "dataset",              limit: 64,  default: "",  null: false
+    t.string  "dataset_description",  limit: 100, default: "",  null: false
+    t.integer "reads_in_dataset",     limit: 3,   default: 0,   null: false
+    t.string  "has_sequence",         limit: 1,   default: "0", null: false
+    t.integer "env_sample_source_id"
+    t.integer "project_id"
+    t.string  "date_trimmed",         limit: 10,  default: "",  null: false
+  end
+
+  add_index "datasets", ["dataset", "project_id"], name: "dataset_project", unique: true, using: :btree
+  add_index "datasets", ["env_sample_source_id"], name: "dataset_fk_env_sample_source_id", using: :btree
+  add_index "datasets", ["project_id"], name: "dataset_fk_project_id", using: :btree
 
   create_table "dna_regions", force: true do |t|
     t.string "dna_region", limit: 32
