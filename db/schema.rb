@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130808170836) do
+ActiveRecord::Schema.define(version: 20130808171712) do
 
   create_table "contacts", force: true do |t|
     t.string   "contact",     limit: 32
@@ -104,6 +104,14 @@ ActiveRecord::Schema.define(version: 20130808170836) do
   end
 
   add_index "ranks", ["rank"], name: "rank", unique: true, using: :btree
+
+  create_table "runs", force: true do |t|
+    t.string "run",          limit: 16, default: "", null: false
+    t.string "run_prefix",   limit: 7,  default: "", null: false
+    t.date   "date_trimmed"
+  end
+
+  add_index "runs", ["run"], name: "run", unique: true, using: :btree
 
   create_table "sequences", force: true do |t|
     t.binary   "sequence_comp", limit: 2147483647
