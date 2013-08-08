@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130808181637) do
+ActiveRecord::Schema.define(version: 20130808182837) do
 
   create_table "contacts", force: true do |t|
     t.string   "contact",     limit: 32
@@ -146,6 +146,17 @@ ActiveRecord::Schema.define(version: 20130808181637) do
   end
 
   add_index "runs", ["run"], name: "run", unique: true, using: :btree
+
+  create_table "sequence_pdr_infos", force: true do |t|
+    t.integer  "run_info_id", null: false
+    t.integer  "sequence_id", null: false
+    t.integer  "seq_count",   null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "sequence_pdr_infos", ["run_info_id", "sequence_id"], name: "uniq_seq_pdr", unique: true, using: :btree
+  add_index "sequence_pdr_infos", ["sequence_id"], name: "sequence_pdr_info_fk_sequence_id", using: :btree
 
   create_table "sequences", force: true do |t|
     t.binary   "sequence_comp", limit: 2147483647
