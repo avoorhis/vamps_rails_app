@@ -3,7 +3,7 @@ class Dataset < ActiveRecord::Base
   belongs_to :user #TODO: How?
   belongs_to :env_sample_source
 
-  has_many  :run_info
+  has_many  :run_infos
 
   validates :dataset, :dataset_description, :presence => true, :format => /[A-Za-z1-9 ,]/
   validates :dataset, :dataset, :presence => true, :format => /[A-Za-z1-9_]/
