@@ -7,6 +7,6 @@ class EnvSampleSource < ActiveRecord::Base
   validates :env_sample_source_id, inclusion: { in: [0, 10, 20, 30, 40, 45, 47, 43, 42, 41, 46, 44, 140, 50, 60, 70, 80, 90, 100, 110, 120, 130],
       message: "%{value} is not a valid env_sample_source_id" }
   
-  validates :env_source_name, uniqueness: true
+  validates :env_source_name, :env_sample_source_id, uniqueness: true
   
 end

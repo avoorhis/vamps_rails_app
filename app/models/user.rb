@@ -1,7 +1,10 @@
 class User < ActiveRecord::Base
-  has_and_belongs_to_many :projects
+  has_and_belongs_to_many :contacts
   
-	has_many :datasets, :through => :projects
+	has_many  :projects, :through => :contacts
+	
+	validates :user, uniqueness: true
+  	
 	attr_accessor :login
 	devise :database_authenticatable,	:registerable, 
   			:recoverable,  				:rememberable,

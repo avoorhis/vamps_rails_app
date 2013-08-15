@@ -8,6 +8,6 @@ class Dataset < ActiveRecord::Base
   validates :dataset, :dataset_description, :presence => true, :format => /[A-Za-z1-9 ,]/
   validates :dataset, :dataset, :presence => true, :format => /[A-Za-z1-9_]/
   validates :project_id, :presence => true
-  
+  validates_uniqueness_of :project_id, :scope => :dataset
 
 end

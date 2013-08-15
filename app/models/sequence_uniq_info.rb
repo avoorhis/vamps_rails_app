@@ -6,5 +6,6 @@ class SequenceUniqInfo < ActiveRecord::Base
   
   validates :refssu_count,  numericality: { only_integer: true }
   validates :gast_distance, numericality: true
+  validates_uniqueness_of :sequence_id
   
 end
