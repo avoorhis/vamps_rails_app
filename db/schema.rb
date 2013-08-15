@@ -56,8 +56,8 @@ ActiveRecord::Schema.define(version: 20130808184526) do
   add_index "dna_regions", ["dna_region"], name: "dna_region", unique: true, using: :btree
 
   create_table "env_sample_sources", force: true do |t|
-    t.string  "env_source_name",      limit: 50
     t.integer "env_sample_source_id", limit: 1,  default: 0, null: false
+    t.string  "env_source_name",      limit: 50
   end
 
   add_index "env_sample_sources", ["env_source_name"], name: "env_source_name", unique: true, using: :btree
