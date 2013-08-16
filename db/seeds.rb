@@ -207,3 +207,38 @@ primers = Primer.create([{primer: 'F', direction: '', sequence: '', region: '', 
 projects = Project.create([{project: 'JPL_PHXF_Bv6', title: 'JPL facilities and Phoneix spacecraft', project_description: 'Planetary Protection assessment of JPL facilities and the Phoenix Spacecraft', rev_project_name: '6vB_FXHP_LPJ', funding: 'JetPropulsionLab CalTech',  contact_id: '1'},
 {project: 'BPC_MRB_C', title: 'cDNA sampling of Marinobacter', project_description: 'cDNA sampling of Marinobacter', rev_project_name: 'C_BRM_CPB', funding: 'pilot', contact_id: '2'},
 {project: 'KCK_MHB_Bv6', title: 'Mount Hope Bay - winter and summer', project_description: 'Mount Hope Bay - winter and summer study', rev_project_name: '6vB_BHM_KCK', funding: 'Keck', contact_id: '3'}])
+
+ranks = Rank.create([{rank:  "NA"}, {rank: "class"}, {rank: "domain"}, {rank: "family"}, {rank: "genus"}, {rank: "order"}, {rank: "orderx"}, {rank: "phylum"}, {rank: "species"}, {rank: "strain"}, {rank: "superkingdom"}])
+
+#todo: run_infos
+
+run_keys = RunKey.create([{run_key: ''},
+{run_key: 'AACACTCG'},
+{run_key: 'AACACTCGTGC'},
+{run_key: 'AACCAGC'},
+{run_key: 'AACCTTCGTT'},
+{run_key: 'AACGGAGTC'},
+{run_key: 'AACTTGC'},
+{run_key: 'AAGAGGATTC'},
+{run_key: 'AAGAGGATTCGAT'},
+{run_key: 'AAGCCGC'},
+{run_key: 'AAGGCAC'},
+{run_key: 'AAGTGCGT'},
+{run_key: 'AAGTGCGTATC'},
+{run_key: 'AAT'},
+{run_key: 'AATTACCGGT'},
+{run_key: 'ACA'},
+{run_key: 'ACAAGGC'},
+{run_key: 'acac'},
+{run_key: 'ACACACTG'},
+{run_key: 'ACACGC'},
+{run_key: 'ACACT'},
+{run_key: 'ACACTGAC'},
+{run_key: 'ACAGA'},
+{run_key: 'ACAGGTGA'},
+{run_key: 'ACATC'},
+{run_key: 'acca'},
+{run_key: 'ACG'},
+{run_key: 'ACGAAGTC'},
+{run_key: 'ACGAC'},
+{run_key: 'ACGAGTGA'}])
