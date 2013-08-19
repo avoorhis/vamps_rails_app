@@ -10,6 +10,10 @@
 #   OperatingSystem.find_or_create_by_name os
 # end
 
+# users = User.create([{user: 'Gordon', passwd: 'e1ff14a173834dbd4d487b7627196b30', active: 1, security_level: 50},
+#   {user: "Relman", passwd: "7436dbbf0b2a49488e1d002da1f5fae7", active: 1, security_level: 50},
+#   {user: "wscnsn", passwd: "d0d082b868bf416b8a1db7e5a9b418ba", active: 1, security_level: 50}
+#   ])
 
 contacts = Contact.create([{contact: 'Elizabeth McCliment', email: 'lmccliment@mbl.edu', institution: 'MBL', vamps_name: 'lmccliment', first_name: 'Elizabeth', last_name:'McCliment'},
 {contact: 'Jeffrey Gordon', email: 'jgordon@wustl.edu', institution: 'Washington University School of Medicine', vamps_name: 'Gordon', first_name: 'Jeffrey', last_name:'Gordon'},
@@ -389,3 +393,4 @@ taxonomies = Taxonomy.create([{taxonomy: 'Archaea;Crenarchaeota;Thermoprotei;Des
 {taxonomy: 'Eukarya;Streptophyta;Unassigned;Caryophyllales;Nyctaginaceae;Boerhavia;Boerhavia coulteri'},
 {taxonomy: 'Eukarya;Streptophyta;Unassigned;Caryophyllales;Nyctaginaceae;Boerhavia;Boerhavia dominii'},
 {taxonomy: 'Eukarya;Streptophyta;Unassigned;Caryophyllales;Nyctaginaceae;Boerhavia;Boerhavia erecta'}])
+

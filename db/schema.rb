@@ -62,6 +62,81 @@ ActiveRecord::Schema.define(version: 20130808184526) do
 
   add_index "env_sample_sources", ["env_source_name"], name: "env_source_name", unique: true, using: :btree
 
+  create_table "ill_full_temp", id: false, force: true do |t|
+    t.integer "run_info_run_info_id",                                                                default: 0,      null: false
+    t.integer "run_info_run_key_id",                                                                                  null: false
+    t.integer "run_info_run_id",                                                                                      null: false
+    t.integer "run_info_lane",                            limit: 1,                                  default: 0,      null: false
+    t.integer "run_info_dataset_id",                                                                                  null: false
+    t.integer "run_info_project_id",                                                                                  null: false
+    t.string  "run_info_tubelabel",                       limit: 32,                                 default: "",     null: false
+    t.string  "run_info_barcode",                         limit: 4,                                  default: "",     null: false
+    t.string  "run_info_adaptor",                         limit: 3,                                  default: "",     null: false
+    t.integer "run_info_dna_region_id",                                                                               null: false
+    t.string  "run_info_amp_operator",                    limit: 5,                                  default: "",     null: false
+    t.string  "run_info_seq_operator",                    limit: 5,                                  default: "",     null: false
+    t.string  "run_info_barcode_index",                   limit: 12,                                 default: "",     null: false
+    t.string  "run_info_overlap",                         limit: 8,                                  default: "none", null: false
+    t.integer "run_info_insert_size",                     limit: 2,                                  default: 0,      null: false
+    t.string  "run_info_file_prefix",                     limit: 0,                                  default: "",     null: false
+    t.integer "run_info_read_length",                     limit: 2,                                                   null: false
+    t.integer "run_info_primer_suite_id",                                                                             null: false
+    t.integer "run_key_run_key_id",                                                                  default: 0,      null: false
+    t.string  "run_key",                                  limit: 25,                                 default: "",     null: false
+    t.integer "run_run_id",                                                                          default: 0,      null: false
+    t.string  "run_run",                                  limit: 16,                                 default: "",     null: false
+    t.string  "run_run_prefix",                           limit: 7,                                  default: "",     null: false
+    t.date    "run_date_trimmed"
+    t.integer "dna_region_dna_region_id",                                                            default: 0,      null: false
+    t.string  "dna_region_dna_region",                    limit: 32
+    t.integer "primer_suite_primer_suite_id",                                                        default: 0,      null: false
+    t.string  "primer_suite_primer_suite",                limit: 25,                                 default: "",     null: false
+    t.integer "sequence_pdr_info_sequence_pdr_info_id",                                              default: 0,      null: false
+    t.integer "sequence_pdr_info_run_info_id",                                                                        null: false
+    t.integer "sequence_pdr_info_sequence_id",                                                                        null: false
+    t.integer "sequence_pdr_info_seq_count",                                                                          null: false
+    t.integer "sequence_uniq_info_sequence_uniq_info_id",                                            default: 0,      null: false
+    t.integer "sequence_uniq_info_sequence_id",                                                                       null: false
+    t.integer "sequence_uniq_info_taxonomy_id",                                                                       null: false
+    t.decimal "sequence_uniq_info_gast_distance",                            precision: 7, scale: 5,                  null: false
+    t.integer "sequence_uniq_info_refssu_id",                                                                         null: false
+    t.integer "sequence_uniq_info_refssu_count",                                                     default: 0,      null: false
+    t.integer "sequence_uniq_info_rank_id",                                                                           null: false
+    t.text    "sequence_uniq_info_refhvr_ids",                                                                        null: false
+    t.integer "rank_rank_id",                                                                        default: 0,      null: false
+    t.string  "rank_rank",                                limit: 32,                                 default: "",     null: false
+    t.string  "taxonomy",                                 limit: 300
+    t.integer "sequence_sequence_id",                                                                default: 0,      null: false
+    t.binary  "sequence",                                 limit: 2147483647,                                          null: false
+    t.integer "project_project_id",                                                                  default: 0,      null: false
+    t.string  "project_project",                          limit: 32,                                 default: "",     null: false
+    t.string  "project_title",                            limit: 64,                                 default: "",     null: false
+    t.string  "project_project_description",                                                         default: "",     null: false
+    t.string  "project_rev_project_name",                 limit: 32,                                 default: "",     null: false
+    t.string  "project_funding",                          limit: 64,                                 default: "",     null: false
+    t.integer "env_sample_source_id"
+    t.integer "project_contact_id"
+    t.integer "env_sample_source_env_sample_source_id",                                              default: 0,      null: false
+    t.string  "env_sample_source_env_source_name",        limit: 50
+    t.integer "contact_contact_id",                                                                  default: 0,      null: false
+    t.string  "contact_contact",                          limit: 32
+    t.string  "contact_email",                            limit: 64
+    t.string  "contact_institution",                      limit: 128
+    t.string  "contact_vamps_name",                       limit: 20
+    t.string  "contact_first_name",                       limit: 20
+    t.string  "contact_last_name",                        limit: 20
+    t.integer "dataset_dataset_id",                                                                  default: 0,      null: false
+    t.string  "dataset_dataset",                          limit: 64,                                 default: "",     null: false
+    t.string  "dataset_dataset_description",              limit: 100,                                default: "",     null: false
+  end
+
+  create_table "primer_suite_primer_temp", id: false, force: true do |t|
+    t.integer "id",                      default: 0,  null: false
+    t.string  "primer_suite", limit: 25, default: "", null: false
+    t.integer "primers_id",              default: 0,  null: false
+    t.string  "primer",       limit: 16, default: "", null: false
+  end
+
   create_table "primer_suites", force: true do |t|
     t.string "primer_suite", limit: 25, default: "", null: false
   end
