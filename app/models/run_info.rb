@@ -5,7 +5,8 @@ class RunInfo < ActiveRecord::Base
   belongs_to :run
   belongs_to :run_key
 
-  has_many :projects, :through => :dataset
+  has_one :project, :through => :dataset
+  
   has_many :sequence_pdr_infos
   has_many :sequences, :through => :sequence_pdr_infos #do we need this?
   
