@@ -9,8 +9,7 @@ class RunInfo < ActiveRecord::Base
   has_many :sequence_pdr_infos
   has_many :sequences, :through => :sequence_pdr_infos #do we need this?
   
-  validates :overlap, inclusion: { in: ["complete", "partial", "none"], \
-      message: "%{value} is not a valid overlap" }
+  validates :overlap, inclusion: { in: ["complete", "partial", "none"], message: "%{value} is not a valid overlap" }
   validates_uniqueness_of :run_id, :scope => [:run_key_id, :barcode_index, :lane]
   
 end

@@ -1,6 +1,6 @@
 class Dataset < ActiveRecord::Base
   belongs_to :project
-  belongs_to :user #TODO: How?
+  # belongs_to :user # Dataset.last.project.contact.users
   belongs_to :env_sample_source
 
   has_many  :run_infos

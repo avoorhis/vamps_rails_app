@@ -1,5 +1,5 @@
 class DnaRegion < ActiveRecord::Base
-  belongs_to :run_info
+  has_many  :run_infos
   validates :dna_region, uniqueness: true
     
 end
