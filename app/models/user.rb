@@ -5,13 +5,18 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :confirmable, 
          :recoverable, :rememberable, :trackable, :validatable
          
+
+   has_many  :projects
+
+   validates_uniqueness_of :contact, :scope => [:email, :institution]
+   validates_uniqueness_of :user
+         
   # attr_accessible :email, :password, :password_confirmation, :remember_me
          
   #   has_and_belongs_to_many :contacts
   #   
   # has_many  :projects, :through => :contacts
   # 
-  # validates :user, uniqueness: true
   #     
   # attr_accessor :login
   # devise :database_authenticatable, :registerable, 

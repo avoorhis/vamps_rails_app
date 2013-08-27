@@ -2,11 +2,14 @@
 
 FactoryGirl.define do
   factory :user do |user|
-    user.user                   "Test User"
+    user.user                   "test_user"
     user.email                  "user@example.com"
     user.password               "password"
     user.password_confirmation  "password"
-    # user.passwd                 "password"
+    user.contact                "Test User"						
+    user.institution            "Test institution"						
+    user.first_name						  "Test"
+    user.last_name						  "User"
   end
 end
 

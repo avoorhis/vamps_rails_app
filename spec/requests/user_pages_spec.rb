@@ -18,15 +18,20 @@ describe "User login" do
       fill_in "Email", :with => "test_user@example.com"
       fill_in "Password", :with => "12345678"
       fill_in "Password confirmation", :with => "12345678"
-      click_button "Sign up"
-    
+      fill_in "Institution", :with => "Test institution"
+      fill_in "First name", :with => "Test"
+      fill_in "Last name", :with => "User"
+      
+      click_button "Sign up"    
     }.to change(User, :count).by(1)
+    puts page.body
     page.should have_content("Welcome! You have signed up successfully.")
     
   end
   
   it "sign in as an existing user and displays the user's username" do
     user = FactoryGirl.create(:user)
+    user.confirm!
     login_as(user, :scope => :user)
     
     visit root_path
