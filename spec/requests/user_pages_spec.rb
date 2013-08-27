@@ -1,14 +1,19 @@
 require 'spec_helper'
 
 describe User do
-  # before(:each) do
-  #   # @user = Factory.build(:user)
-  #   user = FactoryGirl.build(:user)
-  #   user.password = "123456"
-  #   user.save
-  #   # post :login, {:email => user.email, :password => "123456"}
-  #   
-  # end
+  before(:each) do
+    # @user = Factory.build(:user)
+    user = FactoryGirl.build(:user)
+    user.user                   "test_user"
+    user.email                  "user@example.com"
+    user.password               "12345678"
+    user.password_confirmation  "12345678"
+    user.passwd                 "12345678"
+    user.save
+    
+    # post :login, {:email => user.email, :password => "123456"}
+    print user
+  end
   
   it "has a valid factory" do
     # FactoryGirl.create(:user).should be_valid
