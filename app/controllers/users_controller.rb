@@ -1,10 +1,10 @@
 class UsersController < ApplicationController
   
-  def create
-    @user = current_user.build(params[:user])
-    @user.save
-  end
-  
+  # def create
+  #   @user = current_user.build(params[:user])
+  #   @user.save
+  # end
+  # 
   # @users = User.includes(:contacts)
   # @contacts = @user.contacts
   # puts "URA1"

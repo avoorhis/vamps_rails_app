@@ -3,17 +3,21 @@ VampsApp6::Application.routes.draw do
   get "home/index"
   
   devise_for :users
+  devise_scope :user do
+      get '/users/sign_out' => 'devise/sessions#destroy'
+  end
+  
   resources :projects
-  #resources :visualization
 
   root :to => "pages#home"
+  # root :to => "home#index"
   get  'pages/overview', as: :overview
-  get  'pages/faq', as: :faq
-  get  'pages/contact', as: :contact
+  get  'pages/faq',      as: :faq
+  get  'pages/contact',  as: :contact
 
-  post 'visualization/tax_table', as: :tax_table
-  #get 'visualization/heatmap', as: :heatmap
-  post 'visualization/heatmap', as: :heatmap
+  post 'visualization/tax_table',  as: :tax_table
+  #get 'visualization/heatmap',    as: :heatmap
+  post 'visualization/heatmap',    as: :heatmap
   post 'visualization/bar_charts', as: :bar_charts
   post 'visualization/parse_view'
   #get 'visualization/generate_data_download'

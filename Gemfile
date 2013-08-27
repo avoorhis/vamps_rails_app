@@ -23,9 +23,10 @@ gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'
 
+gem 'database_cleaner'
+
 group :development, :test do
    gem 'webrat'
-   gem "cucumber-rails"
    gem 'rspec-rails'
    gem "autotest"
 end
