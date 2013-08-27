@@ -39,5 +39,6 @@ describe "User login" do
   end
   
   it "redirect to sign in if not logged in"
-
+  it "not create a new user if validation failed"
+  it "redirect to home if sing out"
 end

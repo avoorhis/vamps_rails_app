@@ -6,10 +6,10 @@ class CreateProjects < ActiveRecord::Migration
       t.string :project_description, {:limit => 255, :null => false, :default => ''}
       t.string :rev_project_name, {:limit => 32, :null => false, :default => ''}
       t.string :funding, {:limit => 64, :null => false, :default => ''}
-      t.integer :contact_id
+      t.integer :user_id
     end
     add_index :projects, :project, {:name => "project", :unique => true}
     add_index :projects, :rev_project_name, {:name => "rev_project_name", :unique => true}
-    add_index :projects, :contact_id, {:name => "contact_id"}
+    add_index :projects, :user_id, {:name => "user_id"}
   end
 end
