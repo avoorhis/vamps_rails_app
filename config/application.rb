@@ -20,6 +20,15 @@ module VampsApp6
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
     config.assets.enable = true
+    # Version of your assets, change this if you want to expire all your assets
+    config.assets.version = '1.0'
+    config.before_configuration do
+      env_file = File.join(Rails.root, 'config', 'local_env.yml')
+      YAML.load(File.open(env_file)).each do |key, value|
+        ENV[key.to_s] = value
+      end if File.exists?(env_file)
+    end
+    
     config.active_record.schema_format setting = :sql # http://guides.rubyonrails.org/migrations.html#types-of-schema-dumps
     #config.action_view.JavaScript_expansions[:defaults] = %w(jquery rails application) 
     

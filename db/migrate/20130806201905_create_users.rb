@@ -1,8 +1,7 @@
 class CreateUsers < ActiveRecord::Migration
   def change
     create_table :users do |t|
-      t.string :user,   :limit => 20
-      t.string :contact,     :limit => 32
+      t.string :username,    :limit => 20
       t.string :email,       :limit => 64, :null => false, :default => ""
       t.string :institution, :limit => 128
       t.string :first_name,  :limit => 20
@@ -11,8 +10,8 @@ class CreateUsers < ActiveRecord::Migration
       t.column :security_level, 'tinyint unsigned', :null => false, :default => '50'
       
       t.index  :institution, {:length => 15, :name => "institution"}
-      t.index  [:contact, :email, :institution], {:name => "contact_email_inst", :unique => true}      
-      t.index  :user, {:name => "user", :unique => true}
+      t.index  [:first_name, :last_name, :email, :institution], {:name => "contact_email_inst", :unique => true}      
+      t.index  :username, {:name => "username", :unique => true}
       
     end
   end

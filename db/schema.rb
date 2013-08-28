@@ -171,8 +171,7 @@ ActiveRecord::Schema.define(version: 20130826184117) do
   add_index "taxonomies", ["taxonomy"], name: "taxonomy", unique: true, using: :btree
 
   create_table "users", force: true do |t|
-    t.string   "user",                   limit: 20
-    t.string   "contact",                limit: 32
+    t.string   "username",               limit: 20
     t.string   "email",                  limit: 64,  default: "", null: false
     t.string   "institution",            limit: 128
     t.string   "first_name",             limit: 20
@@ -195,9 +194,9 @@ ActiveRecord::Schema.define(version: 20130826184117) do
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
-  add_index "users", ["contact", "email", "institution"], name: "contact_email_inst", unique: true, using: :btree
+  add_index "users", ["first_name", "last_name", "email", "institution"], name: "contact_email_inst", unique: true, using: :btree
   add_index "users", ["institution"], name: "institution", length: {"institution"=>15}, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
-  add_index "users", ["user"], name: "user", unique: true, using: :btree
+  add_index "users", ["username"], name: "username", unique: true, using: :btree
 
 end

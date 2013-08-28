@@ -46,4 +46,7 @@ RSpec.configure do |config|
   config.order = "random"
   config.include Rails.application.routes.url_helpers
   config.include Capybara::DSL
+  # config.include Rails.application.routes.default_url_options[:host] = 'test.host'
+
+  
 end

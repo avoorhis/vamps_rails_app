@@ -5,11 +5,10 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :confirmable, 
          :recoverable, :rememberable, :trackable, :validatable
          
-
    has_many  :projects
 
-   validates_uniqueness_of :contact, :scope => [:email, :institution]
-   validates_uniqueness_of :user
+   validates_uniqueness_of :email, :scope => [:first_name, :last_name, :institution]
+   validates_uniqueness_of :username
          
   # attr_accessible :email, :password, :password_confirmation, :remember_me
          
