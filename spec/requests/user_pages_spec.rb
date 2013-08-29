@@ -101,8 +101,21 @@ describe "User login" do
     user.should be_valid    
   end
 
-  it "redirect to sign in if not logged in"
-  # /visualization
+  it "redirect to sign in if not logged in" do
+    visit "/visualization"
+    page.should have_content("Sign in")
+  end
+
+  it "show visualization if logged in" do
+    user = FactoryGirl.create(:user)
+    user.confirm!
+    login_as(user, :scope => :user)
+    
+    visit "/visualization"
+    page.should have_content("Community Visualization")
+  end
+
+  # 
   it "not create a new user if validation failed"
   it "redirect to home if sing out"
 end
