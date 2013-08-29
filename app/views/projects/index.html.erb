@@ -1,7 +1,17 @@
-
-
 <h1><center>Listing VAMPS Projects</center></h1>
 
+<table class='simple_table'>
+  <tr>
+    <th>Project</th>
+    <th>Title</th>
+    <th>Description</th>
+  </tr>
 
-
-
+  <% @projects.each do |p| %>
+    <tr>
+      <td><%= p.project %></td>
+      <td><%= p.title %></td>
+      <td><%= p.project_description %></td>
+    </tr>
+  <% end %>
+</table>

@@ -3,7 +3,7 @@
 
 <%= render "debug" %>
 
-<table class='standard_table' border='1'>
+<table class='standard_table'>
 <tr><th>Taxonomy</th>
 <% @taxonomy_by_site[0][:datasets].each do |d| %>
     <th><%= link_to d[0], "ds_pie" %></th>
