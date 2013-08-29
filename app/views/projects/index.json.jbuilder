@@ -41,7 +41,7 @@ end
 
 def get_datasets
     id_parts = params[:id].split(';')   # eg "0;AB_SAND_Bv6"
-    project_id = Project.find_by_project(id_parts[1]).project_id
+    project_id = Project.find_by_project(id_parts[1]).id
     @datasets = Dataset.where("project_id='#{project_id}'")
 end
 

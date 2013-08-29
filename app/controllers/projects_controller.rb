@@ -15,7 +15,7 @@ class ProjectsController < ApplicationController
   # GET /projects/1.json
   def show
     @project = Project.find(params[:id])
-    @datasets = Dataset.where("project_id='#{@project.project_id}'")
+    @datasets = Dataset.where("project_id='#{@project.id}'")
     #@datasets ||= []
     #Dataset.all.each do |d|
     #	if d.project_id == @project.id
