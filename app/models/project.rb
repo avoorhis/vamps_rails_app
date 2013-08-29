@@ -1,5 +1,5 @@
 class Project < ActiveRecord::Base
-	belongs_to :users
+	belongs_to :user
 	has_many   :datasets
   has_many   :run_infos, :through => :datasets
 

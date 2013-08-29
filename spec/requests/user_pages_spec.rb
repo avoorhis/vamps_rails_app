@@ -70,7 +70,7 @@ describe "User registration" do
     visit "/users/confirmation?confirmation_token=" + user.confirmation_token
     # puts page.body
     page.should have_content("Your account was successfully confirmed. You are now signed in.")
-    page.should have_content("Logged is as " + user.username)
+    page.should have_content("Logged in as " + user.username)
   end
 end
 
@@ -92,7 +92,7 @@ describe "User login" do
 
     visit root_path
     # puts page.body
-    page.should have_content("Logged is as " + user.username)
+    page.should have_content("Logged in as " + user.username)
     
   end
   
@@ -117,5 +117,5 @@ describe "User login" do
 
   # 
   it "not create a new user if validation failed"
-  it "redirect to home if sing out"
+  it "redirect to home if sign out"
 end

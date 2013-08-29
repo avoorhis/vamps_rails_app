@@ -16,12 +16,11 @@ class ProjectsController < ApplicationController
   def show
     @project = Project.find(params[:id])
     @datasets = Dataset.where("project_id='#{@project.id}'")
-    #@datasets ||= []
-    #Dataset.all.each do |d|
-    #	if d.project_id == @project.id
-    #		@datasets << d
-    #	end
-    #end
+    puts "==="
+    puts "URA"
+    puts @datasets
+    @datasets =  @project.datasets
+    puts @datasets
   end
 
   # GET /projects/new
