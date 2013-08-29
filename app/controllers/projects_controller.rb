@@ -14,13 +14,8 @@ class ProjectsController < ApplicationController
   # GET /projects/1
   # GET /projects/1.json
   def show
-    @project = Project.find(params[:id])
-    @datasets = Dataset.where("project_id='#{@project.id}'")
-    puts "==="
-    puts "URA"
-    puts @datasets
+    @project  = Project.find(params[:id])
     @datasets =  @project.datasets
-    puts @datasets
   end
 
   # GET /projects/new
