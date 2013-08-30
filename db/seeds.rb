@@ -10,14 +10,14 @@
 #   OperatingSystem.find_or_create_by_name os
 # end
 
-# users = User.create([{user: 'Gordon', passwd: 'e1ff14a173834dbd4d487b7627196b30', active: 1, security_level: 50},
-#   {user: "Relman", passwd: "7436dbbf0b2a49488e1d002da1f5fae7", active: 1, security_level: 50},
-#   {user: "wscnsn", passwd: "d0d082b868bf416b8a1db7e5a9b418ba", active: 1, security_level: 50}
-#   ])
+users = User.create([{username: "Gordon", email: "jgordon@wustl.edu", institution: "Washington University School of Medicine", first_name: "Jeffrey", last_name: "Gordon", active: 1, security_level: 50, encrypted_password: "e1ff14a173834dbd4d487b7627196b30", reset_password_token: NULL, reset_password_sent_at: NULL, remember_created_at: NULL, sign_in_count: 0, current_sign_in_at: NULL, last_sign_in_at: NULL, current_sign_in_ip: NULL, last_sign_in_ip: NULL, confirmation_token: NULL, confirmed_at: "2013-08-29 11:40:02", confirmation_sent_at: NULL, unconfirmed_email: NULL},
+  {username: "Relman", email: "relman@stanford.edu", institution: "Stanford University", first_name: "David", last_name: "Relman", active: 1, security_level: 50, encrypted_password: "7436dbbf0b2a49488e1d002da1f5fae7", reset_password_token: NULL, reset_password_sent_at: NULL, remember_created_at: NULL, sign_in_count: 0, current_sign_in_at: NULL, last_sign_in_at: NULL, current_sign_in_ip: NULL, last_sign_in_ip: NULL, confirmation_token: NULL, confirmed_at: "2013-08-29 11:40:02", confirmation_sent_at: NULL, unconfirmed_email: NULL},
+  {username: "wscnsn", email: "mclellan@uwm.edu", institution: "University of Wisconsin-Madison", first_name: "Sandra", last_name: "McLellan", active: 1, security_level: 50, encrypted_password: "d0d082b868bf416b8a1db7e5a9b418ba", reset_password_token: NULL, reset_password_sent_at: NULL, remember_created_at: NULL, sign_in_count: 0, current_sign_in_at: NULL, last_sign_in_at: NULL, current_sign_in_ip: NULL, last_sign_in_ip: NULL, confirmation_token: NULL, confirmed_at: "2013-08-29 11:40:02", confirmation_sent_at: NULL, unconfirmed_email: NULL}
+  ])
 
-contacts = Contact.create([{contact: 'Elizabeth McCliment', email: 'lmccliment@mbl.edu', institution: 'MBL', vamps_name: 'lmccliment', first_name: 'Elizabeth', last_name:'McCliment'},
-{contact: 'Jeffrey Gordon', email: 'jgordon@wustl.edu', institution: 'Washington University School of Medicine', vamps_name: 'Gordon', first_name: 'Jeffrey', last_name:'Gordon'},
-{contact: 'David Relman', email: 'relman@stanford.edu', institution: 'Stanford University', vamps_name: 'Relman', first_name: 'David', last_name:'Relman'}])
+"Gordon"	"jgordon@wustl.edu"	"Washington University School of Medicine"	"Jeffrey"	"Gordon"	"1"	"50"	"e1ff14a173834dbd4d487b7627196b30"	"NULL"	"NULL"	"NULL"	"0"	"NULL"	"NULL"	"NULL"	"NULL"	"NULL"	"2013-08-29 11:40:02"	"NULL"	"NULL"
+"Relman"	"relman@stanford.edu"	"Stanford University"	"David"	"Relman"	"1"	"50"	"7436dbbf0b2a49488e1d002da1f5fae7"	"NULL"	"NULL"	"NULL"	"0"	"NULL"	"NULL"	"NULL"	"NULL"	"NULL"	"2013-08-29 11:40:02"	"NULL"	"NULL"
+"wscnsn"	"mclellan@uwm.edu"	"University of Wisconsin-Madison"	"Sandra"	"McLellan"	"1"	"50"	"d0d082b868bf416b8a1db7e5a9b418ba"	"NULL"	"NULL"	"NULL"	"0"	"NULL"	"NULL"	"NULL"	"NULL"	"NULL"	"2013-08-29 11:40:02"	"NULL"	"NULL"
 
 # TODO: add all fields
 datasets = Dataset.create([{dataset: '0002_SP2_2.2m', dataset_description: '0002_SP-2_2.2m'},
