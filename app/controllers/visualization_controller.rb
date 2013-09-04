@@ -4,6 +4,10 @@ class VisualizationController < ApplicationController
   
 
   def parse_view
+    # TEST:
+    @projects_test = ["SLM_NIH_Bv4v5"]
+    @datasets_test = ["1St_156_Marathon", "1St_85_DELANO"]
+    
     @myarray = get_test_matrix
       
     #@my_json = @myarray.to_json  
@@ -19,6 +23,21 @@ class VisualizationController < ApplicationController
     # params[:datasets] are created in visualization.js::getDatasets()
     #session[:datasets]= clean_datasets( params[:datasets] )
     @datasets    = clean_datasets( params[:datasets] )
+    # puts "URA"
+    # puts @datasets
+    # SLM_NIH_Bv4v5--1St_121_Stockton
+    
+    # TODO 
+    #   1) dhtmltree takes project and dataset together into "params[:datasets]", no need to search for project
+    #   2) it repeates project with each dataset
+    #   3) if click on a project only - does not select the underliyng datasets
+    #   4) it repeats "0" with each project/dataset
+    #   e.g
+    #     fromstandartTreeRow
+    #      "datasets"=>"0;SLM_NIH_Bv4v5,
+    #     0;SLM_NIH_Bv4v5;1St_121_Stockton,
+    #     0;SLM_NIH_Bv4v5;1St_120_Richmond,
+    
     @taxQuery    = create_tax_query()
     @result      = Project.find_by_sql(@taxQuery)
     taxonomy_by_site = {}    
@@ -53,8 +72,7 @@ class VisualizationController < ApplicationController
     else params[:view] == "tax_table"
       #default
       render "tax_table"
-    end
-
+    end    
   end
 
   def get_taxonomy_by_site
@@ -108,25 +126,49 @@ class VisualizationController < ApplicationController
     return new_tax_array
   end
 
-
+  def get_dataset_counts()
+    
+    sql = "SELECT datasets.project_id, dataset_id, sum(seq_count) FROM run_infos 
+      JOIN projects ON (project_id = projects.id)
+      JOIN datasets ON (dataset_id = datasets.id)
+      JOIN sequence_pdr_infos ON (run_info_id = run_infos.id)
+      WHERE project in (#{create_comma_list(@projects_test)}) AND dataset IN (#{create_comma_list(@datasets_test)})  
+      GROUP BY datasets.project_id, dataset_id
+    "
+    @result = ActiveRecord::Base.connection.select_rows(sql)
+    # puts "URA"
+    # puts @result.inspect
+    # puts @result[0][2] dataset_count
+    # return @result
+  end
+    
+  def create_comma_list(my_array)
+    return "'" + my_array.join("', '") + "'"
+  end
+    
   def create_tax_query()
-
     sql_datasets     = @datasets.join("','")
+    get_dataset_counts()
+    
+    
     # superkingdoms has to match what is in db table
+    # TODO: get it from db
     superkingdom  = {"archaea"=>1,"bacteria"=>2, "organelle"=>3,"unknown"=>4,"eukarya"=>5}
     sql_superkingdom = ''
 
-    taxQuery = "select project_dataset, taxon_string, knt, sdc.classifier, frequency, dataset_count
-            FROM summed_data_cube as sdc"
-    join = " JOIN project_dataset using(project_dataset_id)
-          JOIN taxon_string using(taxon_string_id, rank_number)"
+    taxQuery = "SELECT project, dataset, taxon_string, knt, sdc.classifier, frequency, dataset_count
+                  FROM summed_data_cube AS sdc"
+    join     = "  JOIN projects on(project_id = projects.id),
+                  JOIN datasets on(dataset_id = datasets.id)
+              "
 
-    where = " WHERE project_dataset in ('#{sql_datasets}')
-          AND rank_number='#{@rank_number}'"
+    where    = "  WHERE project in ('#{sql_project}')
+                  AND dataset in ('#{sql_dataset}')
+                  AND rank_number='#{@rank_number}'"
     ##DOMAINS
     if @domains.length == 1 then
-      join  += " JOIN taxonomies using(taxon_string_id)"
-      where += " AND superkingdom_id='#{superkingdom[@domains[0]]}'"
+      join  += "  JOIN taxonomies on(taxonomy_id = taxonomies.id)"
+      where += "  AND superkingdom_id = '#{superkingdom[@domains[0]]}'"
     elsif @domains.length == 5 then
       # nothing extra here
     else 
