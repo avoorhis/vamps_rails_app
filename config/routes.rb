@@ -6,11 +6,9 @@ VampsApp6::Application.routes.draw do
   devise_scope :user do
       get '/users/sign_out' => 'devise/sessions#destroy'
   end
-  # resources :users
   resources :projects
 
   root :to => "pages#home"
-  # root :to => "home#index"
   get  'pages/overview', as: :overview
   get  'pages/faq',      as: :faq
   get  'pages/contact',  as: :contact
