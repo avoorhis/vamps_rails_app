@@ -6,22 +6,37 @@ application up and running.
 Things you may want to cover:
 
 * Ruby version
+ruby-1.9.3-p448
 
 * System dependencies
+see Gemfile and run bundle (install)
 
 * Configuration
 
 * Database creation
 
 * Database initialization
+rake db:migrate:reset - optional
+rake mysql_db:restore
 
 * How to run the test suite
+rake spec
 
 * Services (job queues, cache servers, search engines, etc.)
 
 * Deployment instructions
 
-* ...
+* Utilities
+I found a useful syntax for joins:
+RunInfo.joins(:dna_region).merge(DnaRegion.where(dna_region: "v4v5"))
+
+and
+
+Primer.joins(:primer_suites).merge(PrimerSuite.where(primer_suite: "Bacterial V4-V5 Suite")).find_each do |primer|
+    puts "Primer.primer = #{primer.primer} here!"
+    puts "Primer.region = #{primer.region} here!"
+end
+
 
 
 Please feel free to use a different markup language if you do not plan to run
