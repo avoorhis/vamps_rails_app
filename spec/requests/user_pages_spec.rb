@@ -19,7 +19,7 @@ describe "User registration" do
     click_button "Sign up"    
   end
   
-  it "create a user and displays a confirmation link" do
+  it "does create a user and displays a confirmation link" do
     # expect {
     #   visit "/users/sign_up"      
     #   fill_in "Username",              :with => "test_user"
@@ -65,7 +65,7 @@ describe "User registration" do
     page.should have_content("A message with a confirmation link has been sent to your email address. Please open the link to activate your account")
   end
   
-  it "confirm registration and logs in" do
+  it "does confirm registration and logs in" do
     user = User.last
     # puts user.inspect
     visit "/users/confirmation?confirmation_token=" + user.confirmation_token
@@ -117,7 +117,7 @@ end
 
 describe "User login" do
 
-  it "no signs in if wrong credentials" do
+  it "does not sign in if wrong credentials" do
     visit "/users/sign_in"
     fill_in "Username", :with => "wrong_user"
     fill_in "Password", :with => "bad password"
@@ -127,7 +127,7 @@ describe "User login" do
     page.should have_content("Invalid username or password")
   end
 
-  it "sign in as an existing user and displays the user's username" do
+  it "does sign in as an existing user and displays the user's username" do
     user = FactoryGirl.create(:user)
     user.confirm!
     login_as(user, :scope => :user)
@@ -143,21 +143,38 @@ describe "User login" do
     user.should be_valid    
   end
 
-  it "redirect to sign in if not logged in" do
+  it "does redirect to sign in if not logged in" do
     visit "/visualization"
     page.should have_content("Sign in")
   end
 
-  it "show visualization if logged in" do
+  it "does show visualization if logged in" do
     user = FactoryGirl.create(:user)
     user.confirm!
     login_as(user, :scope => :user)
     
     visit "/visualization"
+    
     page.should have_content("Community Visualization")
   end
 
-  # 
-  it "not create a new user if validation failed"
-  it "redirect to home if sign out"
+  it "does redirect to home if sign out" do
+    user = FactoryGirl.create(:user)
+    user.confirm!
+    login_as(user, :scope => :user)
+    visit "/"
+    
+    # puts page.body
+    page.should have_content("Logged in as " + user.username)
+    page.should have_no_content("Login")
+    
+    click_link "Logout"            
+    # puts page.body
+    page.should have_content("Login")
+    page.should have_content("Signed out successfully.")
+    
+  end
+
+  it "does not create a new user if validation failed"
+  
 end
