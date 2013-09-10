@@ -18,12 +18,12 @@ class VisualizationController < ApplicationController
     domains      = params[:domains]
     @domains     = domains.compact
     @tax_rank    = params[:tax_rank]
-    @rank_number = get_rank_num()
+    # @rank_number = get_rank_num()
     @view        = params[:view]
     # params[:datasets] are created in visualization.js::getDatasets()
     #session[:datasets]= clean_datasets( params[:datasets] )
     @datasets    = clean_datasets( params[:datasets] )
-    # puts "URA"
+    # puts "URA1"
     # puts @datasets
     # SLM_NIH_Bv4v5--1St_121_Stockton
     
@@ -40,7 +40,8 @@ class VisualizationController < ApplicationController
     #     0;SLM_NIH_Bv4v5;1St_120_Richmond,
     
     @taxQuery    = create_tax_query()
-    @result      = Project.find_by_sql(@taxQuery)
+    print @taxQuery
+    # @result      = Project.find_by_sql(@taxQuery)
     taxonomy_by_site = {}    
 
     for res in @result
@@ -146,10 +147,11 @@ class VisualizationController < ApplicationController
     
   def create_tax_query()
     sql_datasets   = @datasets.join("','")
+    sql_project    = 
     dataset_counts = get_dataset_counts()
-    puts "URA"
-    puts dataset_counts.inspect
-    puts dataset_counts[0][2]
+    # puts "URA"
+    # puts dataset_counts.inspect
+    # puts dataset_counts[0][2].to_int
     
     
     # superkingdoms has to match what is in db table
@@ -157,15 +159,28 @@ class VisualizationController < ApplicationController
     superkingdom  = {"archaea"=>1,"bacteria"=>2, "organelle"=>3,"unknown"=>4,"eukarya"=>5}
     sql_superkingdom = ''
 
-    taxQuery = "SELECT project, dataset, taxon_string, knt, sdc.classifier, frequency, dataset_count
-                  FROM summed_data_cube AS sdc"
-    join     = "  JOIN projects on(project_id = projects.id),
-                  JOIN datasets on(dataset_id = datasets.id)
+    taxQuery = "SELECT projects.project, datasets.dataset, CONCAT_WS(\";\", superkingdom_id, phylum_id, class_id, orderx_id, family_id, genus_id, species_id, strain_id) AS taxonomy, seq_count AS knt, classifier
+      FROM sequence_pdr_infos
+      JOIN run_infos ON (run_infos.id = run_info_id)
+      JOIN sequence_uniq_infos
+      JOIN taxonomies
+      LEFT JOIN taxa AS t1 ON (superkingdom_id = t1.id)
+      LEFT JOIN taxa AS t2 ON (phylum_id       = t2.id)
+      LEFT JOIN taxa AS t3 ON (class_id        = t3.id)
+      LEFT JOIN taxa AS t4 ON (orderx_id       = t4.id)
+      LEFT JOIN taxa AS t5 ON (family_id       = t5.id)
+      LEFT JOIN taxa AS t6 ON (genus_id        = t6.id)
+      LEFT JOIN taxa AS t7 ON (species_id      = t7.id)
+      LEFT JOIN taxa AS t8 ON (strain_id       = t8.id)
+      JOIN projects ON(project_id = projects.id) 
+      JOIN datasets ON(dataset_id = datasets.id)
               "
 
-    where    = "  WHERE project in ('#{sql_project}')
-                  AND dataset in ('#{sql_dataset}')
-                  AND rank_number='#{@rank_number}'"
+    where    = "  WHERE project in (#{create_comma_list(@projects_test)}) 
+                  AND dataset IN (#{create_comma_list(@datasets_test)})  
+                  AND rank='#{@tax_rank}'"
+                  
+# calculate seq_count/dataset_count AS frequency, dataset_count
     ##DOMAINS
     if @domains.length == 1 then
       join  += "  JOIN taxonomies on(taxonomy_id = taxonomies.id)"
@@ -192,7 +207,7 @@ class VisualizationController < ApplicationController
         # and taxon_string not like '%_NA'
     end
 
-    @taxQuery = taxQuery + join + where
+    @taxQuery = taxQuery + where
   end
 
   def clean_datasets(ds_string)
@@ -214,10 +229,10 @@ class VisualizationController < ApplicationController
 
   end
 
-  def get_rank_num()
-    tax_num = { "domain"=>0,"phylum"=>1,"class"=>2,"order"=>3,"family"=>4,"genus"=>5,"species"=>6,"strain"=>7 }
-    return tax_num[@tax_rank]
-  end
+  # def get_rank_num()
+  #   tax_num = { "domain"=>0,"phylum"=>1,"class"=>2,"order"=>3,"family"=>4,"genus"=>5,"species"=>6,"strain"=>7 }
+  #   return tax_num[@tax_rank]
+  # end
 
   def get_test_matrix
     @myarray = []
