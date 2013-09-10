@@ -144,10 +144,27 @@ class VisualizationController < ApplicationController
   def create_comma_list(my_array)
     return "'" + my_array.join("', '") + "'"
   end
-    
+  
+  def make_taxa_by_rank()
+    rank_id = Rank.find_by_rank(@tax_rank)
+  
+    # rank_ids = "superkingdom_id, phylum_id, class_id, orderx_id, family_id, genus_id, species_id, strain_id"
+    rank_ids = "t1.taxon, t2.taxon, t3.taxon, t4.taxon, t5.taxon, t6.taxon, t7.taxon, t8.taxon"
+    taxa_ids = "LEFT JOIN taxa AS t1 ON (superkingdom_id = t1.id)
+    LEFT JOIN taxa AS t2 ON (phylum_id       = t2.id)
+    LEFT JOIN taxa AS t3 ON (class_id        = t3.id)
+    LEFT JOIN taxa AS t4 ON (orderx_id       = t4.id)
+    LEFT JOIN taxa AS t5 ON (family_id       = t5.id)
+    LEFT JOIN taxa AS t6 ON (genus_id        = t6.id)
+    LEFT JOIN taxa AS t7 ON (species_id      = t7.id)
+    LEFT JOIN taxa AS t8 ON (strain_id       = t8.id)
+    "
+    return rank_ids, taxa_ids
+  end    
+  
   def create_tax_query()
     sql_datasets   = @datasets.join("','")
-    sql_project    = 
+    # sql_project    = 
     dataset_counts = get_dataset_counts()
     # puts "URA"
     # puts dataset_counts.inspect
@@ -156,32 +173,28 @@ class VisualizationController < ApplicationController
     
     # superkingdoms has to match what is in db table
     # TODO: get it from db
-    superkingdom  = {"archaea"=>1,"bacteria"=>2, "organelle"=>3,"unknown"=>4,"eukarya"=>5}
+    superkingdom  = Taxa.find_by_rank(@tax_rank)
+    
+    # {"archaea"=>1,"bacteria"=>2, "organelle"=>3,"unknown"=>4,"eukarya"=>5}
     sql_superkingdom = ''
-
-    taxQuery = "SELECT projects.project, datasets.dataset, CONCAT_WS(\";\", superkingdom_id, phylum_id, class_id, orderx_id, family_id, genus_id, species_id, strain_id) AS taxonomy, seq_count AS knt, classifier
+    rank_ids, taxa_ids = make_taxa_by_rank()
+    print "URA! rank_ids = #{rank_ids}\n taxa_ids = #{taxa_ids}"
+    taxQuery = "SELECT projects.project, datasets.dataset, CONCAT_WS(\";\", #{rank_ids}) AS taxonomy, seq_count AS knt, classifier
                   FROM sequence_pdr_infos
                   JOIN run_infos ON (run_infos.id = run_info_id)
                   JOIN sequence_uniq_infos USING(sequence_id)
                   JOIN taxonomies on (taxonomies.id = taxonomy_id)
-                  LEFT JOIN taxa AS t1 ON (superkingdom_id = t1.id)
-                  LEFT JOIN taxa AS t2 ON (phylum_id       = t2.id)
-                  LEFT JOIN taxa AS t3 ON (class_id        = t3.id)
-                  LEFT JOIN taxa AS t4 ON (orderx_id       = t4.id)
-                  LEFT JOIN taxa AS t5 ON (family_id       = t5.id)
-                  LEFT JOIN taxa AS t6 ON (genus_id        = t6.id)
-                  LEFT JOIN taxa AS t7 ON (species_id      = t7.id)
-                  LEFT JOIN taxa AS t8 ON (strain_id       = t8.id)
+                  #{taxa_ids}
                   JOIN projects ON(project_id = projects.id) 
                   JOIN datasets ON(dataset_id = datasets.id)
-                  JOIN ranks ON (sequence_uniq_infos.rank_id = ranks.id)
               "
 
     where    = "  WHERE project in (#{create_comma_list(@projects_test)}) 
                   AND dataset IN (#{create_comma_list(@datasets_test)})  
-                  AND rank='#{@tax_rank}'"
+               "
                   
 # calculate seq_count/dataset_count AS frequency, dataset_count
+
     ##DOMAINS
     if @domains.length == 1 then
       join  += "  JOIN taxonomies on(taxonomy_id = taxonomies.id)"
