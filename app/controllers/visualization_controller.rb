@@ -160,20 +160,21 @@ class VisualizationController < ApplicationController
     sql_superkingdom = ''
 
     taxQuery = "SELECT projects.project, datasets.dataset, CONCAT_WS(\";\", superkingdom_id, phylum_id, class_id, orderx_id, family_id, genus_id, species_id, strain_id) AS taxonomy, seq_count AS knt, classifier
-      FROM sequence_pdr_infos
-      JOIN run_infos ON (run_infos.id = run_info_id)
-      JOIN sequence_uniq_infos
-      JOIN taxonomies
-      LEFT JOIN taxa AS t1 ON (superkingdom_id = t1.id)
-      LEFT JOIN taxa AS t2 ON (phylum_id       = t2.id)
-      LEFT JOIN taxa AS t3 ON (class_id        = t3.id)
-      LEFT JOIN taxa AS t4 ON (orderx_id       = t4.id)
-      LEFT JOIN taxa AS t5 ON (family_id       = t5.id)
-      LEFT JOIN taxa AS t6 ON (genus_id        = t6.id)
-      LEFT JOIN taxa AS t7 ON (species_id      = t7.id)
-      LEFT JOIN taxa AS t8 ON (strain_id       = t8.id)
-      JOIN projects ON(project_id = projects.id) 
-      JOIN datasets ON(dataset_id = datasets.id)
+                  FROM sequence_pdr_infos
+                  JOIN run_infos ON (run_infos.id = run_info_id)
+                  JOIN sequence_uniq_infos USING(sequence_id)
+                  JOIN taxonomies on (taxonomies.id = taxonomy_id)
+                  LEFT JOIN taxa AS t1 ON (superkingdom_id = t1.id)
+                  LEFT JOIN taxa AS t2 ON (phylum_id       = t2.id)
+                  LEFT JOIN taxa AS t3 ON (class_id        = t3.id)
+                  LEFT JOIN taxa AS t4 ON (orderx_id       = t4.id)
+                  LEFT JOIN taxa AS t5 ON (family_id       = t5.id)
+                  LEFT JOIN taxa AS t6 ON (genus_id        = t6.id)
+                  LEFT JOIN taxa AS t7 ON (species_id      = t7.id)
+                  LEFT JOIN taxa AS t8 ON (strain_id       = t8.id)
+                  JOIN projects ON(project_id = projects.id) 
+                  JOIN datasets ON(dataset_id = datasets.id)
+                  JOIN ranks ON (sequence_uniq_infos.rank_id = ranks.id)
               "
 
     where    = "  WHERE project in (#{create_comma_list(@projects_test)}) 
