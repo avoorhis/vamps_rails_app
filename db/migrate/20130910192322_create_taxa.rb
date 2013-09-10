@@ -3,7 +3,7 @@ class CreateTaxa < ActiveRecord::Migration
     create_table :taxa do |t|
       t.string :taxon, {:limit => 300, :null => false, :default => ''}
       t.integer :rank_id, :null => false      
-      t.index  :rank, {:name => "rank", :unique => true}
+      t.index  :taxon, {:name => "taxon", :unique => true}
     end
   end
 end

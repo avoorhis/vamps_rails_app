@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130808184526) do
+ActiveRecord::Schema.define(version: 20130910192455) do
 
   create_table "datasets", force: true do |t|
     t.string  "dataset",              limit: 64,  default: "",  null: false
@@ -161,6 +161,14 @@ ActiveRecord::Schema.define(version: 20130808184526) do
   end
 
   add_index "sequences", ["sequence_comp"], name: "sequence_comp", unique: true, length: {"sequence_comp"=>400}, using: :btree
+
+  create_table "taxa", force: true do |t|
+    t.string  "taxon",   limit: 300, default: "", null: false
+    t.integer "rank_id",                          null: false
+  end
+
+  add_index "taxa", ["rank_id"], name: "taxon_fk_rank_id", using: :btree
+  add_index "taxa", ["taxon"], name: "taxon", unique: true, using: :btree
 
   create_table "taxonomies", force: true do |t|
     t.string   "taxonomy",   limit: 300
