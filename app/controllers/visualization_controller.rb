@@ -28,10 +28,11 @@ class VisualizationController < ApplicationController
     # SLM_NIH_Bv4v5--1St_121_Stockton
     
     # TODO 
-    #   1) dhtmltree takes project and dataset together into "params[:datasets]", no need to search for project
-    #   2) it repeates project with each dataset
-    #   3) if click on a project only - does not select the underliyng datasets
-    #   4) it repeats "0" with each project/dataset
+    #   1) dhtmltree takes project and dataset together into "params[:datasets]", shouldn't it be separate params? 
+    #   2) no need for Project.find_by_sql - we have it from params
+    #   3) it repeates project with each dataset - better get it once
+    #   4) if click on a project only - does not select the underliyng datasets
+    #   5) it repeats "0" with each project/dataset - what this?
     #   e.g
     #     fromstandartTreeRow
     #      "datasets"=>"0;SLM_NIH_Bv4v5,
@@ -135,11 +136,8 @@ class VisualizationController < ApplicationController
       WHERE project in (#{create_comma_list(@projects_test)}) AND dataset IN (#{create_comma_list(@datasets_test)})  
       GROUP BY datasets.project_id, dataset_id
     "
-    @result = ActiveRecord::Base.connection.select_rows(sql)
-    # puts "URA"
-    # puts @result.inspect
-    # puts @result[0][2] dataset_count
-    # return @result
+    result = ActiveRecord::Base.connection.select_rows(sql)
+    return result
   end
     
   def create_comma_list(my_array)
@@ -147,8 +145,11 @@ class VisualizationController < ApplicationController
   end
     
   def create_tax_query()
-    sql_datasets     = @datasets.join("','")
-    get_dataset_counts()
+    sql_datasets   = @datasets.join("','")
+    dataset_counts = get_dataset_counts()
+    puts "URA"
+    puts dataset_counts.inspect
+    puts dataset_counts[0][2]
     
     
     # superkingdoms has to match what is in db table

@@ -171,32 +171,17 @@ ActiveRecord::Schema.define(version: 20130808184526) do
   add_index "taxonomies", ["taxonomy"], name: "taxonomy", unique: true, using: :btree
 
   create_table "users", force: true do |t|
-    t.string   "username",               limit: 20
-    t.string   "email",                  limit: 64,  default: "", null: false
-    t.string   "institution",            limit: 128
-    t.string   "first_name",             limit: 20
-    t.string   "last_name",              limit: 20
-    t.integer  "active",                 limit: 1,   default: 0,  null: false
-    t.integer  "security_level",         limit: 1,   default: 50, null: false
-    t.string   "encrypted_password",                 default: "", null: false
-    t.string   "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                      default: 0
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
-    t.string   "current_sign_in_ip"
-    t.string   "last_sign_in_ip"
-    t.string   "confirmation_token"
-    t.datetime "confirmed_at"
-    t.datetime "confirmation_sent_at"
-    t.string   "unconfirmed_email"
+    t.string  "username",       limit: 20
+    t.string  "email",          limit: 64,  default: "", null: false
+    t.string  "institution",    limit: 128
+    t.string  "first_name",     limit: 20
+    t.string  "last_name",      limit: 20
+    t.integer "active",         limit: 1,   default: 0,  null: false
+    t.integer "security_level", limit: 1,   default: 50, null: false
   end
 
-  add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
   add_index "users", ["first_name", "last_name", "email", "institution"], name: "contact_email_inst", unique: true, using: :btree
   add_index "users", ["institution"], name: "institution", length: {"institution"=>15}, using: :btree
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["username"], name: "username", unique: true, using: :btree
 
 end
