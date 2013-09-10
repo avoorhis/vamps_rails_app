@@ -1,8 +1,6 @@
 # Read about factories at https://github.com/thoughtbot/factory_girl
 
 FactoryGirl.define do
-  factory :taxa do
-    taxon ""
-    rank_id 1
+  factory :taxon do
   end
 end
