@@ -14,13 +14,10 @@
 ActiveRecord::Schema.define(version: 20130911190702) do
 
   create_table "datasets", force: true do |t|
-    t.string  "dataset",              limit: 64,  default: "",  null: false
-    t.string  "dataset_description",  limit: 100, default: "",  null: false
-    t.integer "reads_in_dataset",     limit: 3,   default: 0,   null: false
-    t.string  "has_sequence",         limit: 1,   default: "0", null: false
+    t.string  "dataset",              limit: 64,  default: "", null: false
+    t.string  "dataset_description",  limit: 100, default: "", null: false
     t.integer "env_sample_source_id"
     t.integer "project_id"
-    t.string  "date_trimmed",         limit: 10,  default: "",  null: false
   end
 
   add_index "datasets", ["dataset", "project_id"], name: "dataset_project", unique: true, using: :btree
@@ -28,7 +25,7 @@ ActiveRecord::Schema.define(version: 20130911190702) do
   add_index "datasets", ["project_id"], name: "dataset_fk_project_id", using: :btree
 
   create_table "env_sample_sources", force: true do |t|
-    t.integer "env_sample_source_id", limit: 2,  default: 0, null: false
+    t.integer "env_sample_source_id", limit: 1,  default: 0, null: false
     t.string  "env_source_name",      limit: 50
   end
 
@@ -55,12 +52,17 @@ ActiveRecord::Schema.define(version: 20130911190702) do
   add_index "ranks", ["rank"], name: "rank", unique: true, using: :btree
 
   create_table "sequence_pdr_infos", force: true do |t|
-    t.integer  "sequence_id", null: false
-    t.integer  "seq_count",   null: false
+    t.integer  "project_id",                             null: false
+    t.integer  "dataset_id",                             null: false
+    t.integer  "sequence_id",                            null: false
+    t.integer  "seq_count",                              null: false
+    t.string   "classifier",  limit: 4, default: "GAST"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
+  add_index "sequence_pdr_infos", ["dataset_id"], name: "sequence_pdr_info_fk_dataset_id", using: :btree
+  add_index "sequence_pdr_infos", ["project_id", "dataset_id", "sequence_id"], name: "uniq_seq_pd", unique: true, using: :btree
   add_index "sequence_pdr_infos", ["sequence_id"], name: "sequence_pdr_info_fk_sequence_id", using: :btree
 
   create_table "sequence_uniq_infos", force: true do |t|
@@ -97,12 +99,26 @@ ActiveRecord::Schema.define(version: 20130911190702) do
   add_index "taxa", ["taxon"], name: "taxon", unique: true, using: :btree
 
   create_table "taxonomies", force: true do |t|
-    t.string   "taxonomy",   limit: 300
+    t.integer  "superkingdom_id"
+    t.integer  "phylum_id"
+    t.integer  "class_id"
+    t.integer  "orderx_id"
+    t.integer  "family_id"
+    t.integer  "genus_id"
+    t.integer  "species_id"
+    t.integer  "strain_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "taxonomies", ["taxonomy"], name: "taxonomy", unique: true, using: :btree
+  add_index "taxonomies", ["class_id"], name: "taxonomy_fk_taxa_id3", using: :btree
+  add_index "taxonomies", ["family_id"], name: "taxonomy_fk_taxa_id5", using: :btree
+  add_index "taxonomies", ["genus_id"], name: "taxonomy_fk_taxa_id6", using: :btree
+  add_index "taxonomies", ["orderx_id"], name: "taxonomy_fk_taxa_id4", using: :btree
+  add_index "taxonomies", ["phylum_id"], name: "taxonomy_fk_taxa_id2", using: :btree
+  add_index "taxonomies", ["species_id"], name: "taxonomy_fk_taxa_id7", using: :btree
+  add_index "taxonomies", ["strain_id"], name: "taxonomy_fk_taxa_id8", using: :btree
+  add_index "taxonomies", ["superkingdom_id", "phylum_id", "class_id", "orderx_id", "family_id", "genus_id", "species_id", "strain_id"], name: "all_names", unique: true, using: :btree
 
   create_table "users", force: true do |t|
     t.string   "username",               limit: 20
