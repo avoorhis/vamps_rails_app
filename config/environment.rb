@@ -2,9 +2,9 @@
 require File.expand_path('../application', __FILE__)
 
 # Initialize the Rails application.
-VampsApp6::Application.initialize!
+VampsApp7::Application.initialize!
 
-VampsApp6::Application.configure do
+VampsApp7::Application.configure do
   config.action_mailer.default_url_options = { :host => 'localhost:3000' }  
 end
 
@@ -17,3 +17,14 @@ end
 #   :authentication       => "plain"
 #   # :enable_starttls_auto => true # I don't have this, but it should work anyway 
 # } 
+# Add new inflection rules using the following format
+# (all these examples are active by default):
+ActiveSupport::Inflector.inflections do |inflect|
+  inflect.uncountable 'metadata'
+  inflect.irregular 'taxon', 'taxa'
+# inflect.plural /^(ox)$/i, '\1en'
+# inflect.singular /^(ox)en/i, '\1'
+# inflect.irregular 'person', 'people'
+# inflect.uncountable %w( fish sheep )
+end
+

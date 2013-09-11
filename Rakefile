@@ -3,4 +3,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-VampsApp6::Application.load_tasks
+VampsApp7::Application.load_tasks

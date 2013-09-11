@@ -13,7 +13,7 @@
 #  }
 #)
 
-
+# views/projects/index.json.jbuilder
 json_id = params[:id]
 
 if json_id == '0'

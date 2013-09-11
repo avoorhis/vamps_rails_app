@@ -6,7 +6,7 @@
 #bars_table_div{
 	font-size:10px;
 	padding:10px;
-	border:1px solid green;
+	border:1px solid red;
 	width:1000px;
 	background:white;
 }
@@ -17,12 +17,16 @@
 	line-height:0px;
 	width:900px;
 }
-#bars_each_div{
-	height:0px;
+.bars_each_div{
+	height:15px;
 	border:none;
-	margin:11px 0 0 0px;
+	margin:0px 0 0 0px;
 }
+table.nodata td{
+	border:none;
+	padding:5px 5px;
 
+}
 #json_sample_treebox{
 	width:250px; 
 	height:400px;

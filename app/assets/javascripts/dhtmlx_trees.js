@@ -10,7 +10,8 @@ function get_json_project_tree()
   json_project_tree.enableTreeLines(true); // true by default
   json_project_tree.enableTreeImages(false); // true to enable 
   json_project_tree.enableCheckBoxes(true, false);
-  //json_project_tree.setOnCheckHandler("onCheck");
+  json_project_tree.setOnCheckHandler("onCheck");
+  // see: views/projects/index.json.jbuilder
   json_project_tree.setXMLAutoLoading("/projects.json");
   //json_tree.setXMLAutoLoadingBehaviour(mode);
   json_project_tree.setDataMode("json");
@@ -26,12 +27,20 @@ function onCheck(id,state)
   // all the datasets are checked but this is not called 
   // for each
   //alert(json_project_tree.getOpenState(id))
-  //alert(json_project_tree.getOpenState(id))
-  if( json_project_tree.getOpenState(id) == 1 ){
+  
+  if( json_project_tree.getOpenState(id) == true ){
 
-    json_project_tree.setCheck(id,false)
-    json_project_tree.setSubChecked(id,false)
-    
+    if(json_project_tree.isItemChecked(id) == true){
+
+      json_project_tree.setCheck(id,true)
+      json_project_tree.setSubChecked(id,true)
+
+    }else{
+
+      json_project_tree.setCheck(id,false)
+      json_project_tree.setSubChecked(id,false)
+
+    }  
     
 
   }else if(json_project_tree.getOpenState(id) == -1){
@@ -39,14 +48,26 @@ function onCheck(id,state)
     json_project_tree.openItem(id)
     json_project_tree.setCheck(id,true)
     json_project_tree.setSubChecked(id,true)
-  }else{
+
+  }else{  // closed
+
     json_project_tree.openItem(id)
-    json_project_tree.setCheck(id,true)
-    json_project_tree.setSubChecked(id,true)
+    if(json_project_tree.isItemChecked(id) == true){
+
+      json_project_tree.setCheck(id,true)
+      json_project_tree.setSubChecked(id,true)
+
+    }else{
+
+      json_project_tree.setCheck(id,false)
+      json_project_tree.setSubChecked(id,false)
+
+    }  
+   
 
   }
   all = json_project_tree.getAllCheckedBranches()
-  alert(all)
+  
 
 }
 function get_xml_project_tree()
