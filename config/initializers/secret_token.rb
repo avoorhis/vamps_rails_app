@@ -9,4 +9,4 @@
 
 # Make sure your secret_key_base is kept private
 # if you're sharing your code publicly.
-VampsApp7::Application.config.secret_key_base = '14e67f5e8ba6ed2767f836f6900c924b1a468145c748443dff7d0d3286dc71b0209003b25986573c2e1f532bb998fd7e040d0f0ba53c4bccdfd7794f0c91e796'
+VampsApp6::Application.config.secret_key_base = '14e67f5e8ba6ed2767f836f6900c924b1a468145c748443dff7d0d3286dc71b0209003b25986573c2e1f532bb998fd7e040d0f0ba53c4bccdfd7794f0c91e796'

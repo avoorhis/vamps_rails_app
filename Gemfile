@@ -26,7 +26,6 @@ gem 'jbuilder', '~> 1.2'
 gem 'database_cleaner'
 
 group :development, :test do
-   gem 'factory_girl_rails', :require => false
    gem 'webrat'
    gem 'rspec-rails'
    gem "autotest"

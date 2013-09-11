@@ -4,23 +4,17 @@
 <%= render "debug" %>
 
 <table class='standard_table'>
-<% if @taxonomy_by_site.any? %>
-	<tr><th>Taxonomy</th>
-
-	<% @taxonomy_by_site[0][:datasets].each do |d| %>
-	    <th><%= link_to d[0], "ds_pie" %></th>
+<tr><th>Taxonomy</th>
+<% @taxonomy_by_site[0][:datasets].each do |d| %>
+    <th><%= link_to d[0], "ds_pie" %></th>
+<% end %>
+</tr>
+<% @taxonomy_by_site.each do |i| %>
+	<tr><td> <%= link_to i[:taxonomy], "tax_pie" %> </td>
+	<% i[:datasets].each do |d| %>
+    	<td><%= i[:datasets][d[0]] %></td>
 	<% end %>
-	</tr>
-
-	<% @taxonomy_by_site.each do |i| %>
-		<tr><td> <%= link_to i[:taxonomy], "tax_pie" %> </td>
-		<% i[:datasets].each do |d| %>
-	    	<td><%= i[:datasets][d[0]] %></td>
-		<% end %>
-	    </tr>
-	<% end %>
-<% else %>
-	<tr><td><strong>NO DATA</strong></td></tr>
+    </tr>
 <% end %>
 
 

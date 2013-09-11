@@ -2,13 +2,13 @@
 
 
 .bar_div {  
-  height: 15px;
+  height: 0px;
   margin-bottom:20px;
 }
 
 .barChartContainer {
 	
-	padding:0px 0 0px 0;
+	padding:10px 0 10px 0;
 	width: 800px;
 	
   /* border:1px solid green; */ 
@@ -28,8 +28,8 @@ table.barChart tr {
 .barChartWrapper {
 	position: relative;
 	width:25px;
-	top:0px;
-	padding: 1px 0px 1px 0px;
+	top:-20px;
+	padding: 1px 0px 12px 0px;
 	
 	
 /*	border:1px solid red;  */
