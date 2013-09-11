@@ -20,7 +20,7 @@ function getDatasets(form)
   		return
   	}
 
-  	var hiddenField1 = document.createElement("input"); 
+  var hiddenField1 = document.createElement("input"); 
 	hiddenField1.setAttribute("type", 'hidden');
 	hiddenField1.setAttribute("name", "datasets");
 	hiddenField1.setAttribute("value", checked_datasets);	

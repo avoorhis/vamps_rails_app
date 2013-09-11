@@ -6,13 +6,12 @@ class AlterSequencePdrInfo < ActiveRecord::Migration
     execute "ALTER TABLE sequence_pdr_infos
           ADD CONSTRAINT sequence_pdr_info_fk_sequence_id FOREIGN KEY (sequence_id) REFERENCES sequences (id) ON UPDATE CASCADE"
           
-    execute "ALTER TABLE sequence_pdr_infos
-          ADD CONSTRAINT sequence_pdr_info_fk_run_info_id FOREIGN KEY (run_info_id) REFERENCES run_infos (id) ON UPDATE CASCADE"
+    
   end
 
   # no need to remove comments
   def self.down
     execute "ALTER TABLE sequence_pdr_infos DROP FOREIGN KEY sequence_pdr_info_fk_sequence_id"
-    execute "ALTER TABLE sequence_pdr_infos DROP FOREIGN KEY sequence_pdr_info_fk_run_info_id"
+    
   end
 end

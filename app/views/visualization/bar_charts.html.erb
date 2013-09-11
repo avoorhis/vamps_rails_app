@@ -8,21 +8,29 @@
 <% @datasets.each do |ds|	%>
 <tr id=''><td nowrap='nowrap'><%= ds %></td>
 	<td>
-	<% ds_info = get_retmat(ds)  %>	 
-	<div id='bars_each_div' >
+	<!-- # see: app/helpers/visualization_helper.rb -->
+	<% ds_info = get_retmat(ds)  %>	
 
-	<table class='barChart' >
-	<% ds_info[:retmat].each do |tax, value| %>
-	  <% if (value*100 / ds_info[:total]) > 0.1 then %>							
-		<tr>
-			<td><%= tax %></td>
-			<td><%= value %></td>
-			<td><%= string_2_color(tax) %></td>
-			<td><%= "http://www.google.com" %></td>
-			<td><%= ds_info[:total] %></td>
-			<td><%= ds %></td>
-		</tr>
-	  <% end %>			
+	<div class='bars_each_div' > 
+		
+	<% if ds_info[:retmat].any? and ds_info[:total] > 0 %>
+		
+		<table class='barChart' >
+		<% ds_info[:retmat].each do |tax, value| %>
+		  <% if (value*100 / ds_info[:total]) > 0.1 then %>							
+			<tr>
+				<td><%= tax %></td>
+				<td><%= value %></td>
+				<td><%= string_2_color(tax) %></td>
+				<td><%= "http://www.google.com" %></td>
+				<td><%= ds_info[:total] %></td>
+				<td><%= ds %></td>
+			</tr>
+		  <% end %>			
+		<% end %>
+	<% else %>
+		<table class='nodata'>		
+		<tr><td>No Data</td></tr>
 	<% end %>
 	</table>
 	</div>

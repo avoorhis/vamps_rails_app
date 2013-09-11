@@ -30,7 +30,7 @@ Example Usage:
 
 var BarChart = new Class({
 	options: {
-		barChartHeight: 10,  // Height of your bar chart
+		barChartHeight: 13,  // Height of your bar chart
 		barChartWidth: 800,  // width of your bar chart
     	td_label_index: 0,    // which TD contains the label			
     	td_index: 1,          // which TD contains the data	

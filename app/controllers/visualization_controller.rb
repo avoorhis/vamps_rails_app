@@ -21,10 +21,10 @@ class VisualizationController < ApplicationController
     @rank_number = get_rank_num()
     @view        = params[:view]
     # params[:datasets] are created in visualization.js::getDatasets()
-    #session[:datasets]= clean_datasets( params[:datasets] )
+    # session[:datasets]= clean_datasets( params[:datasets] )
     @datasets    = clean_datasets( params[:datasets] )
-    # puts "URA"
-    # puts @datasets
+
+     puts @datasets
     # SLM_NIH_Bv4v5--1St_121_Stockton
     
     # TODO 
@@ -43,9 +43,11 @@ class VisualizationController < ApplicationController
     taxonomy_by_site = {}    
 
     for res in @result
-      pd  = res["project_dataset"]
-      ts  = res["taxon_string"]
-      knt = res["knt"]
+      pj  = res["project"]
+      ds  = res["dataset"]
+      pd = pj+'--'+ds
+      ts  = res["taxonomy"]
+      knt = res["seq_count"]
       if taxonomy_by_site.has_key?(ts) then
         # append
         taxonomy_by_site[ts].merge!(pd => knt)
@@ -55,6 +57,7 @@ class VisualizationController < ApplicationController
       end        
     end
     # sort taxonomically alpha
+    puts taxonomy_by_site
     taxonomy_by_site = taxonomy_by_site.sort
       # change to array of hashes and fill in zeros
       @taxonomy_by_site = fill_in_zeros(taxonomy_by_site)
@@ -128,11 +131,11 @@ class VisualizationController < ApplicationController
 
   def get_dataset_counts()
     
-    sql = "SELECT datasets.project_id, dataset_id, sum(seq_count) FROM run_infos 
+    sql = "SELECT datasets.project_id, dataset_id, sum(seq_count) FROM sequence_pdr_infos
       JOIN projects ON (project_id = projects.id)
       JOIN datasets ON (dataset_id = datasets.id)
-      JOIN sequence_pdr_infos ON (run_info_id = run_infos.id)
-      WHERE project in (#{create_comma_list(@projects_test)}) AND dataset IN (#{create_comma_list(@datasets_test)})  
+      WHERE project IN (#{create_comma_list(@projects_test)}) 
+      AND   dataset IN (#{create_comma_list(@datasets_test)})  
       GROUP BY datasets.project_id, dataset_id
     "
     @result = ActiveRecord::Base.connection.select_rows(sql)
@@ -147,7 +150,15 @@ class VisualizationController < ApplicationController
   end
     
   def create_tax_query()
-    sql_datasets     = @datasets.join("','")
+    projects_datasets = []
+    
+    #sql_project_datasets     = @datasets.join("','")
+    @datasets.each do |pd|
+      items = pd.split('--')
+      projects_datasets.push({:project=>items[0],:dataset=>items[1]})
+      
+    end
+
     get_dataset_counts()
     
     
@@ -156,46 +167,63 @@ class VisualizationController < ApplicationController
     superkingdom  = {"archaea"=>1,"bacteria"=>2, "organelle"=>3,"unknown"=>4,"eukarya"=>5}
     sql_superkingdom = ''
 
-    taxQuery = "SELECT project, dataset, taxon_string, knt, sdc.classifier, frequency, dataset_count
-                  FROM summed_data_cube AS sdc"
-    join     = "  JOIN projects on(project_id = projects.id),
-                  JOIN datasets on(dataset_id = datasets.id)
-              "
+    taxQuery = "SELECT project, dataset, seq_count, taxonomy from sequence_pdr_infos"
+    join     = "  JOIN projects ON (project_id = projects.id)
+                  JOIN datasets ON (dataset_id = datasets.id)
+                  JOIN sequence_uniq_infos ON (sequence_uniq_infos.sequence_id = sequence_pdr_infos.sequence_id)
+                  JOIN taxonomies ON (sequence_uniq_infos.taxonomy_id = taxonomies.id)"
+    where    = "  where ( "
+    projects_datasets.each do |pd|
+      where    +=  "(project='#{pd[:project]}' and dataset='#{pd[:dataset]}') or "
+                    
+    end
+    # remove last 'or'
+    where = where[0..-4]
+    where    +=  "  )
+                and rank_id='#{@rank_number}'  "
+   
 
-    where    = "  WHERE project in ('#{sql_project}')
-                  AND dataset in ('#{sql_dataset}')
-                  AND rank_number='#{@rank_number}'"
-    ##DOMAINS
-    if @domains.length == 1 then
-      join  += "  JOIN taxonomies on(taxonomy_id = taxonomies.id)"
-      where += "  AND superkingdom_id = '#{superkingdom[@domains[0]]}'"
-    elsif @domains.length == 5 then
-      # nothing extra here
-    else 
-      sk_num = []
-      @domains.each do |d|
-        sk_num << superkingdom[d].to_s()
-      end
-      sql_superkingdom_ids     = sk_num.join("','")
+    # taxQuery = "SELECT project, dataset, taxon_string, knt, sdc.classifier, frequency, dataset_count
+    #               FROM summed_data_cube AS sdc"
+    # join     = "  JOIN projects on(project_id = projects.id),
+    #               JOIN datasets on(dataset_id = datasets.id)
+    #           "
+
+    # where    = "  WHERE project in ('#{sql_project}')
+    #               AND dataset in ('#{sql_dataset}')
+    #               AND rank_number='#{@rank_number}'"
+    # ##DOMAINS
+    # if @domains.length == 1 then
+    #   join  += "  JOIN taxonomies on(taxonomy_id = taxonomies.id)"
+    #   where += "  AND superkingdom_id = '#{superkingdom[@domains[0]]}'"
+    # elsif @domains.length == 5 then
+    #   # nothing extra here
+    # else 
+    #   sk_num = []
+    #   @domains.each do |d|
+    #     sk_num << superkingdom[d].to_s()
+    #   end
+    #   sql_superkingdom_ids     = sk_num.join("','")
       
-      join  += " JOIN taxonomies using(taxon_string_id)"
-      where += " AND superkingdom_id in ('#{sql_superkingdom_ids}')"
-    end
-    ##NAs
-    if @nas == 'no' then
-      # TODO
-      # and  taxon_string not like 'no_%' 
-        # and taxon_string not like 'NA%'
-        # and taxon_string not like '%;NA;%'
-        # and taxon_string not like '%;NA' 
-        # and taxon_string not like '%_NA'
-    end
+    #   join  += " JOIN taxonomies using(taxon_string_id)"
+    #   where += " AND superkingdom_id in ('#{sql_superkingdom_ids}')"
+    # end
+    # ##NAs
+    # if @nas == 'no' then
+    #   # TODO
+    #   # and  taxon_string not like 'no_%' 
+    #     # and taxon_string not like 'NA%'
+    #     # and taxon_string not like '%;NA;%'
+    #     # and taxon_string not like '%;NA' 
+    #     # and taxon_string not like '%_NA'
+    # end
 
     @taxQuery = taxQuery + join + where
   end
 
   def clean_datasets(ds_string)
     project_datasets_array = []
+
     # 0;AB_PRI_Ev9,0;AB_PRI_Ev9;PRI_0037,0;AB_PRI_Ev9;PRI_0038,0;AB_SAND_Bv6;HS122,0;AB_SAND_Bv6 
     # first split string on commas:
     pd_array = ds_string.split(',')
