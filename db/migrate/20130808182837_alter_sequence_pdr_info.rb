@@ -1,6 +1,6 @@
 class AlterSequencePdrInfo < ActiveRecord::Migration
   def self.up
-    execute "ALTER TABLE sequence_pdr_infos COMMENT = 'sequences uniqued per run / projsect / dataset'"
+    execute "ALTER TABLE sequence_pdr_infos COMMENT = 'sequences uniqued per project / dataset'"
     execute "ALTER TABLE sequence_pdr_infos CHANGE seq_count seq_count int(11) unsigned NOT NULL COMMENT 'count unique sequence per run / project / dataset = frequency from a file'"
     
     execute "ALTER TABLE sequence_pdr_infos
