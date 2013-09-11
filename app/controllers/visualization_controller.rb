@@ -179,7 +179,7 @@ class VisualizationController < ApplicationController
     
     # superkingdoms has to match what is in db table
     # TODO: get it from db
-    superkingdom  = Taxa.find_by_rank(@tax_rank)
+    superkingdom  = Taxon.find_by_rank(@tax_rank)
     
     # {"archaea"=>1,"bacteria"=>2, "organelle"=>3,"unknown"=>4,"eukarya"=>5}
     sql_superkingdom = ''
