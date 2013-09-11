@@ -48,7 +48,8 @@ ActiveRecord::Schema.define(version: 20130911190702) do
   add_index "projects", ["user_id"], name: "user_id", using: :btree
 
   create_table "ranks", force: true do |t|
-    t.string "rank", limit: 32, default: "", null: false
+    t.string  "rank",        limit: 32, default: "", null: false
+    t.integer "rank_number", limit: 1
   end
 
   add_index "ranks", ["rank"], name: "rank", unique: true, using: :btree
@@ -126,6 +127,7 @@ ActiveRecord::Schema.define(version: 20130911190702) do
     t.string   "unconfirmed_email"
   end
 
+  add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
   add_index "users", ["first_name", "last_name", "email", "institution"], name: "contact_email_inst", unique: true, using: :btree
   add_index "users", ["institution"], name: "institution", length: {"institution"=>15}, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
