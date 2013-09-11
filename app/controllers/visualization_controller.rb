@@ -18,20 +18,20 @@ class VisualizationController < ApplicationController
     domains      = params[:domains]
     @domains     = domains.compact
     @tax_rank    = params[:tax_rank]
-    @rank_number = get_rank_num()
+    # @rank_number = get_rank_num()
     @view        = params[:view]
     # params[:datasets] are created in visualization.js::getDatasets()
     # session[:datasets]= clean_datasets( params[:datasets] )
     @datasets    = clean_datasets( params[:datasets] )
 
-     puts @datasets
     # SLM_NIH_Bv4v5--1St_121_Stockton
     
     # TODO 
-    #   1) dhtmltree takes project and dataset together into "params[:datasets]", no need to search for project
-    #   2) it repeates project with each dataset
-    #   3) if click on a project only - does not select the underliyng datasets
-    #   4) it repeats "0" with each project/dataset
+    #   1) dhtmltree takes project and dataset together into "params[:datasets]", shouldn't it be separate params? 
+    #   2) no need for Project.find_by_sql - we have it from params
+    #   3) it repeates project with each dataset - better get it once
+    #   4) if click on a project only - does not select the underliyng datasets
+    #   5) it repeats "0" with each project/dataset - what this?
     #   e.g
     #     fromstandartTreeRow
     #      "datasets"=>"0;SLM_NIH_Bv4v5,
@@ -39,7 +39,8 @@ class VisualizationController < ApplicationController
     #     0;SLM_NIH_Bv4v5;1St_120_Richmond,
     
     @taxQuery    = create_tax_query()
-    @result      = Project.find_by_sql(@taxQuery)
+    print @taxQuery
+    # @result      = Project.find_by_sql(@taxQuery)
     taxonomy_by_site = {}    
 
     for res in @result
@@ -138,17 +139,31 @@ class VisualizationController < ApplicationController
       AND   dataset IN (#{create_comma_list(@datasets_test)})  
       GROUP BY datasets.project_id, dataset_id
     "
-    @result = ActiveRecord::Base.connection.select_rows(sql)
-    # puts "URA"
-    # puts @result.inspect
-    # puts @result[0][2] dataset_count
-    # return @result
+    result = ActiveRecord::Base.connection.select_rows(sql)
+    return result
   end
     
   def create_comma_list(my_array)
     return "'" + my_array.join("', '") + "'"
   end
-    
+  
+  def make_taxa_by_rank()
+    rank_id = Rank.find_by_rank(@tax_rank)
+  
+    # rank_ids = "superkingdom_id, phylum_id, class_id, orderx_id, family_id, genus_id, species_id, strain_id"
+    rank_ids = "t1.taxon, t2.taxon, t3.taxon, t4.taxon, t5.taxon, t6.taxon, t7.taxon, t8.taxon"
+    taxa_ids = "LEFT JOIN taxa AS t1 ON (superkingdom_id = t1.id)
+    LEFT JOIN taxa AS t2 ON (phylum_id       = t2.id)
+    LEFT JOIN taxa AS t3 ON (class_id        = t3.id)
+    LEFT JOIN taxa AS t4 ON (orderx_id       = t4.id)
+    LEFT JOIN taxa AS t5 ON (family_id       = t5.id)
+    LEFT JOIN taxa AS t6 ON (genus_id        = t6.id)
+    LEFT JOIN taxa AS t7 ON (species_id      = t7.id)
+    LEFT JOIN taxa AS t8 ON (strain_id       = t8.id)
+    "
+    return rank_ids, taxa_ids
+  end    
+  
   def create_tax_query()
     projects_datasets = []
     
@@ -160,22 +175,57 @@ class VisualizationController < ApplicationController
     end
 
     get_dataset_counts()
-    
+ 
     
     # superkingdoms has to match what is in db table
     # TODO: get it from db
-    superkingdom  = {"archaea"=>1,"bacteria"=>2, "organelle"=>3,"unknown"=>4,"eukarya"=>5}
+    superkingdom  = Taxa.find_by_rank(@tax_rank)
+    
+    # {"archaea"=>1,"bacteria"=>2, "organelle"=>3,"unknown"=>4,"eukarya"=>5}
     sql_superkingdom = ''
 
-    taxQuery = "SELECT project, dataset, seq_count, taxonomy from sequence_pdr_infos"
-    join     = "  JOIN projects ON (project_id = projects.id)
-                  JOIN datasets ON (dataset_id = datasets.id)
-                  JOIN sequence_uniq_infos ON (sequence_uniq_infos.sequence_id = sequence_pdr_infos.sequence_id)
-                  JOIN taxonomies ON (sequence_uniq_infos.taxonomy_id = taxonomies.id)"
-    where    = "  where ( "
-    projects_datasets.each do |pd|
-      where    +=  "(project='#{pd[:project]}' and dataset='#{pd[:dataset]}') or "
-                    
+    rank_ids, taxa_ids = make_taxa_by_rank()
+    print "URA! rank_ids = #{rank_ids}\n taxa_ids = #{taxa_ids}"
+    taxQuery = "SELECT projects.project, datasets.dataset, CONCAT_WS(\";\", #{rank_ids}) AS taxonomy, seq_count AS knt, classifier
+                  FROM sequence_pdr_infos
+                  JOIN run_infos ON (run_infos.id = run_info_id)
+                  JOIN sequence_uniq_infos USING(sequence_id)
+                  JOIN taxonomies on (taxonomies.id = taxonomy_id)
+                  #{taxa_ids}
+                  JOIN projects ON(project_id = projects.id) 
+                  JOIN datasets ON(dataset_id = datasets.id)
+              "
+
+    where    = "  WHERE project in (#{create_comma_list(@projects_test)}) 
+                  AND dataset IN (#{create_comma_list(@datasets_test)})  
+               "
+                  
+# calculate seq_count/dataset_count AS frequency, dataset_count
+
+    ##DOMAINS
+    if @domains.length == 1 then
+      join  += "  JOIN taxonomies on(taxonomy_id = taxonomies.id)"
+      where += "  AND superkingdom_id = '#{superkingdom[@domains[0]]}'"
+    elsif @domains.length == 5 then
+      # nothing extra here
+    else 
+      sk_num = []
+      @domains.each do |d|
+        sk_num << superkingdom[d].to_s()
+      end
+      sql_superkingdom_ids     = sk_num.join("','")
+      
+      join  += " JOIN taxonomies using(taxon_string_id)"
+      where += " AND superkingdom_id in ('#{sql_superkingdom_ids}')"
+    end
+    ##NAs
+    if @nas == 'no' then
+      # TODO
+      # and  taxon_string not like 'no_%' 
+        # and taxon_string not like 'NA%'
+        # and taxon_string not like '%;NA;%'
+        # and taxon_string not like '%;NA' 
+        # and taxon_string not like '%_NA'
     end
     # remove last 'or'
     where = where[0..-4]
@@ -218,7 +268,7 @@ class VisualizationController < ApplicationController
     #     # and taxon_string not like '%_NA'
     # end
 
-    @taxQuery = taxQuery + join + where
+    @taxQuery = taxQuery + where
   end
 
   def clean_datasets(ds_string)
@@ -241,10 +291,10 @@ class VisualizationController < ApplicationController
 
   end
 
-  def get_rank_num()
-    tax_num = { "domain"=>0,"phylum"=>1,"class"=>2,"order"=>3,"family"=>4,"genus"=>5,"species"=>6,"strain"=>7 }
-    return tax_num[@tax_rank]
-  end
+  # def get_rank_num()
+  #   tax_num = { "domain"=>0,"phylum"=>1,"class"=>2,"order"=>3,"family"=>4,"genus"=>5,"species"=>6,"strain"=>7 }
+  #   return tax_num[@tax_rank]
+  # end
 
   def get_test_matrix
     @myarray = []
