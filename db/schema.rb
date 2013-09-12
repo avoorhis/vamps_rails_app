@@ -110,7 +110,6 @@ ActiveRecord::Schema.define(version: 20130911181032) do
     t.string   "last_name",              limit: 20
     t.integer  "active",                 limit: 1,   default: 0,  null: false
     t.integer  "security_level",         limit: 1,   default: 50, null: false
-    t.string   "email",                              default: "", null: false
     t.string   "encrypted_password",                 default: "", null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
@@ -122,7 +121,6 @@ ActiveRecord::Schema.define(version: 20130911181032) do
     t.string   "last_sign_in_ip"
   end
 
-  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["first_name", "last_name", "institution"], name: "contact_email_inst", unique: true, using: :btree
   add_index "users", ["institution"], name: "institution", length: {"institution"=>15}, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
