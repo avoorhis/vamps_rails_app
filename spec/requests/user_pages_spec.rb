@@ -22,6 +22,8 @@ describe "User registration" do
   it "does confirm registration and logs in" do
     user = User.last
     visit "/users/confirmation?confirmation_token=" + user.confirmation_token
+    # puts page.body
+    
     page.should have_content("Your account was successfully confirmed. You are now signed in.")
     page.should have_content("Logged in as " + user.username)
   end
@@ -94,6 +96,8 @@ describe "User not logged in" do
 
   it "does redirect to sign in if not logged in" do
     visit "/visualization"
+    # puts page.body
+    
     page.should have_content("Sign in")
   end
 

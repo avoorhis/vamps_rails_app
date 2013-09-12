@@ -73,7 +73,6 @@ GEM
       railties (>= 3.2.6, < 5)
       warden (~> 1.2.1)
     diff-lcs (1.2.4)
-    dynatree-rails (0.1.2)
     erubis (2.7.0)
     execjs (1.4.0)
       multi_json (~> 1.0)
@@ -223,7 +222,6 @@ DEPENDENCIES
   cucumber-rails
   database_cleaner
   devise (= 3.0.0.rc)
-  dynatree-rails
   factory_girl_rails
   faker
   guard-rspec
