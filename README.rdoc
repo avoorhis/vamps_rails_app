@@ -17,6 +17,7 @@ see Gemfile and run bundle (install)
 
 * Database initialization
 rake db:migrate:reset
+rake db:migrate:reset RAILS_ENV=test
 rake mysql_db:restore
 
 * How to run the test suite
