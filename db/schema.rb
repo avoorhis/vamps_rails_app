@@ -11,9 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
-ActiveRecord::Schema.define(version: 20130911190702) do
-
+ActiveRecord::Schema.define(version: 20130910192455) do
 
   create_table "datasets", force: true do |t|
     t.string  "dataset",              limit: 64,  default: "", null: false
@@ -33,7 +31,7 @@ ActiveRecord::Schema.define(version: 20130911190702) do
   add_index "dna_regions", ["dna_region"], name: "dna_region", unique: true, using: :btree
 
   create_table "env_sample_sources", force: true do |t|
-    t.integer "env_sample_source_id", limit: 2,  default: 0, null: false
+    t.integer "env_sample_source_id", limit: 1,  default: 0, null: false
     t.string  "env_source_name",      limit: 50
   end
 
@@ -122,19 +120,17 @@ ActiveRecord::Schema.define(version: 20130911190702) do
 
   create_table "ranks", force: true do |t|
     t.string  "rank",        limit: 32, default: "", null: false
-    t.integer "rank_number", limit: 1,  default: 0, null: false
+    t.integer "rank_number", limit: 1,               null: false
   end
 
   add_index "ranks", ["rank"], name: "rank", unique: true, using: :btree
 
   create_table "sequence_pdr_infos", force: true do |t|
-
     t.integer  "project_id",                             null: false
     t.integer  "dataset_id",                             null: false
     t.integer  "sequence_id",                            null: false
     t.integer  "seq_count",                              null: false
     t.string   "classifier",  limit: 4, default: "GAST"
-
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -246,7 +242,6 @@ ActiveRecord::Schema.define(version: 20130911190702) do
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
@@ -255,7 +250,6 @@ ActiveRecord::Schema.define(version: 20130911190702) do
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
   add_index "users", ["first_name", "last_name", "email", "institution"], name: "contact_email_inst", unique: true, using: :btree
-
   add_index "users", ["institution"], name: "institution", length: {"institution"=>15}, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["username"], name: "username", unique: true, using: :btree

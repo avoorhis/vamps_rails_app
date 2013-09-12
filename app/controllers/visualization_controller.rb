@@ -5,11 +5,10 @@ class VisualizationController < ApplicationController
 
   def parse_view
     # TEST:
-    @projects_test = ["SLM_NIH_Bv4v5"]
-    @datasets_test = ["1St_156_Marathon", "1St_85_DELANO"]
     
-    @myarray = get_test_matrix
-      
+    
+    #@myarray = get_test_matrix
+    
     #@my_json = @myarray.to_json  
 
     
@@ -22,7 +21,7 @@ class VisualizationController < ApplicationController
     @view        = params[:view]
     # params[:datasets] are created in visualization.js::getDatasets()
     # session[:datasets]= clean_datasets( params[:datasets] )
-    @datasets    = clean_datasets( params[:datasets] )
+    #@datasets    = clean_datasets( params[:datasets] )
 
     # SLM_NIH_Bv4v5--1St_121_Stockton
     
@@ -38,45 +37,45 @@ class VisualizationController < ApplicationController
     #     0;SLM_NIH_Bv4v5;1St_121_Stockton,
     #     0;SLM_NIH_Bv4v5;1St_120_Richmond,
     
-    @taxQuery    = create_tax_query()
-    print @taxQuery
-    # @result      = Project.find_by_sql(@taxQuery)
-    taxonomy_by_site = {}    
+  #   @taxQuery    = create_tax_query()
+  #   print @taxQuery
+  #   # @result      = Project.find_by_sql(@taxQuery)
+  #   taxonomy_by_site = {}    
 
-    for res in @result
-      pj  = res["project"]
-      ds  = res["dataset"]
-      pd = pj+'--'+ds
-      ts  = res["taxonomy"]
-      knt = res["seq_count"]
-      if taxonomy_by_site.has_key?(ts) then
-        # append
-        taxonomy_by_site[ts].merge!(pd => knt)
-      else
-        # add array to hash
-        taxonomy_by_site[ts] = {pd=>knt}
-      end        
-    end
-    # sort taxonomically alpha
-    puts taxonomy_by_site
-    taxonomy_by_site = taxonomy_by_site.sort
-      # change to array of hashes and fill in zeros
-      @taxonomy_by_site = fill_in_zeros(taxonomy_by_site)
-     #session[:taxonomy_by_site] = @taxonomy_by_site
+  #   for res in @result
+  #     pj  = res["project"]
+  #     ds  = res["dataset"]
+  #     pd = pj+'--'+ds
+  #     ts  = res["taxonomy"]
+  #     knt = res["seq_count"]
+  #     if taxonomy_by_site.has_key?(ts) then
+  #       # append
+  #       taxonomy_by_site[ts].merge!(pd => knt)
+  #     else
+  #       # add array to hash
+  #       taxonomy_by_site[ts] = {pd=>knt}
+  #     end        
+  #   end
+  #   # sort taxonomically alpha
+  #   puts taxonomy_by_site
+  #   taxonomy_by_site = taxonomy_by_site.sort
+  #     # change to array of hashes and fill in zeros
+  #     @taxonomy_by_site = fill_in_zeros(taxonomy_by_site)
+  #    #session[:taxonomy_by_site] = @taxonomy_by_site
 
-  # select SQL_CACHE project_dataset, taxon_string, knt, classifier, frequency, dataset_count FROM new_summed_data_cube  
-    # join new_project_dataset using(project_dataset_id)   
-    # join new_taxon_string using(taxon_string_id, rank_number)  where
-    # project_dataset in ('AB_SAND_Bv6--HS122','AB_SAND_Bv6--HS123') and  rank_number='1'
+  # # select SQL_CACHE project_dataset, taxon_string, knt, classifier, frequency, dataset_count FROM new_summed_data_cube  
+  #   # join new_project_dataset using(project_dataset_id)   
+  #   # join new_taxon_string using(taxon_string_id, rank_number)  where
+  #   # project_dataset in ('AB_SAND_Bv6--HS122','AB_SAND_Bv6--HS123') and  rank_number='1'
     
-    if params[:view] == "heatmap"
-      render :heatmap
-    elsif  params[:view] == "bar_charts"
-      render :bar_charts
-    else params[:view] == "tax_table"
-      #default
-      render "tax_table"
-    end    
+  #   if params[:view] == "heatmap"
+  #     render :heatmap
+  #   elsif  params[:view] == "bar_charts"
+  #     render :bar_charts
+  #   else params[:view] == "tax_table"
+  #     #default
+  #     render "tax_table"
+  #   end    
   end
 
   def get_taxonomy_by_site
@@ -88,7 +87,7 @@ class VisualizationController < ApplicationController
   end
 
   def index
-
+    @all_data = get_test_sample_object()
   end
 
   def create
@@ -288,6 +287,50 @@ class VisualizationController < ApplicationController
       end
     end
     return project_datasets_array
+
+  end
+
+  def get_test_sample_object
+    
+
+
+      all_sample_data = [
+      {:id=>2, :name => 'BPC_MRB_C', :datasets =>
+          [
+            {:id=>1,:name=>'DS_1'},
+            {:id=>16,:name=>'DS_2'},
+            {:id=>34,:name=>'DS_3'}
+          ]
+        },
+      {:id=>3, :name => 'KCK_MHB_Bv6', :datasets =>
+        [
+           {:id=>10,:name=>'DS_4'},
+           {:id=>160,:name=>'DS_5'},
+           {:id=>349,:name=>'DS_56'},
+           {:id=>15,:name=>'DS_17'},
+           {:id=>164,:name=>'DS_8'},
+           {:id=>345,:name=>'DS_9'}
+        ]
+      },
+      {:id=>5, :name => 'SLM_NIH_Bv6', :datasets => 
+        [
+          {:id=>25,:name=>'SS_WWTP_1_25_11_2step_2'},
+          {:id=>123,:name=>'SS_WWTP_1_25_11_2step_123'},
+          {:id=>56,:name=>'SS_WWTP_1_25_11_2step_56'}
+        ]
+      },
+      {:id=>6, :name => 'SLM_NIH_Bv4v5', :datasets =>
+        [
+            {:id=>14,:name=>'DS_10'},
+            {:id=>161,:name=>'DS_11'},
+            {:id=>342,:name=>'DS_12'},
+            {:id=>18,:name=>'DS_13'},
+            {:id=>163,:name=>'DS_14'},
+            {:id=>349,:name=>'DS_15'}
+        ]
+      } ]
+
+  return all_sample_data
 
   end
 
