@@ -14,14 +14,16 @@ describe "User registration" do
     click_button "Sign up"    
   end
   
-  it "does create a user and displays a confirmation link" do
+  it "should create a user and displays a confirmation link" do
     page.should have_no_content("Welcome! You have signed up successfully.")
     page.should have_content("A message with a confirmation link has been sent to your email address. Please open the link to activate your account")
   end
   
-  it "does confirm registration and logs in" do
+  it "should confirm registration and logs in" do
     user = User.last
     visit "/users/confirmation?confirmation_token=" + user.confirmation_token
+    # puts page.body
+    
     page.should have_content("Your account was successfully confirmed. You are now signed in.")
     page.should have_content("Logged in as " + user.username)
   end
@@ -53,19 +55,19 @@ describe "User login_as" do
     @user.should be_valid    
   end
 
-  it "does sign in as an existing user and displays the user's username" do
+  it "should sign in as an existing user and displays the user's username" do
     visit root_path
     page.should have_content("Logged in as " + @user.username)
     
   end
   
-  it "does show visualization if logged in" do
+  it "should show visualization if logged in" do
     visit "/visualization"  
     page.should have_content("Community Visualization")
   end
   
   
-  it "does redirect to home if sign out" do
+  it "should redirect to home if sign out" do
     visit "/"
     
     page.should have_content("Logged in as " + @user.username)
@@ -82,7 +84,7 @@ describe "User login_as" do
 end
   
 describe "User not logged in" do
-  it "does not sign in if wrong credentials" do
+  it "should not sign in if wrong credentials" do
     visit "/users/sign_in"
     fill_in "Username", :with => "wrong_user"
     fill_in "Password", :with => "bad password"
@@ -92,11 +94,13 @@ describe "User not logged in" do
     page.should have_content("Invalid username or password")
   end
 
-  it "does redirect to sign in if not logged in" do
+  it "should redirect to sign in if not logged in" do
     visit "/visualization"
+    # puts page.body
+    
     page.should have_content("Sign in")
   end
 
-  it "does not create a new user if validation failed"
+  it "should not create a new user if validation failed"
   
 end

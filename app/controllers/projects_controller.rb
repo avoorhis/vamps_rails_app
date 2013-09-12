@@ -78,6 +78,6 @@ private
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def project_params
-      params.require(:project).permit(:name, :title, :description)
+      params.require(:project).permit(:project, :title, :project_description, :funding, :user_id)
     end
 end
