@@ -15,7 +15,7 @@ class VisualizationController < ApplicationController
     domains      = params[:domains]
     @domains     = domains.compact
     # TODO: can we take a rank_id here, please?
-    @tax_rank    = params[:tax_rank]
+    @tax_rank    = params[:tax_rank] || 2
     # @rank_number = get_rank_num()
     @view        = params[:view]
     # params[:datasets] are created in visualization.js::getDatasets()
@@ -109,6 +109,7 @@ class VisualizationController < ApplicationController
   def tax_table
 
   end
+  
 ################################################################################
   private
 
