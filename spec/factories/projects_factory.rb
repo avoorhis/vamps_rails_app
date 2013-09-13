@@ -9,6 +9,7 @@ FactoryGirl.define do
 		project.project_description "Analysis microbial communities found in sewage influent samples collected from a variety of WWTPs."
 		sequence(:rev_project_name){|n| "#{n}v_HIN_MLS" }
 		project.funding             "1"
+		project.user_id             1
   end
 end
 
