@@ -3,7 +3,8 @@ require 'spec_helper'
 
 describe "Projects and Datasets list" do
   before(:each) do
-    @projects = FactoryGirl.create(:user).projects
+    @user     = FactoryGirl.create(:user)
+    @projects = @user.projects
     # puts "@projects = "
     # puts @projects.inspect
     #   @datasets = Array.new
@@ -19,6 +20,8 @@ describe "Projects and Datasets list" do
     # @dataset = FactoryGirl.create(:dataset)
     # puts "@dataset = "
     # puts @dataset.inspect
+    login_as(@user, :scope => :user)
+    
     visit "/visualization"      
   end
   
