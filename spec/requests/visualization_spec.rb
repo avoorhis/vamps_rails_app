@@ -17,6 +17,8 @@ describe "Projects and Datasets list" do
     end
     # @datasets = FactoryGirl.create(:dataset)
     # @dataset = FactoryGirl.create(:dataset)
+    # puts "@dataset = "
+    # puts @dataset.inspect
     visit "/visualization"      
   end
   
