@@ -10,8 +10,6 @@ class VisualizationController < ApplicationController
     #@myarray = get_test_matrix
     
     #@my_json = @myarray.to_json  
-
-    
     @nas         = params[:nas]
     #domains  = Array[params[:bacteria], params[:archaea], params[:eukarya], params[:organelle], params[:unknown]]
     domains      = params[:domains]
@@ -88,6 +86,7 @@ class VisualizationController < ApplicationController
 
   def index
     @all_data = get_test_sample_object()
+    @projects = Project.all    
   end
 
   def create

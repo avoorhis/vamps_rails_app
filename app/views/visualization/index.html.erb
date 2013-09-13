@@ -31,10 +31,8 @@
       
         Projects 
          
-        <% all_projects = Project.all %>
-        <!-- TODO: remove the line above!!! -->
       <ul>
-      <% all_projects.each do |project| %>
+      <% @projects.each do |project| %>
       <li>
         <label class="dataset-select">
           <%= check_box_tag project, project.id, false, :onclick=>"open_datasets('#{project.id}','#{project.project}')"%>
