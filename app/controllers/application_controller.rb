@@ -4,6 +4,30 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   before_filter :configure_permitted_parameters, if: :devise_controller?
+  before_filter :do_common_stuff
+  
+  def do_common_stuff
+    @ranks = Rank.find(:all, :order => "rank_number")
+  end
+  
+  
+  def make_taxa_by_rank()
+    rank_id = Rank.find_by_rank(@tax_rank)
+  
+    # rank_ids = "superkingdom_id, phylum_id, class_id, orderx_id, family_id, genus_id, species_id, strain_id"
+    rank_ids = "t1.taxon, t2.taxon, t3.taxon, t4.taxon, t5.taxon, t6.taxon, t7.taxon, t8.taxon"
+    taxa_ids = "LEFT JOIN taxa AS t1 ON (superkingdom_id = t1.id)
+    LEFT JOIN taxa AS t2 ON (phylum_id  = t2.id)
+    LEFT JOIN taxa AS t3 ON (class_id   = t3.id)
+    LEFT JOIN taxa AS t4 ON (orderx_id  = t4.id)
+    LEFT JOIN taxa AS t5 ON (family_id  = t5.id)
+    LEFT JOIN taxa AS t6 ON (genus_id   = t6.id)
+    LEFT JOIN taxa AS t7 ON (species_id = t7.id)
+    LEFT JOIN taxa AS t8 ON (strain_id  = t8.id)
+    "
+    return rank_ids, taxa_ids
+  end    
+  
   
   
   protected

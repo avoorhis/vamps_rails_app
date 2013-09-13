@@ -14,6 +14,7 @@ class VisualizationController < ApplicationController
     #domains  = Array[params[:bacteria], params[:archaea], params[:eukarya], params[:organelle], params[:unknown]]
     domains      = params[:domains]
     @domains     = domains.compact
+    # TODO: can we take a rank_id here, please?
     @tax_rank    = params[:tax_rank]
     # @rank_number = get_rank_num()
     @view        = params[:view]
