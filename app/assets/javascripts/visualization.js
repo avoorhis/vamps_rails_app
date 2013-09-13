@@ -31,19 +31,47 @@ function toggleAll(name)
 
 //   	$(form).submit();
 // }
+
+//
+// CHECK_FOR_SELECTED_DATASETS
+//
+function check_for_selected_datasets(form)
+{
+  
+  cbs = document.getElementsByName(project+'--ds-ids[]')
+  alert(cbs)
+  have_acheck = false
+  for(var i=0; i < cbs.length; i++) {
+    if(cbs[i].checked){
+      have_acheck = true
+    }
+              
+  }
+  if(have_acheck){
+    alert('submitting')
+    $(form).submit();
+  }else{
+    alert('Select some data!')
+    return;
+  }
+  return;
+}
+//
+// OPEN_DATASETS
+//
 function open_datasets(pid, project)
 {
   
   //alert('in open')
-  ds_div = document.getElementById(pid);
-  cbs = document.getElementsByName(project+'_ds_ids[]')
+  ds_div = document.getElementById(pid+'_ds_div');
+  cbs = document.getElementsByName(project+'--ds-ids[]')
   toggle = document.getElementById(project+'_toggle')
   if(ds_div.style.display == 'inline'){
     // hide
     ds_div.style.display = 'none'
     toggle.style.visibility = 'hidden'
     // uncheck project
-    document.getElementById(project).checked = false
+    document.getElementById(project+'--pj-id').checked = false
     for(var i=0; i < cbs.length; i++) {
       if(cbs[i].type == 'checkbox') {
         cbs[i].checked=false        
@@ -54,7 +82,7 @@ function open_datasets(pid, project)
     ds_div.style.display = 'inline'
     toggle.style.visibility = 'visible'
     // check project
-    document.getElementById(project).checked = true
+    document.getElementById(project+'--pj-id').checked = true
     // now set all the ds checkboxes to 'checked'
     for(var i=0; i < cbs.length; i++) {
       if(cbs[i].type == 'checkbox') {
@@ -65,20 +93,49 @@ function open_datasets(pid, project)
   
 
 }
+//
+//  CHECK_PROJECTS
+//
+function check_project(pid, project)
+{
+  cbs = document.getElementsByName(project+'--ds-ids[]')
+  have_acheck = false
+  for(var i=0; i < cbs.length; i++) {
+    if(cbs[i].checked){
+      have_acheck = true
 
-function toggle_selected_datasets(project)
+    }
+              
+  }
+  if(have_acheck){
+    document.getElementById(project+'--pj-id').checked = true
+  }else{
+    document.getElementById(project+'--pj-id').checked = false
+  }
+}
+//
+// TOGGLE_SELECTED_DATASETS
+//
+function toggle_selected_datasets(pid, project)
 {
   
-  cbs = document.getElementsByName(project+'_ds_ids[]')
-  ds_div = document.getElementById(pid);
-  for(var i=0; i < cbs.length; i++) {
-      if(ds_div.style.display == 'inline'){
+  cbs = document.getElementsByName(project+'--ds-ids[]')
+  ds_div = document.getElementById(pid+'_ds_div')
+  
+
+  
+  if(cbs[0].checked == true) {  
+    document.getElementById(project+'--pj-id').checked = false
+    for(var i=0; i < cbs.length; i++) { 
+        cbs[i].checked=false        
+    }
+  }else{
+    document.getElementById(project+'--pj-id').checked = true
+    for(var i=0; i < cbs.length; i++) { 
         cbs[i].checked=true        
-      }else{
-        cbs[i].checked=false
-      }
     }
 
- 
+  }
+
 
 }

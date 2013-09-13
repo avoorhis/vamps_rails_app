@@ -9,9 +9,46 @@ class VisualizationController < ApplicationController
     
     #@myarray = get_test_matrix
     
-    #@my_json = @myarray.to_json  
+    we_have_some_data = false
+    @master_sample_data = Hash.new
+    @master_sample_data2 = []
+    temp_project = {}
+    params.each do |k,v|
+      
+      param_parts = k.split('--')
+      #puts param_parts[0]
+      # here we catch the selected project (the selected datasets should follow)
+      # if no datasets folow then we should delete @master_sample_data[pid]
+      if param_parts[1] == 'pj-id' and v.to_i > 0
 
-    
+         
+         temp_project = { :id=>v.to_i, :name=>param_parts[0] }
+
+      end
+      if param_parts[1] == 'ds-ids' and params[k].any?
+        if temp_project[:name] == param_parts[0]
+          we_have_some_data = true
+          puts temp_project.inspect
+          v = v.collect{|i| i.to_i}
+          @master_sample_data[temp_project[:id]] = v
+          myhash = {:id=>temp_project[:id], :project=>temp_project[:name],  :datasets=>v,}
+          @master_sample_data2.push(myhash)
+          temp_project = {}
+        end
+      end
+      # if no datasets folow then we should delete @master_sample_data[pid]
+      #if @master_sample_data.include? temp_project[:id] and @master_sample_data[temp_project[:id]] == []
+      #  @master_sample_data.delete(temp_project[:id])
+      #end
+    end
+    if not we_have_some_data
+      flash.alert = 'Choose some data!'
+      redirect_to visualization_index_path
+      return
+    end
+  puts 'Which is better: '
+    puts '   this?: '+@master_sample_data.inspect
+    puts '  Or this?: '+@master_sample_data2.inspect
     @nas         = params[:nas]
     #domains  = Array[params[:bacteria], params[:archaea], params[:eukarya], params[:organelle], params[:unknown]]
     domains      = params[:domains]
@@ -68,14 +105,14 @@ class VisualizationController < ApplicationController
   #   # join new_taxon_string using(taxon_string_id, rank_number)  where
   #   # project_dataset in ('AB_SAND_Bv6--HS122','AB_SAND_Bv6--HS123') and  rank_number='1'
     
-  #   if params[:view] == "heatmap"
-  #     render :heatmap
-  #   elsif  params[:view] == "bar_charts"
-  #     render :bar_charts
-  #   else params[:view] == "tax_table"
-  #     #default
-  #     render "tax_table"
-  #   end    
+    if params[:view] == "heatmap"
+      render :heatmap
+    elsif  params[:view] == "bar_charts"
+      render :bar_charts
+    else params[:view] == "tax_table"
+      #default
+      render "tax_table"
+    end    
   end
 
   def get_taxonomy_by_site

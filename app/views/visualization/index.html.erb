@@ -1,8 +1,11 @@
+
 <h1><center>Community Visualization</center></h1>
 
 
-<%= form_tag({controller: "visualization", action: "parse_view"}, :id=>'vizform', method: "post") do %>
-
+<%= form_tag({controller: "visualization", action: "parse_view"}, :id=>'vizform', :method=> "post", :autocomplete=>"off") do %>
+<% if flash[:notice] %>
+    <div class="notice"><%= flash[:notice] %></div>
+<% end %>
 <center>
 <table>
 
@@ -19,7 +22,7 @@
 		<%= label_tag(:view_bar_charts, "Bar Charts") %>
     <br><hr>
 
-    <%= button_tag("Submit") %>
+    <%= button_tag "Submit" %>
     
     </div>
   	</td>
@@ -27,8 +30,7 @@
     <td valign='top'>
     <div style='width:400px;height:500px;overflow:auto;'>
 
-
-      
+  
         Projects 
          
         <% all_projects = Project.all %>
@@ -36,30 +38,30 @@
       <% all_projects.each do |project| %>
       <li>
         <label class="dataset-select">
-          <%= check_box_tag project, project.id, false, :onclick=>"open_datasets('#{project.id}','#{project.project}')"%>
+          <% project_cb_id = project.project+'--pj-id' %>
+          <%= check_box_tag project_cb_id, project.id, false, :onclick=>"open_datasets('#{project.id}','#{project.project}')" %>
           <%= project.project %>
 
-          <a href='#' id="<%= project.project+'_toggle' %>" style='visibility:hidden;font-size:9px;' onclick="toggle_selected_datasets('<%= project.project %>'); return false;" >(toggle)</a>
+          <a href='#' id="<%= project.project+'_toggle' %>" style='visibility:hidden;font-size:9px;' onclick="toggle_selected_datasets('<%= project.id %>','<%= project.project %>'); return false;" >(toggle)</a>
         </label>  
           <ul>
-          <div id='<%= project.id %>' style='display:none;'>  
-          <% project.datasets.each do |dataset| %>
-          <li>
-          <label class="dataset-select">
-            <% box_name = project.project+'_ds_ids[]' %>
-            <%= check_box_tag box_name, dataset.id, false %>
-            <%= dataset.dataset %>
-          </label>
-          </li>
-          <% end %>
-          </div>
+            <% project_dataset_div = project.id.to_s+'_ds_div' %>
+            <div id='<%= project_dataset_div %>' style='display:none;'>  
+              <% project.datasets.each do |dataset| %>
+                <li>
+                <label class="dataset-select">
+                <% box_name = project.project+'--ds-ids[]' %>
+                <%= check_box_tag box_name, dataset.id, false , :onclick=>"check_project('#{project.id}','#{project.project}')" %>
+                <%= dataset.dataset %>
+                </label>
+                </li>
+              <% end %>
+            </div>
           </ul>
           
       </li>
       <% end %>
-      </ul>
-      
-      
+      </ul>     
       
     
   </div>
@@ -70,9 +72,6 @@
         <%= render "simple_taxonomy" %>    
       </div>
     </td>
-
-
-
 
 
   </tr>
