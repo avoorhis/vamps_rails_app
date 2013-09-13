@@ -9,6 +9,7 @@ class VisualizationController < ApplicationController
     
     #@myarray = get_test_matrix
     
+
     we_have_some_data = false
     @master_sample_data = Hash.new
     @master_sample_data2 = []
@@ -49,11 +50,13 @@ class VisualizationController < ApplicationController
   puts 'Which is better: '
     puts '   this?: '+@master_sample_data.inspect
     puts '  Or this?: '+@master_sample_data2.inspect
+
     @nas         = params[:nas]
     #domains  = Array[params[:bacteria], params[:archaea], params[:eukarya], params[:organelle], params[:unknown]]
     domains      = params[:domains]
     @domains     = domains.compact
-    @tax_rank    = params[:tax_rank]
+    # TODO: can we take a rank_id here, please?
+    @tax_rank    = params[:tax_rank] || 2
     # @rank_number = get_rank_num()
     @view        = params[:view]
     # params[:datasets] are created in visualization.js::getDatasets()
@@ -125,6 +128,7 @@ class VisualizationController < ApplicationController
 
   def index
     @all_data = get_test_sample_object()
+    @projects = Project.all    
   end
 
   def create
@@ -146,6 +150,7 @@ class VisualizationController < ApplicationController
   def tax_table
 
   end
+  
 ################################################################################
   private
 

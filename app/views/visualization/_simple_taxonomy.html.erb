@@ -29,27 +29,10 @@ Keep NAs in output?
 <br>
 <br>
 Taxonomic Rank:
-<br>
-<%= radio_button_tag(:tax_rank, 'domain') %>
-<%= label_tag(:tax_domain, "Domain") %>
-<br>
-<%= radio_button_tag(:tax_rank, 'phylum', true) %>
-<%= label_tag(:tax_phylum, "Phylum") %>
-<br>
-<%= radio_button_tag(:tax_rank, 'class') %>
-<%= label_tag(:tax_class, "Class") %>
-<br>
-<%= radio_button_tag(:tax_rank, 'order') %>
-<%= label_tag(:tax_order, "Order") %>
-<br>
-<%= radio_button_tag(:tax_rank, 'family') %>
-<%= label_tag(:tax_family, "Family") %>
-<br>
-<%= radio_button_tag(:tax_rank, 'genus') %>
-<%= label_tag(:tax_genus, "Genus") %>
-<br>
-<%= radio_button_tag(:tax_rank, 'species') %>
-<%= label_tag(:tax_species, "Species") %>
-<br>
-<%= radio_button_tag(:tax_rank, 'strain') %>
-<%= label_tag(:tax_strain, "Strain") %>
+<% @ranks.each_with_index do |rank, rank_number| %>
+  <% if rank_number < 8 %>
+    <br>
+    <%= radio_button_tag(:tax_rank, rank.id) %>
+    <%= label_tag(:tax_domain, rank.rank.capitalize) %>
+  <% end %>
+<% end %>
