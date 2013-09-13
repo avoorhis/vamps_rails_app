@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   before_filter :do_common_stuff
   
   def do_common_stuff
-    @ranks = Rank.find(:all, :order => "rank_number")
+    @ranks = Rank.all.sorted
   end
   
   
