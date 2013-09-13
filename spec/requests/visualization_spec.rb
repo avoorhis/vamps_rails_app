@@ -4,7 +4,18 @@ require 'spec_helper'
 describe "Projects and Datasets list" do
   before(:each) do
     @projects = FactoryGirl.create(:user).projects
-    puts @projects.inspect
+    # puts "@projects = "
+    # puts @projects.inspect
+    #   @datasets = Array.new
+    @projects.each do |project|
+      puts "project = "
+      puts project.datasets.inspect
+    #   puts "project.datasets.inspect = "
+    #   puts project.datasets.inspect
+    #   
+    #   @datasets.push(project.datasets)
+    end
+    # @datasets = FactoryGirl.create(:dataset)
     # @dataset = FactoryGirl.create(:dataset)
     visit "/visualization"      
   end
