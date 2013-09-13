@@ -1,21 +1,12 @@
 <%= radio_button_tag 'toggle' , 'toggle', false, :onclick =>
 	"toggleAll('domain_select');return false;"%>Toggle Domains
 <br>
-<%= check_box_tag("domains[]", 'archaea', true, :class=>'domain_select') %>
-<%= label_tag(:archaea, "Archaea") %>
-<br>
-<%= check_box_tag("domains[]", 'bacteria', true, :class=>'domain_select') %>
-<%= label_tag(:bacteria, "Bacteria") %>
-<br>
-<%= check_box_tag("domains[]", 'eukarya', true, :class=>'domain_select') %>
-<%= label_tag(:eukarya, "Eukarya") %>
-<br>
-<%= check_box_tag("domains[]", 'organelle', true, :class=>'domain_select') %>
-<%= label_tag(:organelle, "Organelle") %>
-<br>
-<%= check_box_tag("domains[]", 'unknown', true, :class=>'domain_select') %>
-<%= label_tag(:unknown, "Unknown") %>
 
+<% @domains.each do |domain| %>
+    <br>
+    <%= check_box_tag("domains[]", domain.taxon, true, :class=>'domain_select') %>
+    <%= label_tag(domain.taxon, domain.taxon.capitalize) %>
+<% end %>
 
 <br>
 <br>

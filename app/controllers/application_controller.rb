@@ -11,7 +11,6 @@ class ApplicationController < ActionController::Base
     @domains = Rank.find_by(rank: "superkingdom").taxa.order(:taxon)
   end
   
-  
   def make_taxa_by_rank()
     rank_id = Rank.find_by_rank(@tax_rank)
   
