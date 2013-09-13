@@ -3,8 +3,9 @@ require 'spec_helper'
 
 describe "Projects and Datasets list" do
   before(:each) do
-    # @project = FactoryGirl.create(:project)
-    @dataset = FactoryGirl.create(:dataset)
+    @projects = FactoryGirl.create(:user).projects
+    puts @projects.inspect
+    # @dataset = FactoryGirl.create(:dataset)
     visit "/visualization"      
   end
   
