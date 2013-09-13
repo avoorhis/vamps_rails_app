@@ -7,7 +7,12 @@ class ApplicationController < ActionController::Base
   before_filter :do_common_stuff
   
   def do_common_stuff
-    @ranks = Rank.all.sorted
+    @ranks   = Rank.all.sorted
+    
+    
+    @domains = @ranks.domains
+    puts "URA"
+    puts @domains
   end
   
   
