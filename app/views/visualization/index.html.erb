@@ -12,15 +12,12 @@
   <tr>
   	<td valign='top'>Choose:<br>
 	  <div id='choose_viz'>
-        <%= radio_button_tag(:view, 'heatmap') %>
-		<%= label_tag(:view_heatmap, "Heatmap") %>
-		<br>
-        <%= radio_button_tag(:view, 'tax_table', true) %>
-		<%= label_tag(:view_tax_table, "Tax Table") %>
-		<br>
-        <%= radio_button_tag(:view, 'bar_charts') %>
-		<%= label_tag(:view_bar_charts, "Bar Charts") %>
-    <br><hr>
+	    <% ['heatmap', 'tax_table', 'bar_charts'].each do |view| %>
+        <%= radio_button_tag(:view, view, view == "tax_table") %>
+        <%= label_tag("view_#{view}", view.tr('_', ' ').capitalize) %>
+        <br>
+      <% end %>
+      <hr>
 
     <%= button_tag "Submit" %>
     
