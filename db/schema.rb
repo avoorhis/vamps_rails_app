@@ -24,13 +24,18 @@ ActiveRecord::Schema.define(version: 20130914150755) do
   add_index "datasets", ["env_sample_source_id"], name: "dataset_fk_env_sample_source_id", using: :btree
   add_index "datasets", ["project_id"], name: "dataset_fk_project_id", using: :btree
 
+  create_table "dna_regions", force: true do |t|
+    t.string "dna_region", limit: 32
+  end
+
+  add_index "dna_regions", ["dna_region"], name: "dna_region", unique: true, using: :btree
+
   create_table "env_sample_sources", force: true do |t|
     t.integer "env_sample_source_id", limit: 1,  default: 0, null: false
     t.string  "env_source_name",      limit: 50
   end
 
   add_index "env_sample_sources", ["env_source_name"], name: "env_source_name", unique: true, using: :btree
-
 
   create_table "ill_full_temp", id: false, force: true do |t|
     t.integer "run_info_run_info_id",                                                                default: 0,      null: false
@@ -100,7 +105,6 @@ ActiveRecord::Schema.define(version: 20130914150755) do
     t.string  "dataset_dataset_description",              limit: 100,                                default: "",     null: false
   end
 
-
   create_table "projects", force: true do |t|
     t.string  "project",             limit: 32, default: "", null: false
     t.string  "title",               limit: 64, default: "", null: false
@@ -116,7 +120,6 @@ ActiveRecord::Schema.define(version: 20130914150755) do
 
   create_table "ranks", force: true do |t|
     t.string  "rank",        limit: 32, default: "", null: false
-
     t.integer "rank_number", limit: 1,               null: false
   end
 
@@ -178,7 +181,6 @@ ActiveRecord::Schema.define(version: 20130914150755) do
     t.integer  "genus_id"
     t.integer  "species_id"
     t.integer  "strain_id"
-
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -194,20 +196,9 @@ ActiveRecord::Schema.define(version: 20130914150755) do
 
   create_table "taxonomies_old", force: true do |t|
     t.string   "taxonomy",   limit: 300
-
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-
-  add_index "taxonomies", ["class_id"], name: "taxonomy_fk_taxa_id3", using: :btree
-  add_index "taxonomies", ["family_id"], name: "taxonomy_fk_taxa_id5", using: :btree
-  add_index "taxonomies", ["genus_id"], name: "taxonomy_fk_taxa_id6", using: :btree
-  add_index "taxonomies", ["orderx_id"], name: "taxonomy_fk_taxa_id4", using: :btree
-  add_index "taxonomies", ["phylum_id"], name: "taxonomy_fk_taxa_id2", using: :btree
-  add_index "taxonomies", ["species_id"], name: "taxonomy_fk_taxa_id7", using: :btree
-  add_index "taxonomies", ["strain_id"], name: "taxonomy_fk_taxa_id8", using: :btree
-  add_index "taxonomies", ["superkingdom_id", "phylum_id", "class_id", "orderx_id", "family_id", "genus_id", "species_id", "strain_id"], name: "all_names", unique: true, using: :btree
 
   add_index "taxonomies_old", ["taxonomy"], name: "taxonomy", unique: true, using: :btree
 
@@ -234,19 +225,33 @@ ActiveRecord::Schema.define(version: 20130914150755) do
 
   add_index "taxonomies_sep", ["superkingdom", "phylum", "class", "orderx", "family", "genus", "species", "strain"], name: "all_names", unique: true, using: :btree
 
-
   create_table "users", force: true do |t|
-    t.string  "username",       limit: 20
-    t.string  "email",          limit: 64,  default: "", null: false
-    t.string  "institution",    limit: 128
-    t.string  "first_name",     limit: 20
-    t.string  "last_name",      limit: 20
-    t.integer "active",         limit: 1,   default: 0,  null: false
-    t.integer "security_level", limit: 1,   default: 50, null: false
+    t.string   "username",               limit: 20
+    t.string   "email",                  limit: 64,  default: "", null: false
+    t.string   "institution",            limit: 128
+    t.string   "first_name",             limit: 20
+    t.string   "last_name",              limit: 20
+    t.integer  "active",                 limit: 1,   default: 0,  null: false
+    t.integer  "security_level",         limit: 1,   default: 50, null: false
+    t.string   "encrypted_password",                 default: "", null: false
+    t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer  "sign_in_count",                      default: 0
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
+    t.string   "confirmation_token"
+    t.datetime "confirmed_at"
+    t.datetime "confirmation_sent_at"
+    t.string   "unconfirmed_email"
   end
 
+  add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
   add_index "users", ["first_name", "last_name", "email", "institution"], name: "contact_email_inst", unique: true, using: :btree
   add_index "users", ["institution"], name: "institution", length: {"institution"=>15}, using: :btree
+  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["username"], name: "username", unique: true, using: :btree
 
 end

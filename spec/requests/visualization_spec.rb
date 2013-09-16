@@ -15,11 +15,11 @@ describe "Projects and Datasets list" do
   end
   
   it "should have projects and datasets" do
-    puts page.body
+    #puts page.body
     page.should have_content("SLM_NIH_v3")
     # page.should have_xpath('//*[@id="3"]/li[2]/label/text()')
     check('SLM_NIH_v3--pj-id')
-    puts find_field('SLM_NIH_v3--ds-ids_').value
+    #puts find_field('SLM_NIH_v3--ds-ids_').value
     # click('SLM_NIH_v3--pj-id')
     page.should have_content("7_Stockton")    
   end
