@@ -2,7 +2,11 @@
 
 
 FactoryGirl.define do
+  
   factory :project do |project|
+    before(:create) do |project|
+      FactoryGirl.reload
+    end
     
     sequence(:project){|n| "SLM_NIH_v#{n}" }
 		project.title               "WWTP_Influents"

@@ -52,7 +52,6 @@ describe "User login_as" do
     @user = FactoryGirl.create(:user)
     @user.confirm!
     login_as(@user, :scope => :user)
-    @projects = @user.projects
     @ranks    = FactoryGirl.create(:rank)
     @taxa     = Array.new(3) { FactoryGirl.build(:taxon) } 
     
