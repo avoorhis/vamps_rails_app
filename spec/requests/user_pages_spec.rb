@@ -2,6 +2,9 @@ require 'spec_helper'
 
 describe "User registration" do
   before(:each) do
+    @ranks    = FactoryGirl.create(:rank)
+    @taxa     = Array.new(3) { FactoryGirl.build(:taxon) } 
+    
     visit "/users/sign_up"      
     fill_in "Username", 			       :with => "test_user"
     fill_in "Email", 			           :with => "test_user@example.com"
@@ -49,6 +52,10 @@ describe "User login_as" do
     @user = FactoryGirl.create(:user)
     @user.confirm!
     login_as(@user, :scope => :user)
+    @projects = @user.projects
+    @ranks    = FactoryGirl.create(:rank)
+    @taxa     = Array.new(3) { FactoryGirl.build(:taxon) } 
+    
   end
   
   it "has a valid factory" do
@@ -84,6 +91,11 @@ describe "User login_as" do
 end
   
 describe "User not logged in" do
+  before(:each) do
+    @ranks    = FactoryGirl.create(:rank)
+    @taxa     = Array.new(3) { FactoryGirl.build(:taxon) } 
+  end  
+  
   it "should not sign in if wrong credentials" do
     visit "/users/sign_in"
     fill_in "Username", :with => "wrong_user"
