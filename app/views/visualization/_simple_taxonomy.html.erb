@@ -1,38 +1,27 @@
 <%= radio_button_tag 'toggle' , 'toggle', false, :onclick =>
 	"toggleAll('domain_select');return false;"%>Toggle Domains
-<br>
-<%= check_box_tag("domains[]", 'archaea', true, :class=>'domain_select') %>
-<%= label_tag(:archaea, "Archaea") %>
-<br>
-<%= check_box_tag("domains[]", 'bacteria', true, :class=>'domain_select') %>
-<%= label_tag(:bacteria, "Bacteria") %>
-<br>
-<%= check_box_tag("domains[]", 'eukarya', true, :class=>'domain_select') %>
-<%= label_tag(:eukarya, "Eukarya") %>
-<br>
-<%= check_box_tag("domains[]", 'organelle', true, :class=>'domain_select') %>
-<%= label_tag(:organelle, "Organelle") %>
-<br>
-<%= check_box_tag("domains[]", 'unknown', true, :class=>'domain_select') %>
-<%= label_tag(:unknown, "Unknown") %>
-
+<% @domains.each do |domain| %>
+    <br>
+    <%= check_box_tag("domains[]", domain.taxon, true, :class=>'domain_select') %>
+    <%= label_tag(domain.taxon, domain.taxon.capitalize) %>
+<% end %>
 
 <br>
 <br>
 Keep NAs in output?
 <br>
-<%= radio_button_tag(:nas, 'yes',  true) %>
-<%= label_tag(:nas_yes, "Yes") %>
-<br>
-<%= radio_button_tag(:nas, 'no') %>
-<%= label_tag(:nas_no, "No") %>
-<br>
+<% ['yes', 'no'].each do |nas| %>
+  <%= radio_button_tag(:nas, nas, nas == "yes") %>
+  <%= label_tag("nas_#{nas}", nas.capitalize) %>
+  <br>
+<% end %>
+
 <br>
 Taxonomic Rank:
 <% @ranks.each_with_index do |rank, rank_number| %>
   <% if rank_number < 8 %>
     <br>
-    <%= radio_button_tag(:tax_rank, rank.id) %>
+    <%= radio_button_tag(:tax_rank, rank.id, rank.rank == "phylum") %>
     <%= label_tag(:tax_domain, rank.rank.capitalize) %>
   <% end %>
 <% end %>
