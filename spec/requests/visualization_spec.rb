@@ -15,13 +15,24 @@ describe "Projects and Datasets list" do
   end
   
   it "should have projects and datasets" do
-    #puts page.body
+    puts page.body
     page.should have_content("SLM_NIH_v3")
+    
+    page.html.should include('7_Stockton')
+    # html = page.evaluate_script("document.getElementById('SLM_NIH_v3--ds-ids_').innerHTML")
+    #     Capybara::NotSupportedByDriverError:
+    #     
+    #     html.should include('7_Stockton')
+    
     # page.should have_xpath('//*[@id="3"]/li[2]/label/text()')
-    check('SLM_NIH_v3--pj-id')
+    # check('SLM_NIH_v3--pj-id')
+    # puts "URA"
+    # puts find(:xpath, "//input[@id='SLM_NIH_v3--ds-ids_']").value
+    # page.should have_selector('#SLM_NIH_v3--ds-ids_', visible: false)
+    # find(:css, "#SLM_NIH_v3--ds-ids_").should_not be_visible
     #puts find_field('SLM_NIH_v3--ds-ids_').value
     # click('SLM_NIH_v3--pj-id')
-    page.should have_content("7_Stockton")    
+    # page.should have_content("7_Stockton")    
   end
 
   it "should check all underlying dataset checkboxes if its project was chosen" 

@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
   end
   
   def make_taxa_by_rank()
-    rank_id = Rank.find_by_rank(@tax_rank)
+    # rank_id = Rank.find_by_rank(@tax_rank)
   
     # rank_ids = "superkingdom_id, phylum_id, class_id, orderx_id, family_id, genus_id, species_id, strain_id"
     rank_ids = "t1.taxon, t2.taxon, t3.taxon, t4.taxon, t5.taxon, t6.taxon, t7.taxon, t8.taxon"
