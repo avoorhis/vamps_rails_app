@@ -14,24 +14,15 @@
 ActiveRecord::Schema.define(version: 20130910192455) do
 
   create_table "datasets", force: true do |t|
-    t.string  "dataset",              limit: 64,  default: "",  null: false
-    t.string  "dataset_description",  limit: 100, default: "",  null: false
-    t.integer "reads_in_dataset",     limit: 3,   default: 0,   null: false
-    t.string  "has_sequence",         limit: 1,   default: "0", null: false
+    t.string  "dataset",              limit: 64,  default: "", null: false
+    t.string  "dataset_description",  limit: 100, default: "", null: false
     t.integer "env_sample_source_id"
     t.integer "project_id"
-    t.string  "date_trimmed",         limit: 10,  default: "",  null: false
   end
 
   add_index "datasets", ["dataset", "project_id"], name: "dataset_project", unique: true, using: :btree
   add_index "datasets", ["env_sample_source_id"], name: "dataset_fk_env_sample_source_id", using: :btree
   add_index "datasets", ["project_id"], name: "dataset_fk_project_id", using: :btree
-
-  create_table "dna_regions", force: true do |t|
-    t.string "dna_region", limit: 32
-  end
-
-  add_index "dna_regions", ["dna_region"], name: "dna_region", unique: true, using: :btree
 
   create_table "env_sample_sources", force: true do |t|
     t.integer "env_sample_source_id", limit: 1,  default: 0, null: false
@@ -39,31 +30,6 @@ ActiveRecord::Schema.define(version: 20130910192455) do
   end
 
   add_index "env_sample_sources", ["env_source_name"], name: "env_source_name", unique: true, using: :btree
-
-  create_table "primer_suites", force: true do |t|
-    t.string "primer_suite", limit: 25, default: "", null: false
-  end
-
-  add_index "primer_suites", ["primer_suite"], name: "primer_suite", unique: true, using: :btree
-
-  create_table "primer_suites_primers", id: false, force: true do |t|
-    t.integer "primer_id",       null: false
-    t.integer "primer_suite_id", null: false
-  end
-
-  add_index "primer_suites_primers", ["primer_id", "primer_suite_id"], name: "primer_id_primer_suite_id", unique: true, using: :btree
-  add_index "primer_suites_primers", ["primer_suite_id", "primer_id"], name: "primer_suite_id_primer_id", unique: true, using: :btree
-
-  create_table "primers", force: true do |t|
-    t.string "primer",       limit: 16, default: "", null: false
-    t.string "direction",    limit: 1,               null: false
-    t.string "sequence",     limit: 64, default: "", null: false
-    t.string "region",       limit: 16, default: "", null: false
-    t.string "original_seq", limit: 64, default: "", null: false
-    t.string "domain",       limit: 8
-  end
-
-  add_index "primers", ["primer"], name: "primer", unique: true, using: :btree
 
   create_table "projects", force: true do |t|
     t.string  "project",             limit: 32, default: "", null: false
@@ -79,62 +45,24 @@ ActiveRecord::Schema.define(version: 20130910192455) do
   add_index "projects", ["user_id"], name: "user_id", using: :btree
 
   create_table "ranks", force: true do |t|
-    t.string "rank", limit: 32, default: "", null: false
+    t.string  "rank",        limit: 32, default: "", null: false
+    t.integer "rank_number", limit: 1
   end
 
   add_index "ranks", ["rank"], name: "rank", unique: true, using: :btree
 
-  create_table "run_infos", force: true do |t|
-    t.integer  "run_key_id",                                  null: false
-    t.integer  "run_id",                                      null: false
-    t.integer  "lane",            limit: 1,  default: 0,      null: false
-    t.integer  "dataset_id",                                  null: false
-    t.integer  "project_id",                                  null: false
-    t.string   "tubelabel",       limit: 32, default: "",     null: false
-    t.string   "barcode",         limit: 4,  default: "",     null: false
-    t.string   "adaptor",         limit: 3,  default: "",     null: false
-    t.integer  "dna_region_id",                               null: false
-    t.string   "amp_operator",    limit: 5,  default: "",     null: false
-    t.string   "seq_operator",    limit: 5,  default: "",     null: false
-    t.string   "barcode_index",   limit: 12, default: "",     null: false
-    t.string   "overlap",         limit: 8,  default: "none", null: false
-    t.integer  "insert_size",     limit: 2,  default: 0,      null: false
-    t.integer  "read_length",     limit: 2,                   null: false
-    t.integer  "primer_suite_id",                             null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "run_infos", ["dataset_id"], name: "run_info_fk_dataset_id", using: :btree
-  add_index "run_infos", ["dna_region_id"], name: "run_info_fk_dna_region_id", using: :btree
-  add_index "run_infos", ["primer_suite_id"], name: "run_info_fk_primer_suite_id", using: :btree
-  add_index "run_infos", ["project_id"], name: "run_info_fk_project_id", using: :btree
-  add_index "run_infos", ["run_id", "run_key_id", "barcode_index", "lane"], name: "uniq_key", unique: true, using: :btree
-  add_index "run_infos", ["run_key_id"], name: "run_info_fk_run_key_id", using: :btree
-
-  create_table "run_keys", force: true do |t|
-    t.string "run_key", limit: 25, default: "", null: false
-  end
-
-  add_index "run_keys", ["run_key"], name: "run_key", unique: true, using: :btree
-
-  create_table "runs", force: true do |t|
-    t.string "run",          limit: 16, default: "", null: false
-    t.string "run_prefix",   limit: 7,  default: "", null: false
-    t.date   "date_trimmed"
-  end
-
-  add_index "runs", ["run"], name: "run", unique: true, using: :btree
-
   create_table "sequence_pdr_infos", force: true do |t|
-    t.integer  "run_info_id", null: false
-    t.integer  "sequence_id", null: false
-    t.integer  "seq_count",   null: false
+    t.integer  "project_id",                             null: false
+    t.integer  "dataset_id",                             null: false
+    t.integer  "sequence_id",                            null: false
+    t.integer  "seq_count",                              null: false
+    t.string   "classifier",  limit: 4, default: "GAST"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "sequence_pdr_infos", ["run_info_id", "sequence_id"], name: "uniq_seq_pdr", unique: true, using: :btree
+  add_index "sequence_pdr_infos", ["dataset_id"], name: "sequence_pdr_info_fk_dataset_id", using: :btree
+  add_index "sequence_pdr_infos", ["project_id", "dataset_id", "sequence_id"], name: "uniq_seq_pd", unique: true, using: :btree
   add_index "sequence_pdr_infos", ["sequence_id"], name: "sequence_pdr_info_fk_sequence_id", using: :btree
 
   create_table "sequence_uniq_infos", force: true do |t|
@@ -171,40 +99,39 @@ ActiveRecord::Schema.define(version: 20130910192455) do
   add_index "taxa", ["taxon"], name: "taxon", unique: true, using: :btree
 
   create_table "taxonomies", force: true do |t|
-    t.string   "taxonomy",   limit: 300
+    t.integer  "superkingdom_id"
+    t.integer  "phylum_id"
+    t.integer  "class_id"
+    t.integer  "orderx_id"
+    t.integer  "family_id"
+    t.integer  "genus_id"
+    t.integer  "species_id"
+    t.integer  "strain_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "taxonomies", ["taxonomy"], name: "taxonomy", unique: true, using: :btree
+  add_index "taxonomies", ["class_id"], name: "taxonomy_fk_taxa_id3", using: :btree
+  add_index "taxonomies", ["family_id"], name: "taxonomy_fk_taxa_id5", using: :btree
+  add_index "taxonomies", ["genus_id"], name: "taxonomy_fk_taxa_id6", using: :btree
+  add_index "taxonomies", ["orderx_id"], name: "taxonomy_fk_taxa_id4", using: :btree
+  add_index "taxonomies", ["phylum_id"], name: "taxonomy_fk_taxa_id2", using: :btree
+  add_index "taxonomies", ["species_id"], name: "taxonomy_fk_taxa_id7", using: :btree
+  add_index "taxonomies", ["strain_id"], name: "taxonomy_fk_taxa_id8", using: :btree
+  add_index "taxonomies", ["superkingdom_id", "phylum_id", "class_id", "orderx_id", "family_id", "genus_id", "species_id", "strain_id"], name: "all_names", unique: true, using: :btree
 
   create_table "users", force: true do |t|
-    t.string   "username",               limit: 20
-    t.string   "email",                  limit: 64,  default: "", null: false
-    t.string   "institution",            limit: 128
-    t.string   "first_name",             limit: 20
-    t.string   "last_name",              limit: 20
-    t.integer  "active",                 limit: 1,   default: 0,  null: false
-    t.integer  "security_level",         limit: 1,   default: 50, null: false
-    t.string   "encrypted_password",                 default: "", null: false
-    t.string   "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                      default: 0
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
-    t.string   "current_sign_in_ip"
-    t.string   "last_sign_in_ip"
-    t.string   "confirmation_token"
-    t.datetime "confirmed_at"
-    t.datetime "confirmation_sent_at"
-    t.string   "unconfirmed_email"
+    t.string  "username",       limit: 20
+    t.string  "email",          limit: 64,  default: "", null: false
+    t.string  "institution",    limit: 128
+    t.string  "first_name",     limit: 20
+    t.string  "last_name",      limit: 20
+    t.integer "active",         limit: 1,   default: 0,  null: false
+    t.integer "security_level", limit: 1,   default: 50, null: false
   end
 
-  add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
   add_index "users", ["first_name", "last_name", "email", "institution"], name: "contact_email_inst", unique: true, using: :btree
   add_index "users", ["institution"], name: "institution", length: {"institution"=>15}, using: :btree
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["username"], name: "username", unique: true, using: :btree
 
 end
