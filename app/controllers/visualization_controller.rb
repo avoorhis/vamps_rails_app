@@ -32,7 +32,7 @@ class VisualizationController < ApplicationController
           puts temp_project.inspect
           v = v.collect{|i| i.to_i}
           @master_sample_data[temp_project[:id]] = v
-          myhash = {:id=>temp_project[:id], :project=>temp_project[:name],  :datasets=>v,}
+          myhash = {:pid=>temp_project[:id], :name=>temp_project[:name],  :datasets=>v,}
           @master_sample_data2.push(myhash)
           temp_project = {}
         end
@@ -47,9 +47,9 @@ class VisualizationController < ApplicationController
       redirect_to visualization_index_path
       return
     end
-  puts 'Which is better: '
-    puts '   this?: '+@master_sample_data.inspect
-    puts '  Or this?: '+@master_sample_data2.inspect
+    puts 'Which is a better format: '
+    puts '  this? a simple hash: '+@master_sample_data.inspect
+    puts '  Or this? an array of hashes: '+@master_sample_data2.inspect
 
     @nas         = params[:nas]
     #domains  = Array[params[:bacteria], params[:archaea], params[:eukarya], params[:organelle], params[:unknown]]
@@ -77,9 +77,9 @@ class VisualizationController < ApplicationController
     #     0;SLM_NIH_Bv4v5;1St_121_Stockton,
     #     0;SLM_NIH_Bv4v5;1St_120_Richmond,
     
-  #   @taxQuery    = create_tax_query()
-  #   print @taxQuery
-  #   # @result      = Project.find_by_sql(@taxQuery)
+     @taxQuery    = create_tax_query()
+     print @taxQuery
+  #   @result      = Project.find_by_sql(@taxQuery)
   #   taxonomy_by_site = {}    
 
   #   for res in @result
@@ -229,7 +229,6 @@ class VisualizationController < ApplicationController
     print "URA! rank_ids = #{rank_ids}\n taxa_ids = #{taxa_ids}"
     taxQuery = "SELECT projects.project, datasets.dataset, CONCAT_WS(\";\", #{rank_ids}) AS taxonomy, seq_count AS knt, classifier
                   FROM sequence_pdr_infos
-                  JOIN run_infos ON (run_infos.id = run_info_id)
                   JOIN sequence_uniq_infos USING(sequence_id)
                   JOIN taxonomies on (taxonomies.id = taxonomy_id)
                   #{taxa_ids}
