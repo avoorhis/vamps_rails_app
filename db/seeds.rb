@@ -86,7 +86,7 @@ ranks = Rank.create([
 
 # TAM: select * from vamps_export where taxonomy like 'Archaea;Euryarchaeota;Halobacteria;Halobacteriales;Halobacteriaceae;Haloferax%'
 
-taxonomies = Taxonomy.create([
+taxonomies_old = Taxonomy.create([
 	{id:"1",taxonomy: 'Archaea;Crenarchaeota;Thermoprotei;Desulfurococcales;Desulfurococcaceae;Unassigned;uncultured crenarchaeote pBA3'},
 	{id:"2",taxonomy: 'Archaea;Crenarchaeota;Thermoprotei;Desulfurococcales;Desulfurococcaceae;Unassigned;uncultured Desulfurococcaceae archaeon'},
 	{id:"3",taxonomy: 'Archaea;Crenarchaeota;Thermoprotei;Desulfurococcales;environmental samples'},

@@ -16,12 +16,12 @@ describe "Projects and Datasets list" do
   
   it "should have projects and datasets" do
     #puts page.body
-    page.should have_content("SLM_NIH_v3")
+    page.should have_content("SLM_NIH_v1")
     # page.should have_xpath('//*[@id="3"]/li[2]/label/text()')
-    check('SLM_NIH_v3--pj-id')
+    check('SLM_NIH_v1--pj-id')
     #puts find_field('SLM_NIH_v3--ds-ids_').value
     # click('SLM_NIH_v3--pj-id')
-    page.should have_content("7_Stockton")    
+    page.should have_content("1_Stockton")    
   end
 
   it "should check all underlying dataset checkboxes if its project was chosen" 
