@@ -22,6 +22,18 @@ end
 ActiveSupport::Inflector.inflections do |inflect|
   inflect.uncountable 'metadata'
   inflect.irregular 'taxon', 'taxa'
+  inflect.irregular 'medium', 'media'
+  inflect.irregular 'bacterium', 'bacteria'
+  inflect.irregular 'flagellum', 'flagella'
+  inflect.irregular 'bacillus', 'bacilli'
+  inflect.irregular 'coccus', 'cocci'
+  inflect.irregular 'genus', 'genera'
+  inflect.irregular 'species', 'species'
+  inflect.irregular 'inoculum', 'inocula'
+  inflect.irregular 'phenomenon', 'phenomena'
+  inflect.irregular 'criterion', 'criteria'
+  
+  
 # inflect.plural /^(ox)$/i, '\1en'
 # inflect.singular /^(ox)en/i, '\1'
 # inflect.irregular 'person', 'people'
