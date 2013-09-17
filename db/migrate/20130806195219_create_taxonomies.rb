@@ -12,6 +12,6 @@ class CreateTaxonomies < ActiveRecord::Migration
       t.timestamps
     end
 
-    add_index "taxonomies", ["superkingdom_id", "phylum_id", "class_id", "order_id", "family_id", "genus_id", "species_id", "strain_id"], name: "all_names", unique: true    
+    add_index "taxonomies", ["superkingdom_id", "phylum_id", "klass_id", "order_id", "family_id", "genus_id", "species_id", "strain_id"], name: "all_names", unique: true    
   end
 end
