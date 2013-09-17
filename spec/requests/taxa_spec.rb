@@ -64,17 +64,17 @@ describe "Taxa" do
         {:taxon => "Bacteroidia", :rank_id => 2}
         ]
     
-    aaa = FactoryGirl.create(:taxon)
-    puts "Ura2"
-    puts aaa.inspect
+    # aaa = FactoryGirl.create(:taxonomy)
+    # puts "Ura2"
+    # puts aaa.inspect
     
     @taxa = Array.new
     taxa_array.each do |my_hash|
        @taxa.push(FactoryGirl.create(:taxon, taxon: my_hash[:taxon], rank_id: my_hash[:rank_id]))       
     end
 
-    puts "Ura"
-    puts @taxa.inspect
+    # puts "Ura"
+    # puts @taxa.inspect
         
     visit "/visualization"      
   end
