@@ -68,7 +68,7 @@ html, body {
 
 .left_menu a {
     display: block;
-    padding: 5px;
+    padding: 6px 5px 5px 5px;
     color: #444444;
     background: #fff;
     text-decoration: none;

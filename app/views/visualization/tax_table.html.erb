@@ -7,12 +7,12 @@
 
 
 <% projects = [] %>
-
+<% column_totals = {} %>
 <% if @taxonomy_by_site_hash.any? %>
 	<tr><th>Taxonomy</th>
 <!--
 ## Getting data out of these nested hashes is way too difficult
-## especially if we have to sort the data later	
+## especially if we have to sort the data 
 -->
 	<% @taxonomy_by_site_hash.each do |tax, data| %>
 	  <% data.each do |project, ds_hash|%>
@@ -41,6 +41,11 @@
 			<% count = dataset[1] %>
 			<% pd = project+'--'+ds %>
 			<td><%= count %></td>
+			<% if column_totals.has_key?(pd) then %>
+			  <% column_totals[pd] += count %>
+			<% else %>
+			  <% column_totals[pd] = count %>
+			<% end %>
 		<% end %>
 	  <% end %>
 	  </tr>
@@ -49,7 +54,12 @@
 <% else %>
 	<tr><td><strong>NO DATA</strong></td></tr>
 <% end %>
-
+<tr>
+	<td><b>TOTALS:</b></td>
+	<% column_totals.each do |t| %>
+  		<td><b><%= number_with_delimiter(t[1]) %></b></td>
+	<% end %>
+</td>
 </table>
 
 

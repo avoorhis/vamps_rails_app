@@ -14,18 +14,19 @@ class ApplicationController < ActionController::Base
   def make_taxa_by_rank()
     # rank_id = Rank.find_by_rank(@tax_rank)
   
-    # rank_ids = "superkingdom_id, phylum_id, class_id, orderx_id, family_id, genus_id, species_id, strain_id"
-    rank_ids = "t1.taxon, t2.taxon, t3.taxon, t4.taxon, t5.taxon, t6.taxon, t7.taxon, t8.taxon"
-    taxa_ids = "LEFT JOIN taxa AS t1 ON (superkingdom_id = t1.id)
-    LEFT JOIN taxa AS t2 ON (phylum_id  = t2.id)
-    LEFT JOIN taxa AS t3 ON (class_id   = t3.id)
-    LEFT JOIN taxa AS t4 ON (orderx_id  = t4.id)
-    LEFT JOIN taxa AS t5 ON (family_id  = t5.id)
-    LEFT JOIN taxa AS t6 ON (genus_id   = t6.id)
-    LEFT JOIN taxa AS t7 ON (species_id = t7.id)
-    LEFT JOIN taxa AS t8 ON (strain_id  = t8.id)
-    "
-    return rank_ids, taxa_ids
+    rank_names        = %w[superkingdom  phylum  klass   order  family   genus  species strain ]
+    taxon_table_names = %w[superkingdoms phylums klasses orders families genera species strains]
+    rank_ids = ""
+    taxa_joins = ""
+    for n in 0..@rank_number 
+      rank_ids += ' t'+(n+1).to_s+".#{rank_names[n]},"
+      taxa_joins += "LEFT JOIN #{taxon_table_names[n]} AS t"+(n+1).to_s+" ON (#{rank_names[n]}_id = t"+(n+1).to_s+".id)\n"
+    end
+    
+    return rank_ids[0..-2], taxa_joins
+
+
+    
   end    
   
   

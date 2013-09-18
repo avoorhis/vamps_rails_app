@@ -359,23 +359,23 @@ end
     return "'" + my_array.join("', '") + "'"
   end
   
-  def make_taxa_by_rank()
-    #rank_number = Rank.get_rank_number(@tax_rank)
-    #puts 'rank id: '+rank_number  # == rank.id
+  # def make_taxa_by_rank()
+  #   #rank_number = Rank.get_rank_number(@tax_rank)
+  #   #puts 'rank id: '+rank_number  # == rank.id
   
     
-    #rank_id_names = %w[superkingdom_id phylum_id klass_id order_id family_id genus_id species_id strain_id]
-    rank_names        = %w[superkingdom  phylum  klass   order  family   genus  species strain ]
-    taxon_table_names = %w[superkingdoms phylums klasses orders families genera species strains]
-    rank_ids = ""
-    taxa_joins = ""
-    for n in 0..@rank_number 
-      rank_ids += ' t'+(n+1).to_s+".#{rank_names[n]},"
-      taxa_joins += "LEFT JOIN #{taxon_table_names[n]} AS t"+(n+1).to_s+" ON (#{rank_names[n]}_id = t"+(n+1).to_s+".id)\n"
-    end
+  #   #rank_id_names = %w[superkingdom_id phylum_id klass_id order_id family_id genus_id species_id strain_id]
+  #   rank_names        = %w[superkingdom  phylum  klass   order  family   genus  species strain ]
+  #   taxon_table_names = %w[superkingdoms phylums klasses orders families genera species strains]
+  #   rank_ids = ""
+  #   taxa_joins = ""
+  #   for n in 0..@rank_number 
+  #     rank_ids += ' t'+(n+1).to_s+".#{rank_names[n]},"
+  #     taxa_joins += "LEFT JOIN #{taxon_table_names[n]} AS t"+(n+1).to_s+" ON (#{rank_names[n]}_id = t"+(n+1).to_s+".id)\n"
+  #   end
     
-    return rank_ids[0..-2], taxa_joins
-  end    
+  #   return rank_ids[0..-2], taxa_joins
+  # end    
 
 #
 #  CREATE TAX QUERY
