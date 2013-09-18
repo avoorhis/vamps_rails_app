@@ -3,7 +3,8 @@ class Dataset < ActiveRecord::Base
   # belongs_to :user # Dataset.last.project.contact.users
   belongs_to :env_sample_source
 
-  has_many  :run_infos
+  has_many   :sequence_pdr_infos
+  
 
   validates :dataset, :dataset_description, :presence => true, :format => /[A-Za-z1-9 ,]/
   validates :dataset, :dataset, :presence => true, :format => /[A-Za-z1-9_]/
