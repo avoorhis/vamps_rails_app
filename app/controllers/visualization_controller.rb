@@ -177,12 +177,23 @@ class VisualizationController < ApplicationController
   def get_dataset_counts()
     
     sql = "SELECT datasets.project_id, dataset_id, sum(seq_count) FROM sequence_pdr_infos
-      JOIN projects ON (project_id = projects.id)
       JOIN datasets ON (dataset_id = datasets.id)
-      WHERE project IN (#{create_comma_list(@projects_test)}) 
-      AND   dataset IN (#{create_comma_list(@datasets_test)})  
+      JOIN projects ON (project_id = projects.id)
+      "      
+
+    where    = "  WHERE (\n"
+    @master_sample_data.each do |pid,d_array|       
+         d_sql = create_comma_list(d_array)
+         puts d_sql
+           where    += "(projects.id = '#{pid}' "
+           where    += "AND datasets.id IN (#{d_sql}) )\nOR "
+    end 
+    where = where[0..-4]
+    where  += ")\n"    
+    sql = sql + where + "
       GROUP BY datasets.project_id, dataset_id
     "
+    puts sql
     result = ActiveRecord::Base.connection.select_rows(sql)
     return result
   end
@@ -194,25 +205,18 @@ class VisualizationController < ApplicationController
   def make_taxa_by_rank()
     #rank_number = Rank.get_rank_number(@tax_rank)
     #puts 'rank id: '+rank_number  # == rank.id
-    puts @this_rank
+  
     puts @this_rank.rank_number 
-    rank_id_names = %w[superkingdom_id phylum_id class_id orderx_id family_id genus_id species_id strain_id]
+    #rank_id_names = %w[superkingdom_id phylum_id klass_id order_id family_id genus_id species_id strain_id]
+    rank_names        = %w[superkingdom  phylum  klass   order  family   genus  species strain ]
+    taxon_table_names = %w[superkingdoms phylums klasses orders families genera species strains]
     rank_ids = ""
     taxa_joins = ""
     for n in 0..@this_rank.rank_number 
-      rank_ids += ' t'+(n+1).to_s+".taxon,"
-      taxa_joins += "LEFT JOIN taxa AS t"+(n+1).to_s+" ON (#{rank_id_names[n]} = t"+(n+1).to_s+".id)\n"
+      rank_ids += ' t'+(n+1).to_s+".#{rank_names[n]},"
+      taxa_joins += "LEFT JOIN #{taxon_table_names[n]} AS t"+(n+1).to_s+" ON (#{rank_names[n]}_id = t"+(n+1).to_s+".id)\n"
     end
-    # rank_ids = "t1.taxon, t2.taxon, t3.taxon, t4.taxon, t5.taxon, t6.taxon, t7.taxon, t8.taxon"
-    # taxa_joins = "LEFT JOIN taxa AS t1 ON (superkingdom_id = t1.id)
-    #             LEFT JOIN taxa AS t2 ON (phylum_id       = t2.id)
-    #             LEFT JOIN taxa AS t3 ON (class_id        = t3.id)
-    #             LEFT JOIN taxa AS t4 ON (orderx_id       = t4.id)
-    #             LEFT JOIN taxa AS t5 ON (family_id       = t5.id)
-    #             LEFT JOIN taxa AS t6 ON (genus_id        = t6.id)
-    #             LEFT JOIN taxa AS t7 ON (species_id      = t7.id)
-    #             LEFT JOIN taxa AS t8 ON (strain_id       = t8.id)
-    #             "
+    
     return rank_ids[0..-2], taxa_joins
   end    
   
@@ -226,7 +230,7 @@ class VisualizationController < ApplicationController
       
     # end
 
-    #get_dataset_counts()
+    get_dataset_counts()
  
     
     # superkingdoms has to match what is in db table
@@ -241,14 +245,13 @@ class VisualizationController < ApplicationController
     print "URA! rank_ids = #{rank_ids}\n taxa_joins = #{taxa_joins}"
     taxQuery = "SELECT distinct projects.project, datasets.dataset, CONCAT_WS(\";\", #{rank_ids}) AS taxonomy, seq_count AS knt, classifier
 FROM sequence_pdr_infos"
-join = "\nJOIN sequence_uniq_infos USING(sequence_id)
-JOIN taxonomies on (taxonomies.id = taxonomy_id)
+join = "\nJOIN datasets ON (dataset_id = datasets.id)
+JOIN projects ON (project_id = projects.id) 
+JOIN sequence_uniq_infos USING(sequence_id)
+JOIN taxonomies ON (taxonomies.id = taxonomy_id)
 #{taxa_joins}
-JOIN projects ON(project_id = projects.id) 
-JOIN datasets ON(dataset_id = datasets.id)
 "
 
-    
     where    = "  WHERE (\n"
     @master_sample_data.each do |pid,d_array|
         puts pid
@@ -293,8 +296,8 @@ JOIN datasets ON(dataset_id = datasets.id)
     end
 
 
-    where    +=  " 
-    AND sequence_uniq_infos.rank_id='#{@this_rank.rank_number}'  "
+    #where    +=  " 
+    #AND sequence_uniq_infos.rank_id='#{@this_rank.rank_number}'  "
    
 
     # taxQuery = "SELECT project, dataset, taxon_string, knt, sdc.classifier, frequency, dataset_count
