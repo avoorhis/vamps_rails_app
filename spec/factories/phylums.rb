@@ -2,5 +2,6 @@
 
 FactoryGirl.define do
   factory :phylum do
+    sequence(:phylum){|n| "Bacteroidetes#{n}" }
   end
 end

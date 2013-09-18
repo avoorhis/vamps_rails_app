@@ -2,5 +2,8 @@
 
 FactoryGirl.define do
   factory :genus do
+    sequence(:genus){|n| "Acidovorax#{n}" }
+    # taxon.taxonomies   { Array.new(3) { FactoryGirl.build(:taxonomy) } }    
   end
 end
+

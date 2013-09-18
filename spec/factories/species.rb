@@ -2,5 +2,6 @@
 
 FactoryGirl.define do
   factory :species do
+    sequence(:species){|n| "abyssi#{n}" }
   end
 end

@@ -2,5 +2,6 @@
 
 FactoryGirl.define do
   factory :strain do
+    sequence(:strain){|n| "DSM 5456#{n}" }
   end
 end

@@ -23,55 +23,92 @@ describe "Taxa" do
        @ranks.push(FactoryGirl.create(:rank, rank: my_hash[:rank], rank_number: my_hash[:rank_number]))       
     end
     
-    taxa_array = 
-      [{:taxon => "Archaea", :rank_id => 10},
-        {:taxon => "Bacteria", :rank_id => 10},
-        {:taxon => "", :rank_id => 8},
-        {:taxon => "epidermidis", :rank_id => 8},
-        {:taxon => "uncultured crenarchaeote pBA3", :rank_id => 8},
-        {:taxon => "uncultured Desulfurococcaceae archaeon", :rank_id => 8},
-        {:taxon => "agglomerans", :rank_id => 8},
-        {:taxon => "Bacteroidetes", :rank_id => 7},
-        {:taxon => "Firmicutes", :rank_id => 7},
-        {:taxon => "Crenarchaeota", :rank_id => 7},
-        {:taxon => "Proteobacteria", :rank_id => 7},
-        {:taxon => "Bacteroidales", :rank_id => 6},
-        {:taxon => "Desulfurococcales", :rank_id => 6},
-        {:taxon => "Sphingomonadales", :rank_id => 6},
-        {:taxon => "Pseudomonadales", :rank_id => 6},
-        {:taxon => "Lactobacillales", :rank_id => 6},
-        {:taxon => "Enterobacteriales", :rank_id => 6},
-        {:taxon => "Bacillales", :rank_id => 6},
-        {:taxon => "Staphylococcus", :rank_id => 5},
-        {:taxon => "Bacteroides", :rank_id => 5},
-        {:taxon => "Acinetobacter", :rank_id => 5},
-        {:taxon => "Marinobacter", :rank_id => 5},
-        {:taxon => "Streptococcus", :rank_id => 5},
-        {:taxon => "Pantoea", :rank_id => 5},
-        {:taxon => "Bacteroidaceae", :rank_id => 4},
-        {:taxon => "Desulfurococcaceae", :rank_id => 4},
-        {:taxon => "Erythrobacteraceae", :rank_id => 4},
-        {:taxon => "Moraxellaceae", :rank_id => 4},
-        {:taxon => "Alteromonadaceae", :rank_id => 4},
-        {:taxon => "Streptococcaceae", :rank_id => 4},
-        {:taxon => "Enterobacteriaceae", :rank_id => 4},
-        {:taxon => "Staphylococcaceae", :rank_id => 4},
-        {:taxon => "Vibrionaceae", :rank_id => 4},
-        {:taxon => "Bacilli", :rank_id => 2},
-        {:taxon => "Thermoprotei", :rank_id => 2},
-        {:taxon => "Alphaproteobacteria", :rank_id => 2},
-        {:taxon => "Gammaproteobacteria", :rank_id => 2},
-        {:taxon => "Bacteroidia", :rank_id => 2}
-        ]
+    superkingdom_arr = [{:superkingdom => "Archaea"},
+    {:superkingdom => "Bacteria"},
+    {:superkingdom => "Eukarya"},
+    {:superkingdom => "Organelle"},
+    {:superkingdom => "Unknown"}]
+    # @taxa = Array.new
+    # taxa_array.each do |my_hash|
+    #    @taxa.push(FactoryGirl.create(:taxon, taxon: my_hash[:taxon], rank_id: my_hash[:rank_id]))       
+    # end
     
+    phylum_arr       = [{:phylum => "Bacteroidetes"},
+    {:phylum => "Firmicutes"},
+    {:phylum => "Proteobacteria"},
+    {:phylum => "Actinobacteria"},
+    {:phylum => "Euryarchaeota"}]
+    @phylum = Array.new
+    phylum_arr.each do |my_hash|
+       @phylum.push(FactoryGirl.create(:phylum, phylum: my_hash[:phylum]))       
+    end
+    
+    klass_arr        = [{:klass => "Bacteroidia"},
+    {:klass => "Bacilli"},
+    {:klass => "Gammaproteobacteria"},
+    {:klass => "Betaproteobacteria"},
+    {:klass => "Alphaproteobacteria"},
+    {:klass => "Clostridia"}]
+    # @taxa = Array.new
+    # taxa_array.each do |my_hash|
+    #    @taxa.push(FactoryGirl.create(:taxon, taxon: my_hash[:taxon], rank_id: my_hash[:rank_id]))       
+    # end
+    
+    order_arr        = [{:order => "Bacteroidales"},
+    {:order => "Bacillales"},
+    {:order => "Vibrionales"},
+    {:order => "Rhodocyclales"},
+    {:order => "Actinomycetales"}]
+    # @taxa = Array.new
+    # taxa_array.each do |my_hash|
+    #    @taxa.push(FactoryGirl.create(:taxon, taxon: my_hash[:taxon], rank_id: my_hash[:rank_id]))       
+    # end
+    
+    family_arr       = [{:family => "Bacteroidaceae"},
+    {:family => "Staphylococcaceae"},
+    {:family => "Vibrionaceae"},
+    {:family => "Rhodocyclaceae"},
+    {:family => "Microbacteriaceae"}]
+    # @taxa = Array.new
+    # taxa_array.each do |my_hash|
+    #    @taxa.push(FactoryGirl.create(:taxon, taxon: my_hash[:taxon], rank_id: my_hash[:rank_id]))       
+    # end
+    
+    genus_arr        = [{:family => "Bacteroides"},
+    {:family => "Staphylococcus"},
+    {:family => "Dechloromonas"},
+    {:family => "Okibacterium"},
+    {:family => "Blastomonas"}]
+    # @taxa = Array.new
+    # taxa_array.each do |my_hash|
+    #    @taxa.push(FactoryGirl.create(:taxon, taxon: my_hash[:taxon], rank_id: my_hash[:rank_id]))       
+    # end
+    
+    species _arr     = [{:species => "epidermidis"},
+    {:species => "fritillariae"},
+    {:species => "sp. HPA-87"},
+    {:species => "sp. HSA18"},
+    {:species => "sp. HSA19"}]
+    # @taxa = Array.new
+    # taxa_array.each do |my_hash|
+    #    @taxa.push(FactoryGirl.create(:taxon, taxon: my_hash[:taxon], rank_id: my_hash[:rank_id]))       
+    # end
+    
+    strain_arr       = [{:species => "DSM 5456"},
+    {:species => "strain_NA"}]
+    # @taxa = Array.new
+    # taxa_array.each do |my_hash|
+    #    @taxa.push(FactoryGirl.create(:taxon, taxon: my_hash[:taxon], rank_id: my_hash[:rank_id]))       
+    # end
+       
     # aaa = FactoryGirl.create(:taxonomy)
     # puts "Ura2"
     # puts aaa.inspect
     
-    @taxa = Array.new
-    taxa_array.each do |my_hash|
-       @taxa.push(FactoryGirl.create(:taxon, taxon: my_hash[:taxon], rank_id: my_hash[:rank_id]))       
-    end
+    # @taxa = Array.new
+    # taxa_array.each do |my_hash|
+    #    @taxa.push(FactoryGirl.create(:taxon, taxon: my_hash[:taxon], rank_id: my_hash[:rank_id]))       
+    # end
 
     # puts "Ura"
     # puts @taxa.inspect
@@ -81,7 +118,7 @@ describe "Taxa" do
   
   it "should show taxonomy" do
     puts "Ura1"
-    puts @taxa.inspect
+    # puts @taxa.inspect
   end
   # it "should have projects and datasets" do
   #   puts page.body
