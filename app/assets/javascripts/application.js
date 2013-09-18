@@ -16,3 +16,7 @@
 //= require ./barchart
 //= require_tree .
 
+$(document).ready(function(){
+
+	
+})

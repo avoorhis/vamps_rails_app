@@ -9,7 +9,7 @@ gem 'mysql2'
 gem 'devise', '3.0.0.rc'
 gem 'nokogiri'
 gem 'yaml_db', github: 'jetthoughts/yaml_db', ref: 'fb4b6bd7e12de3cffa93e0a298a1e5253d7e92ba'
-
+gem 'protected_attributes'
 gem 'colorize'
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
@@ -30,6 +30,7 @@ group :development, :test do
    gem 'webrat'
    gem 'rspec-rails'
    gem "autotest"
+   gem 'seed_dump'
 end
 
 group :test do 
@@ -39,6 +40,7 @@ group :test do
 	gem 'capybara'
 	gem 'guard-rspec'
 	gem 'launchy'
+  gem 'seed_dump'
 end
 
 group :doc do

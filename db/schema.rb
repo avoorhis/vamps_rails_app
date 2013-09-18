@@ -120,7 +120,7 @@ ActiveRecord::Schema.define(version: 20130914150755) do
 
   create_table "ranks", force: true do |t|
     t.string  "rank",        limit: 32, default: "", null: false
-    t.integer "rank_number", limit: 1,  default: "", null: false
+    t.integer "rank_number", limit: 1,  default: 0,  null: false
   end
 
   add_index "ranks", ["rank"], name: "rank", unique: true, using: :btree

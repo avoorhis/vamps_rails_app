@@ -5,4 +5,9 @@ class Rank < ActiveRecord::Base
   # TODO: Do we need all of them?
   validates :rank, inclusion: { in: ["NA", "class", "domain", "family", "genus", "order", "phylum", "species", "strain", "superkingdom"], message: "%{value} is not a valid rank" }, uniqueness: true
   scope :sorted,  -> { order(:rank_number) }    
+
+
+def get_rank_number(n)
+	return :rank_number
+end
 end

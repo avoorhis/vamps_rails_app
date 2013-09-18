@@ -6,7 +6,9 @@ class VisualizationController < ApplicationController
   def parse_view
     # TEST:
     
-    
+    @projects_test = %w[SLM_NIH_v3]
+    @datasets_test = %w[7_Stockton 8_Stockton 9_Stockton]
+
     #@myarray = get_test_matrix
     
 
@@ -48,7 +50,7 @@ class VisualizationController < ApplicationController
       return
     end
     puts 'Which is a better format: '
-    puts '  this? a simple hash: '+@master_sample_data.inspect
+    puts '  this? a simple hash: ' + @master_sample_data.inspect
     puts '  Or this? an array of hashes: '+@master_sample_data2.inspect
 
     @nas         = params[:nas]
@@ -57,6 +59,7 @@ class VisualizationController < ApplicationController
     @domains     = domains.compact
     # TODO: can we take a rank_id here, please?
     @tax_rank    = params[:tax_rank] || 2
+    @this_rank = Rank.find_by_id(@tax_rank)
     # @rank_number = get_rank_num()
     @view        = params[:view]
     # params[:datasets] are created in visualization.js::getDatasets()
@@ -79,29 +82,29 @@ class VisualizationController < ApplicationController
     
      @taxQuery    = create_tax_query()
      print @taxQuery
-  #   @result      = Project.find_by_sql(@taxQuery)
-  #   taxonomy_by_site = {}    
+     @result      = Project.find_by_sql(@taxQuery)
+     taxonomy_by_site = {}    
 
-  #   for res in @result
-  #     pj  = res["project"]
-  #     ds  = res["dataset"]
-  #     pd = pj+'--'+ds
-  #     ts  = res["taxonomy"]
-  #     knt = res["seq_count"]
-  #     if taxonomy_by_site.has_key?(ts) then
-  #       # append
-  #       taxonomy_by_site[ts].merge!(pd => knt)
-  #     else
-  #       # add array to hash
-  #       taxonomy_by_site[ts] = {pd=>knt}
-  #     end        
-  #   end
-  #   # sort taxonomically alpha
-  #   puts taxonomy_by_site
-  #   taxonomy_by_site = taxonomy_by_site.sort
-  #     # change to array of hashes and fill in zeros
-  #     @taxonomy_by_site = fill_in_zeros(taxonomy_by_site)
-  #    #session[:taxonomy_by_site] = @taxonomy_by_site
+    for res in @result
+      pj  = res["project"]
+      ds  = res["dataset"]
+      pd = pj+'--'+ds
+      ts  = res["taxonomy"]
+      knt = res["knt"]
+      if taxonomy_by_site.has_key?(ts) then
+        # append
+        taxonomy_by_site[ts].merge!(pd => knt)
+      else
+        # add array to hash
+        taxonomy_by_site[ts] = {pd=>knt}
+      end        
+    end
+    # sort taxonomically alpha
+    puts taxonomy_by_site
+    @taxonomy_by_site = taxonomy_by_site.sort
+    # change to array of hashes and fill in zeros
+    #@taxonomy_by_site = fill_in_zeros(@taxonomy_by_site)
+    #session[:taxonomy_by_site] = @taxonomy_by_site
 
   # # select SQL_CACHE project_dataset, taxon_string, knt, classifier, frequency, dataset_count FROM new_summed_data_cube  
   #   # join new_project_dataset using(project_dataset_id)   
@@ -189,74 +192,95 @@ class VisualizationController < ApplicationController
   end
   
   def make_taxa_by_rank()
-    rank_id = Rank.find_by_rank(@tax_rank)
-  
-    # rank_ids = "superkingdom_id, phylum_id, class_id, orderx_id, family_id, genus_id, species_id, strain_id"
-    rank_ids = "t1.taxon, t2.taxon, t3.taxon, t4.taxon, t5.taxon, t6.taxon, t7.taxon, t8.taxon"
-    taxa_ids = "LEFT JOIN taxa AS t1 ON (superkingdom_id = t1.id)
-    LEFT JOIN taxa AS t2 ON (phylum_id       = t2.id)
-    LEFT JOIN taxa AS t3 ON (class_id        = t3.id)
-    LEFT JOIN taxa AS t4 ON (orderx_id       = t4.id)
-    LEFT JOIN taxa AS t5 ON (family_id       = t5.id)
-    LEFT JOIN taxa AS t6 ON (genus_id        = t6.id)
-    LEFT JOIN taxa AS t7 ON (species_id      = t7.id)
-    LEFT JOIN taxa AS t8 ON (strain_id       = t8.id)
-    "
-    return rank_ids, taxa_ids
+    #rank_number = Rank.get_rank_number(@tax_rank)
+    #puts 'rank id: '+rank_number  # == rank.id
+    puts @this_rank
+    puts @this_rank.rank_number 
+    rank_id_names = %w[superkingdom_id phylum_id class_id orderx_id family_id genus_id species_id strain_id]
+    rank_ids = ""
+    taxa_joins = ""
+    for n in 0..@this_rank.rank_number 
+      rank_ids += ' t'+(n+1).to_s+".taxon,"
+      taxa_joins += "LEFT JOIN taxa AS t"+(n+1).to_s+" ON (#{rank_id_names[n]} = t"+(n+1).to_s+".id)\n"
+    end
+    # rank_ids = "t1.taxon, t2.taxon, t3.taxon, t4.taxon, t5.taxon, t6.taxon, t7.taxon, t8.taxon"
+    # taxa_joins = "LEFT JOIN taxa AS t1 ON (superkingdom_id = t1.id)
+    #             LEFT JOIN taxa AS t2 ON (phylum_id       = t2.id)
+    #             LEFT JOIN taxa AS t3 ON (class_id        = t3.id)
+    #             LEFT JOIN taxa AS t4 ON (orderx_id       = t4.id)
+    #             LEFT JOIN taxa AS t5 ON (family_id       = t5.id)
+    #             LEFT JOIN taxa AS t6 ON (genus_id        = t6.id)
+    #             LEFT JOIN taxa AS t7 ON (species_id      = t7.id)
+    #             LEFT JOIN taxa AS t8 ON (strain_id       = t8.id)
+    #             "
+    return rank_ids[0..-2], taxa_joins
   end    
   
   def create_tax_query()
-    projects_datasets = []
     
+    #projects_datasets = []
     #sql_project_datasets     = @datasets.join("','")
-    @datasets.each do |pd|
-      items = pd.split('--')
-      projects_datasets.push({:project=>items[0],:dataset=>items[1]})
+    # @datasets.each do |pd|
+    #   items = pd.split('--')
+    #   projects_datasets.push({:project=>items[0],:dataset=>items[1]})
       
-    end
+    # end
 
-    get_dataset_counts()
+    #get_dataset_counts()
  
     
     # superkingdoms has to match what is in db table
     # TODO: get it from db
-    superkingdom  = Taxon.find_by_rank(@tax_rank)
-    
+    #superkingdom  = Taxon.find_by_rank(@tax_rank)
+    # will this always be '10'?
+    superkingdom_rank_id = 10
+    @superkingdom_list = Taxon.find_all_by_rank_id(superkingdom_rank_id)
     # {"archaea"=>1,"bacteria"=>2, "organelle"=>3,"unknown"=>4,"eukarya"=>5}
-    sql_superkingdom = ''
 
-    rank_ids, taxa_ids = make_taxa_by_rank()
-    print "URA! rank_ids = #{rank_ids}\n taxa_ids = #{taxa_ids}"
-    taxQuery = "SELECT projects.project, datasets.dataset, CONCAT_WS(\";\", #{rank_ids}) AS taxonomy, seq_count AS knt, classifier
-                  FROM sequence_pdr_infos
-                  JOIN sequence_uniq_infos USING(sequence_id)
-                  JOIN taxonomies on (taxonomies.id = taxonomy_id)
-                  #{taxa_ids}
-                  JOIN projects ON(project_id = projects.id) 
-                  JOIN datasets ON(dataset_id = datasets.id)
-              "
+    rank_ids, taxa_joins = make_taxa_by_rank()
+    print "URA! rank_ids = #{rank_ids}\n taxa_joins = #{taxa_joins}"
+    taxQuery = "SELECT distinct projects.project, datasets.dataset, CONCAT_WS(\";\", #{rank_ids}) AS taxonomy, seq_count AS knt, classifier
+FROM sequence_pdr_infos"
+join = "\nJOIN sequence_uniq_infos USING(sequence_id)
+JOIN taxonomies on (taxonomies.id = taxonomy_id)
+#{taxa_joins}
+JOIN projects ON(project_id = projects.id) 
+JOIN datasets ON(dataset_id = datasets.id)
+"
 
-    where    = "  WHERE project in (#{create_comma_list(@projects_test)}) 
-                  AND dataset IN (#{create_comma_list(@datasets_test)})  
-               "
-                  
-# calculate seq_count/dataset_count AS frequency, dataset_count
+    
+    where    = "  WHERE (\n"
+    @master_sample_data.each do |pid,d_array|
+        puts pid
+        
+         d_sql = create_comma_list(d_array)
+         puts d_sql
+           where    += "(projects.id = '#{pid}' "
+           where    += "AND datasets.id IN (#{d_sql}) )\nOR "
+    end 
+    where = where[0..-4]
+    where  += ")\n"           
+    # calculate seq_count/dataset_count AS frequency, dataset_count
 
     ##DOMAINS
-    if @domains.length == 1 then
-      join  += "  JOIN taxonomies on(taxonomy_id = taxonomies.id)"
-      where += "  AND superkingdom_id = '#{superkingdom[@domains[0]]}'"
-    elsif @domains.length == 5 then
-      # nothing extra here
-    else 
-      sk_num = []
-      @domains.each do |d|
-        sk_num << superkingdom[d].to_s()
-      end
-      sql_superkingdom_ids     = sk_num.join("','")
+    unless @domains.length == 5 then
       
-      join  += " JOIN taxonomies using(taxon_string_id)"
-      where += " AND superkingdom_id in ('#{sql_superkingdom_ids}')"
+      sk_num = []
+      @superkingdom_list.each do |sk|
+          if @domains.include? sk.taxon then
+            
+              sk_num << sk.id.to_s
+            
+          end
+      end 
+      puts 'sk num '+sk_num.to_s    
+      if @domains.length == 1
+
+        where += " AND superkingdom_id ='#{sk_num[0]}'"
+      else
+        sql_superkingdom_ids     = sk_num.join("','")      
+        where += " AND superkingdom_id in ('#{sql_superkingdom_ids}')"
+    end
     end
     ##NAs
     if @nas == 'no' then
@@ -267,10 +291,10 @@ class VisualizationController < ApplicationController
         # and taxon_string not like '%;NA' 
         # and taxon_string not like '%_NA'
     end
-    # remove last 'or'
-    where = where[0..-4]
-    where    +=  "  )
-                and rank_id='#{@rank_number}'  "
+
+
+    where    +=  " 
+    AND sequence_uniq_infos.rank_id='#{@this_rank.rank_number}'  "
    
 
     # taxQuery = "SELECT project, dataset, taxon_string, knt, sdc.classifier, frequency, dataset_count
@@ -308,7 +332,7 @@ class VisualizationController < ApplicationController
     #     # and taxon_string not like '%_NA'
     # end
 
-    @taxQuery = taxQuery + where
+    @taxQuery = taxQuery + join + where
   end
 
   def clean_datasets(ds_string)
