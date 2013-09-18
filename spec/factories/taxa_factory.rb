@@ -11,7 +11,7 @@ FactoryGirl.define do
     
     sequence(:taxon){|n| "Bacteria#{n}" }
     taxon.rank_id       1
-    taxon.taxonomies   { Array.new(3) { FactoryGirl.build(:taxonomy) } }    
+    # taxon.taxonomies   { Array.new(3) { FactoryGirl.build(:taxonomy) } }    
     
   end
 end

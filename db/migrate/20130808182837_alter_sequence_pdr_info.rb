@@ -7,8 +7,6 @@ class AlterSequencePdrInfo < ActiveRecord::Migration
           ADD CONSTRAINT sequence_pdr_info_fk_sequence_id FOREIGN KEY (sequence_id) REFERENCES sequences (id) ON UPDATE CASCADE"
     execute "ALTER TABLE sequence_pdr_infos
           ADD CONSTRAINT `sequence_pdr_info_fk_dataset_id` FOREIGN KEY (`dataset_id`) REFERENCES `datasets` (`id`) ON UPDATE CASCADE"
-    execute "ALTER TABLE sequence_pdr_infos
-          ADD CONSTRAINT `sequence_pdr_info_fk_project_id` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`) ON UPDATE CASCADE"
   end
 
   # no need to remove comments
