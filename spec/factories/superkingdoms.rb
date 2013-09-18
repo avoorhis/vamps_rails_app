@@ -2,5 +2,6 @@
 
 FactoryGirl.define do
   factory :superkingdom do
+    sequence(:superkingdom){|n| "Archaea#{n}" }
   end
 end

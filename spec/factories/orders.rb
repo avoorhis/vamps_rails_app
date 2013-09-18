@@ -2,5 +2,6 @@
 
 FactoryGirl.define do
   factory :order do
+    sequence(:order){|n| "Bacteroidales#{n}" }
   end
 end
