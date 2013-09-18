@@ -6,23 +6,46 @@
 <table class='standard_table'>
 
 
+<% projects = [] %>
 
-
-<% if @taxonomy_by_site.any? %>
+<% if @taxonomy_by_site_hash.any? %>
 	<tr><th>Taxonomy</th>
-
-	<% @taxonomy_by_site[0][:datasets].each do |d| %>
-	    <th><%= link_to d[0], "ds_pie" %></th>
-	<% end %>
-	</tr>
-
-	<% @taxonomy_by_site.each do |i| %>
-		<tr><td> <%= link_to i[:taxonomy], "tax_pie" %> </td>
-		<% i[:datasets].each do |d| %>
-	    	<td><%= i[:datasets][d[0]] %></td>
+<!--
+## Getting data out of these nested hashes is way too difficult
+## especially if we have to sort the data later	
+-->
+	<% @taxonomy_by_site_hash.each do |tax, data| %>
+	  <% data.each do |project, ds_hash|%>
+		<% ds_hash.each do |dataset|%>
+			<% ds = dataset[0] %>
+			<% count = dataset[1] %>
+			<% pd = project+'--'+ds %>
+			<% if not projects.include?(pd) then %>
+				<% projects << pd %>
+			<% end %>
 		<% end %>
-	    </tr>
+	  <% end %>
 	<% end %>
+	
+    <% projects.each do |pd| %>    
+		<td> <%= link_to pd, "ds_pie" %> </td>    
+    <% end %>
+</tr>
+
+	<% @taxonomy_by_site_hash.each do |tax, data| %>
+	<tr><td><%= tax %></td>
+	
+	  <% data.each do |project, ds_hash|%>
+		<% ds_hash.each do |dataset|%>
+			<% ds = dataset[0] %>
+			<% count = dataset[1] %>
+			<% pd = project+'--'+ds %>
+			<td><%= count %></td>
+		<% end %>
+	  <% end %>
+	  </tr>
+	<% end %>
+
 <% else %>
 	<tr><td><strong>NO DATA</strong></td></tr>
 <% end %>

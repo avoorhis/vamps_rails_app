@@ -18,10 +18,10 @@ Keep NAs in output?
 
 <br>
 Taxonomic Rank:
-<% @ranks.each_with_index do |rank, rank_number| %>
-  <% if rank_number < 8 %>
+<% @ranks.each do |rank| %>
+  <% if rank.rank_number < 8 %>
     <br>
-    <%= radio_button_tag(:tax_rank, rank.id, rank.rank == "phylum") %>
+    <%= radio_button_tag(:tax_id, rank.id, rank.rank == "phylum") %>
     <%= label_tag(:tax_domain, rank.rank.capitalize) %>
   <% end %>
 <% end %>
