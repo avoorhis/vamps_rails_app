@@ -9,12 +9,6 @@ class VisualizationController < ApplicationController
     @projects_test = %w[SLM_NIH_v3]
     @datasets_test = %w[7_Stockton 8_Stockton 9_Stockton]
 
-    #@myarray = get_test_matrix
-    
-
-    #we_have_some_data = false
-    #@master_sample_data = Hash.new
-    #@master_sample_data2 = []
     
     @ordered_datasets = create_ordered_datasets() 
     

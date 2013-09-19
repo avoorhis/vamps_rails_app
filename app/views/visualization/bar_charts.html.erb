@@ -5,14 +5,15 @@
 
 <div  id='bars_table_div' >
 <table id ='bars_table'>
+	<% puts 'tax '+@taxonomy_by_site_hash.inspect %>
 <% @ordered_datasets.each do |pj| %>       
   <% pj[:datasets].each do |ds|	%>
     <tr id=''><td nowrap='nowrap'><%= pj[:pname] %>--<%= ds[:dname] %></td>
 	<td>
 	<!-- # see: app/helpers/visualization_helper.rb -->
 	<% puts 'ds '+ds.inspect %>
-	<% ds_info = get_retmat(ds[:dname])  %>	
-
+	<% ds_info = get_retmat(pj[:pname], ds[:dname])  %>	
+<% puts 'retmat '+ds_info.inspect %>
 	<div class='bars_each_div' > 
 		
 	<% if ds_info[:retmat].any? and ds_info[:total] > 0 %>

@@ -1,18 +1,23 @@
 module VisualizationHelper
 
-  def get_retmat(ds)
+  def get_retmat(pj,ds)
 	retmat = {}
 	total = 0
-	@taxonomy_by_site_hash.each do |item|
-		taxonomy = item[:taxonomy]
-		ds_hash  = item[:datasets]
-		value = ds_hash[ds]
-		retmat[taxonomy] = value
-		if value > 0 then
-			total += value
+	@taxonomy_by_site_hash.each do |taxonomy, pj_hash|
+	  pj_hash.each do |project, ds_hash|
+	    if pj == project	
+		  ds_hash.each do |dataset, value|
+		    if ds == dataset
+		      if value > 0 then
+		  	    retmat[taxonomy] = value		      
+			    total += value
+			  end
+			end
+		  end
 		end
+	  end
 	end
-	return { :name=>ds, :retmat=>retmat, :total=>total }
+	return { :dname=>ds, :retmat=>retmat, :total=>total }
   end
 
  

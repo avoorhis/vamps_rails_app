@@ -1,15 +1,15 @@
 <h1>Tax Table</h1>
 
-
 <%= render "debug" %>
 
+<div  id='tax_table_div' >
 <table class='standard_table'>
 
 
 <% projects = [] %>
 <% column_totals = {} %>
 <% if @taxonomy_by_site_hash.any? %>
-	<tr><th>Taxonomy</th>
+	<tr><th style='text-align:right;'>Projects:</th>
 <!--
 ## Getting data out of these nested hashes is way too difficult
 ## especially if we have to sort the data 
@@ -26,14 +26,25 @@
 		<% end %>
 	  <% end %>
 	<% end %>
-	
-    <% projects.each do |pd| %>    
-		<td> <%= link_to pd, "ds_pie" %> </td>    
-    <% end %>
-</tr>
+
+	<% @ordered_datasets.each do |p| %>
+		
+	  		<td style='text-align:center;' colspan='<%= p[:datasets].length %>'> <%= p[:pname] %> </td>   
+	  	
+	<% end %>
+	</tr>
+	<tr><th style='text-align:left;'>Taxonomy:</th>
+	<% @ordered_datasets.each do |p| %>
+		<% p[:datasets].each do |d| %>
+		  <td style='padding:0 2px 0 2px;'> <%= d[:dname] %> </td> 
+		<% end %>
+	<% end %>
+
+    
+    </tr>
 
 	<% @taxonomy_by_site_hash.each do |tax, data| %>
-	<tr><td><%= tax %></td>
+	<tr><td nowrap='nowrap'><%= tax %></td>
 	
 	  <% data.each do |project, ds_hash|%>
 		<% ds_hash.each do |dataset|%>
@@ -61,5 +72,5 @@
 	<% end %>
 </td>
 </table>
-
+</div>
 

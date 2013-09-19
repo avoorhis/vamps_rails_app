@@ -2,7 +2,18 @@
   Place all the styles related to the matching controller here.
   They will automatically be included in application.css.
 */
+#tax_table_div{
+	margin:10px 0 0 10px;
+	
+}
+.standard_table{
+	background:white;
 
+}
+.no_bullets ul{
+	list-style-type: none;
+	
+}
 #bars_table_div{
 	font-size:10px;
 	padding:10px;

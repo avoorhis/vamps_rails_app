@@ -2,8 +2,6 @@
 // All this logic will automatically be available in application.js.
 
 
-//= require ./mootools/mootools-beta-1.2b2
-//= require ./mootools/moocanvas
 
 function toggleAll(name)
 {
@@ -65,23 +63,30 @@ function open_datasets(pid, project)
   //alert('in open')
   ds_div = document.getElementById(pid+'_ds_div');
   cbs = document.getElementsByName(project+'--ds-ids[]')
-  toggle = document.getElementById(project+'_toggle')
+  
+  // if closed it will open
   if(ds_div.style.display == 'inline'){
-    // hide
-    ds_div.style.display = 'none'
-    toggle.style.visibility = 'hidden'
+    
     // uncheck project
-    document.getElementById(project+'--pj-id').checked = false
-    for(var i=0; i < cbs.length; i++) {
-      if(cbs[i].type == 'checkbox') {
+
+    if(cbs[0].checked == true) {  
+      document.getElementById(project+'--pj-id').checked = false
+      for(var i=0; i < cbs.length; i++) { 
         cbs[i].checked=false        
       }
+    }else{
+      document.getElementById(project+'--pj-id').checked = true
+      for(var i=0; i < cbs.length; i++) { 
+        cbs[i].checked=true        
+      }
     }
+
+
+    
   }else{
-    // show open dataset div
-    ds_div.style.display = 'inline'
-    toggle.style.visibility = 'visible'
+   
     // check project
+    ds_div.style.display = 'inline'
     document.getElementById(project+'--pj-id').checked = true
     // now set all the ds checkboxes to 'checked'
     for(var i=0; i < cbs.length; i++) {
@@ -113,29 +118,62 @@ function check_project(pid, project)
     document.getElementById(project+'--pj-id').checked = false
   }
 }
+
 //
 // TOGGLE_SELECTED_DATASETS
 //
 function toggle_selected_datasets(pid, project)
 {
-  
+
   cbs = document.getElementsByName(project+'--ds-ids[]')
   ds_div = document.getElementById(pid+'_ds_div')
-  
-
-  
-  if(cbs[0].checked == true) {  
+  toggle = document.getElementById(project+'_toggle')
+  if(ds_div.style.display == 'inline'){
+    ds_div.style.display = 'none'
     document.getElementById(project+'--pj-id').checked = false
-    for(var i=0; i < cbs.length; i++) { 
+    // change image to plus.png
+    toggle.innerHTML = "<img alt='plus' src='assets/tree_plus.gif' />"
+    for(var i=0; i < cbs.length; i++) {
+      if(cbs[i].type == 'checkbox') {
         cbs[i].checked=false        
+      }
     }
   }else{
+    ds_div.style.display = 'inline'
     document.getElementById(project+'--pj-id').checked = true
-    for(var i=0; i < cbs.length; i++) { 
+    toggle.innerHTML = "<img alt='minus' src='assets/tree_minus.gif' />"
+    for(var i=0; i < cbs.length; i++) {
+      if(cbs[i].type == 'checkbox') {
         cbs[i].checked=true        
+      }
     }
-
   }
 
 
 }
+//
+// TOGGLE_SELECTED_DATASETS
+//
+// function toggle_selected_datasets(pid, project)
+// {
+  
+//   cbs = document.getElementsByName(project+'--ds-ids[]')
+//   ds_div = document.getElementById(pid+'_ds_div')
+  
+
+  
+//   if(cbs[0].checked == true) {  
+//     document.getElementById(project+'--pj-id').checked = false
+//     for(var i=0; i < cbs.length; i++) { 
+//         cbs[i].checked=false        
+//     }
+//   }else{
+//     document.getElementById(project+'--pj-id').checked = true
+//     for(var i=0; i < cbs.length; i++) { 
+//         cbs[i].checked=true        
+//     }
+
+//   }
+
+
+// }
