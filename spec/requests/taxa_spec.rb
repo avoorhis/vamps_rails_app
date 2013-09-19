@@ -28,19 +28,23 @@ describe "Taxa" do
     {:superkingdom => "Eukarya"},
     {:superkingdom => "Organelle"},
     {:superkingdom => "Unknown"}]
-    # @taxa = Array.new
-    # taxa_array.each do |my_hash|
-    #    @taxa.push(FactoryGirl.create(:taxon, taxon: my_hash[:taxon], rank_id: my_hash[:rank_id]))       
-    # end
+    @superkingdoms = Array.new
+    superkingdom_arr.each do |my_hash|
+       @superkingdoms.push(FactoryGirl.create(:superkingdom, superkingdom: my_hash[:superkingdom]))       
+    end
+    
+    puts "UUU"
+    puts @superkingdoms.inspect
     
     phylum_arr       = [{:phylum => "Bacteroidetes"},
     {:phylum => "Firmicutes"},
     {:phylum => "Proteobacteria"},
     {:phylum => "Actinobacteria"},
     {:phylum => "Euryarchaeota"}]
-    @phylum = Array.new
+
+    @phylums = Array.new
     phylum_arr.each do |my_hash|
-       @phylum.push(FactoryGirl.create(:phylum, phylum: my_hash[:phylum]))       
+       @phylums.push(FactoryGirl.create(:phylum, phylum: my_hash[:phylum]))       
     end
     
     klass_arr        = [{:klass => "Bacteroidia"},
@@ -49,57 +53,57 @@ describe "Taxa" do
     {:klass => "Betaproteobacteria"},
     {:klass => "Alphaproteobacteria"},
     {:klass => "Clostridia"}]
-    # @taxa = Array.new
-    # taxa_array.each do |my_hash|
-    #    @taxa.push(FactoryGirl.create(:taxon, taxon: my_hash[:taxon], rank_id: my_hash[:rank_id]))       
-    # end
+    @klasses = Array.new
+    klass_arr.each do |my_hash|
+       @klasses.push(FactoryGirl.create(:klass, klass: my_hash[:klass]))       
+    end
     
     order_arr        = [{:order => "Bacteroidales"},
     {:order => "Bacillales"},
     {:order => "Vibrionales"},
     {:order => "Rhodocyclales"},
     {:order => "Actinomycetales"}]
-    # @taxa = Array.new
-    # taxa_array.each do |my_hash|
-    #    @taxa.push(FactoryGirl.create(:taxon, taxon: my_hash[:taxon], rank_id: my_hash[:rank_id]))       
-    # end
+    @orders = Array.new
+    order_arr.each do |my_hash|
+       @orders.push(FactoryGirl.create(:order, order: my_hash[:order]))       
+    end
     
     family_arr       = [{:family => "Bacteroidaceae"},
     {:family => "Staphylococcaceae"},
     {:family => "Vibrionaceae"},
     {:family => "Rhodocyclaceae"},
     {:family => "Microbacteriaceae"}]
-    # @taxa = Array.new
-    # taxa_array.each do |my_hash|
-    #    @taxa.push(FactoryGirl.create(:taxon, taxon: my_hash[:taxon], rank_id: my_hash[:rank_id]))       
-    # end
+    @families = Array.new
+    family_arr.each do |my_hash|
+       @families.push(FactoryGirl.create(:family, family: my_hash[:family]))       
+    end
     
-    genus_arr        = [{:family => "Bacteroides"},
-    {:family => "Staphylococcus"},
-    {:family => "Dechloromonas"},
-    {:family => "Okibacterium"},
-    {:family => "Blastomonas"}]
-    # @taxa = Array.new
-    # taxa_array.each do |my_hash|
-    #    @taxa.push(FactoryGirl.create(:taxon, taxon: my_hash[:taxon], rank_id: my_hash[:rank_id]))       
-    # end
+    genus_arr        = [{:genus => "Bacteroides"},
+    {:genus => "Staphylococcus"},
+    {:genus => "Dechloromonas"},
+    {:genus => "Okibacterium"},
+    {:genus => "Blastomonas"}]
+    @genera = Array.new
+    genus_arr.each do |my_hash|
+       @genera.push(FactoryGirl.create(:genus, genus: my_hash[:genus]))       
+    end
     
     species _arr     = [{:species => "epidermidis"},
     {:species => "fritillariae"},
     {:species => "sp. HPA-87"},
     {:species => "sp. HSA18"},
     {:species => "sp. HSA19"}]
-    # @taxa = Array.new
-    # taxa_array.each do |my_hash|
-    #    @taxa.push(FactoryGirl.create(:taxon, taxon: my_hash[:taxon], rank_id: my_hash[:rank_id]))       
-    # end
+    @species = Array.new
+    species_arr.each do |my_hash|
+       @species.push(FactoryGirl.create(:species, species: my_hash[:species]))       
+    end
     
-    strain_arr       = [{:species => "DSM 5456"},
-    {:species => "strain_NA"}]
-    # @taxa = Array.new
-    # taxa_array.each do |my_hash|
-    #    @taxa.push(FactoryGirl.create(:taxon, taxon: my_hash[:taxon], rank_id: my_hash[:rank_id]))       
-    # end
+    strain_arr       = [{:strain => "DSM 5456"},
+    {:strain => "strain_NA"}]
+    @strains = Array.new
+    strain_arr.each do |my_hash|
+       @strains.push(FactoryGirl.create(:strain, strain: my_hash[:strain]))       
+    end
        
     # aaa = FactoryGirl.create(:taxonomy)
     # puts "Ura2"
