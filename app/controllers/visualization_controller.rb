@@ -12,49 +12,22 @@ class VisualizationController < ApplicationController
     #@myarray = get_test_matrix
     
 
-    we_have_some_data = false
-    @master_sample_data = Hash.new
-    @master_sample_data2 = []
+    #we_have_some_data = false
+    #@master_sample_data = Hash.new
+    #@master_sample_data2 = []
     
-    temp_project = {}
-    params.each do |k,v|
-      
-      param_parts = k.split('--')
-      #puts param_parts[0]
-      # here we catch the selected project (the selected datasets should follow)
-      # if no datasets folow then we should delete @master_sample_data[pid]
-      if param_parts[1] == 'pj-id' and v.to_i > 0
-
-         
-         temp_project = { :id=>v.to_i, :name=>param_parts[0] }
-
-      end
-      if param_parts[1] == 'ds-ids' and params[k].any?
-        if temp_project[:name] == param_parts[0]
-          we_have_some_data = true
-          puts temp_project.inspect
-          v = v.collect{|i| i.to_i}
-          @master_sample_data[temp_project[:id]] = v
-          myhash = {:pid=>temp_project[:id], :name=>temp_project[:name],  :datasets=>v,}
-          #myhash2 = {:pid=>temp_project[:id], :name=>temp_project[:name],  :datasets=>v,}
-          @master_sample_data2.push(myhash)
-          #@master_sample_names.push(myhash2)
-          temp_project = {}
-        end
-      end
-      # if no datasets folow then we should delete @master_sample_data[pid]
-      #if @master_sample_data.include? temp_project[:id] and @master_sample_data[temp_project[:id]] == []
-      #  @master_sample_data.delete(temp_project[:id])
-      #end
-    end
-    if not we_have_some_data
+    @ordered_datasets = create_ordered_datasets() 
+    
+    puts 'ordered datasets: ' +@ordered_datasets.inspect
+   
+    if not @ordered_datasets.any?
       flash.alert = 'Choose some data!'
       redirect_to visualization_index_path
       return
     end
-    puts 'Which is a better format: '
-    puts '  this? a simple hash: ' + @master_sample_data.inspect
-    puts '  Or this? an array of hashes: '+@master_sample_data2.inspect
+    #puts 'Which is a better format: '
+    #puts '  this? a simple hash: ' + @master_sample_data.inspect
+    #puts '  Or this? an array of hashes: '+@master_sample_data2.inspect
 
     @nas         = params[:nas]
     #domains  = Array[params[:bacteria], params[:archaea], params[:eukarya], params[:organelle], params[:unknown]]
@@ -63,13 +36,10 @@ class VisualizationController < ApplicationController
     # TODO: can we take a rank_id here, please?
     
     rank_id = params[:tax_id]
-    puts 'this_rank id: '+rank_id.to_s
-    this_rank = Rank.find_by_id(rank_id)
-    @rank_number = this_rank.rank_number
-    @rank_name = this_rank.rank
-    puts 'this_rank num: '+@rank_number.to_s
-    puts 'this_rank name: '+@rank_name 
-    # @rank_number = get_rank_num()
+    rank_obj = Rank.find_by_id(rank_id)
+    @rank_number = rank_obj.rank_number
+    @rank_name = rank_obj.rank
+    
     @view        = params[:view]
     # params[:datasets] are created in visualization.js::getDatasets()
     # session[:datasets]= clean_datasets( params[:datasets] )
@@ -91,28 +61,15 @@ class VisualizationController < ApplicationController
     
     @taxQuery    = create_tax_query()
     print @taxQuery
-    result      = Project.find_by_sql(@taxQuery)
-    @taxonomy_hash = create_sorted_taxonomy_by_site(result)
-    puts "before fill with zeros:"
-    puts @taxonomy_hash
-    @taxonomy_by_site_hash = fill_in_zeros(@taxonomy_hash)
-    puts "after fill with zeros:"
-    puts @taxonomy_by_site_hash
-    # puts 'EXIT'
-    # @taxonomy_by_site_array = create_sorted_taxonomy_by_site(result)
-    # puts @taxonomy_by_site_array.inspect
-    # puts
-    # # change to array of hashes and fill in zeros
-    # @taxonomy_by_site_hash = fill_in_zeros(@taxonomy_by_site_array)
-    # puts @taxonomy_by_site_hash.inspect
+    sql_result      = Project.find_by_sql(@taxQuery)
+    taxonomy_hash = create_sorted_taxonomy_by_site(sql_result)
+    #puts "before fill with zeros:"
+    #puts taxonomy_hash
+    @taxonomy_by_site_hash = fill_in_zeros(taxonomy_hash)
+    #puts "after fill with zeros:"
+    #puts @taxonomy_by_site_hash
+  
 
-    #session[:taxonomy_by_site] = @taxonomy_by_site
-
-  # # select SQL_CACHE project_dataset, taxon_string, knt, classifier, frequency, dataset_count FROM new_summed_data_cube  
-  #   # join new_project_dataset using(project_dataset_id)   
-  #   # join new_taxon_string using(taxon_string_id, rank_number)  where
-  #   # project_dataset in ('AB_SAND_Bv6--HS122','AB_SAND_Bv6--HS123') and  rank_number='1'
-    
     if params[:view]      == "heatmap"
       render :heatmap
     elsif  params[:view]  == "bar_charts"
@@ -159,24 +116,55 @@ class VisualizationController < ApplicationController
 ################################################################################
   private
 
+#
+#  GET ORDERED DATASETS
+#
+def create_ordered_datasets() 
+  # Retains order: [ {'p1'=>['d1','d2','d3']}, {'p2'=>['d4','d5','d6']} ]
+  # Retains order: [  {:pid=>pid, :name=>"pname", :datasets=>[{:did=>did_1,:dname=>"dname_1"},{}] }, 
+  #                   {}
+  #                   {} 
+  #                 ]
+  temp_project_array = []
+  temp_dataset_array = []
+  pid = -1  #initialize
+  params.each do |k,v|
+    
+    param_parts = k.split('--')
+    
+    if param_parts[1] == 'pj-id'
+
+      pid = v.to_i
+    end
+    
+    if param_parts[1] == 'ds-ids' and params[k].any?
+      project_name = param_parts[0]
+      v.each do |did|
+        dataset_name = Dataset.find_by_id(did).dataset
+        temp_dataset_array << {:did=>did,:dname=>dataset_name}
+      end
+      temp_project_array << {:pid=>pid,:pname=>project_name, :datasets=> temp_dataset_array}
+      temp_dataset_array = []
+      pid = -1  # reset
+    end
+  end
+
+  return temp_project_array
+end
+
+#
+#  CREATE SORTED TAXONOMY BY SITE
+#
 def create_sorted_taxonomy_by_site(result)
     taxonomy_hash =  {} 
-    @project_datasets = {}
+    
     for res in result
       pj  = res["project"]
       ds  = res["dataset"]
       #pd = pj+'--'+ds
       ts  = res["taxonomy"]
       knt = res["knt"]
-      # create dataset names hash
-      # PD: {"SLM_NIH_Bv6"=>["SS_WWTP_1_25_11_2step"], "SLM_NIH_Bv4v5"=>["1St_121_Stockton", "1St_120_Richmond", "1St_152_Metro_North"]}
-      if @project_datasets.has_key?(pj) then
-        if ! @project_datasets[pj].include?(ds) 
-          @project_datasets[pj] << ds
-        end
-      else
-        @project_datasets[pj] = [ds]
-      end
+      
       if taxonomy_hash.has_key?(ts) then
         if taxonomy_hash[ts].has_key?(pj) then
           if taxonomy_hash[ts][pj].has_key?(ds) then
@@ -199,132 +187,38 @@ def create_sorted_taxonomy_by_site(result)
 
     return taxonomy_hash
 end
-#
-#  CREATE SORTED TAXONOMY BY SITE
-#
-# has all sites filled (with zeros if neccesary)
-# {
-#   "Bacteria;Bacteroidetes"=>
-#     {
-#       "SLM_NIH_Bv6"=>
-#         { 
-#           "SS_WWTP_1_25_11_2step"=>1011
-          
-#         },
-#       "SLM_NIH_Bv4v5"=>
-#         {
-#           "1St_121_Stockton"=>0, 
-#             "1St_120_Richmond"=>0, 
-#             "1St_152_Metro_North"=>0
-#         }
-#     },
-#   "Bacteria;Proteobacteria"=>{
-#     "SLM_NIH_Bv6"=>
-#       {
-#         "SS_WWTP_1_25_11_2step"=>1634236
-#       },
-#     "SLM_NIH_Bv4v5"=>
-#       {
-#         "1St_121_Stockton"=>11, 
-#         "1St_120_Richmond"=>4, 
-#         "1St_152_Metro_North"=>1
-#       }
-#   }
-# }
-  # def create_sorted_taxonomy_by_site(result)
-  #   taxonomy_by_site = {}  
-  #   @project_datasets = {}
-  #   for res in result
-  #     pj  = res["project"]
-  #     ds  = res["dataset"]
-  #     pd = pj+'--'+ds
-  #     ts  = res["taxonomy"]
-  #     knt = res["knt"]
-
-  #     # create dataset names hash
-  #     # PD: {"SLM_NIH_Bv6"=>["SS_WWTP_1_25_11_2step"], "SLM_NIH_Bv4v5"=>["1St_121_Stockton", "1St_120_Richmond", "1St_152_Metro_North"]}
-  #     if @project_datasets.has_key?(pj) then
-  #       if ! @project_datasets[pj].include?(ds) 
-  #         @project_datasets[pj] << ds
-  #       end
-  #     else
-  #       @project_datasets[pj] = [ds]
-  #     end
-  #     if taxonomy_by_site.has_key?(ts) then
-  #       if taxonomy_by_site[ts].has_key?(pd) then
-  #         # sum knt for this ts and ds
-  #         taxonomy_by_site[ts][pd] += knt 
-  #       else
-  #         # append new
-  #         taxonomy_by_site[ts].merge!(pd => knt)
-  #       end
-  #     else
-  #       # add new array to hash if not already there
-  #       taxonomy_by_site[ts] = {pd=>knt}
-  #     end        
-  #   end
-  #   # sort taxonomically alpha
-  #   #puts 'PD: '+@project_datasets.inspect
-  #   return taxonomy_by_site.sort
-  # end
 
 #
 #  FILL IN ZEROS
 #
   def fill_in_zeros(tax_hash)
-    #new_tax_array = []
+
     tax_hash.each do |tax, pj_hash| 
-      @project_datasets.each do |project,datasets| 
-        if not pj_hash.include?(project) then
+      @ordered_datasets.each do |pj| 
+        if not pj_hash.include?(pj[:pname]) then
           # add the empty project
-          pj_hash.merge!(project => {})
+          pj_hash.merge!(pj[:pname] => {})
         end
       end
 
       pj_hash.each do |p, ds_hash|
         #puts 'ds_hash '+ds_hash.inspect
-        @project_datasets.each do |project,datasets| 
-          datasets.each do |dataset|
+        @ordered_datasets.each do |pj| 
+          
+          pj[:datasets].each do |ds|
             
-            #pd = project+'--'+dataset
-            if p==project and not ds_hash.include?(dataset) then
-            #tax_hash[tax].merge!(ds => 0)
-            ds_hash.merge!(dataset => 0)
-
+            if p==pj[:pname] and not ds_hash.include?(ds[:dname]) then    
+              ds_hash.merge!(ds[:dname] => 0)
             end
-
           end
         end
 
       end
       #puts 'pj_hash '+pj_hash.inspect 
-      #new_tax_array.push({:taxonomy=>tax,:datasets=>v})
     end
     return tax_hash
-    #return new_tax_array
   end
-  # def fill_in_zeros(tax_hash)
-  #   #new_tax_array = []
-  #   tax_hash.each do |tax, v|      
-  #     @project_datasets.each do |project,datasets| 
-  #       datasets.each do |dataset|
-
-  #         pd = project+'--'+dataset
-  #         if not v.include?(pd) then
-  #           #tax_hash[tax].merge!(ds => 0)
-  #           v.merge!(pd => 0)
-
-  #         end
-
-  #       end
-
-  #     end
-  #     #new_tax_array.push({:taxonomy=>tax,:datasets=>v})
-  #   end
-  #   return tax_hash
-  #   #return new_tax_array
-  # end
-
+ 
 #
 #  GET DATASET COUNTS
 #
@@ -336,11 +230,15 @@ end
       "      
 
     where    = "  WHERE (\n"
-    @master_sample_data.each do |pid,d_array|       
-         d_sql = create_comma_list(d_array)
-         puts d_sql
-           where    += "(projects.id = '#{pid}' "
-           where    += "AND datasets.id IN (#{d_sql}) )\nOR "
+    #@master_sample_data.each do |pid,d_array|  
+    @ordered_datasets.each do |p|     
+         
+        # p[:datasets]
+        d_array = p[:datasets].map { |x| x[:did] }
+        puts d_array
+        d_sql = create_comma_list(d_array)
+        where    += "(projects.id = '#{p[:pid]}' "
+        where    += "AND datasets.id IN (#{d_sql}) )\nOR "
     end 
     where = where[0..-4]
     where  += ")\n"    
@@ -406,13 +304,13 @@ JOIN taxonomies ON (taxonomies.id = taxonomy_id)
 "
 
     where    = "  WHERE (\n"
-    @master_sample_data.each do |pid,d_array|
-        puts pid
-        
-         d_sql = create_comma_list(d_array)
-         puts d_sql
-           where    += "(projects.id = '#{pid}' "
-           where    += "AND datasets.id IN (#{d_sql}) )\nOR "
+    @ordered_datasets.each do |p|     
+         
+        d_array = p[:datasets].map { |x| x[:did] }
+        puts d_array
+        d_sql = create_comma_list(d_array)
+        where    += "(projects.id = '#{p[:pid]}' "
+        where    += "AND datasets.id IN (#{d_sql}) )\nOR "
     end 
     where = where[0..-4]
     where  += ")\n"           

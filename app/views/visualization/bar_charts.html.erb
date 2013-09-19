@@ -5,11 +5,13 @@
 
 <div  id='bars_table_div' >
 <table id ='bars_table'>
-<% @datasets.each do |ds|	%>
-<tr id=''><td nowrap='nowrap'><%= ds %></td>
+<% @ordered_datasets.each do |pj| %>       
+  <% pj[:datasets].each do |ds|	%>
+    <tr id=''><td nowrap='nowrap'><%= pj[:pname] %>--<%= ds[:dname] %></td>
 	<td>
 	<!-- # see: app/helpers/visualization_helper.rb -->
-	<% ds_info = get_retmat(ds)  %>	
+	<% puts 'ds '+ds.inspect %>
+	<% ds_info = get_retmat(ds[:dname])  %>	
 
 	<div class='bars_each_div' > 
 		
@@ -24,7 +26,7 @@
 				<td><%= string_2_color(tax) %></td>
 				<td><%= "http://www.google.com" %></td>
 				<td><%= ds_info[:total] %></td>
-				<td><%= ds %></td>
+				<td><%= ds[:dname] %></td>
 			</tr>
 		  <% end %>			
 		<% end %>
@@ -37,6 +39,7 @@
 	</td>
 </tr>
 <% end %>	
+<% end %>
 </table>	
 </div>	   
 		
