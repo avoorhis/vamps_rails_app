@@ -1,6 +1,6 @@
 class Dataset < ActiveRecord::Base
   belongs_to :project
-  has_one    :env_sample_source
+  belongs_to :env_sample_source
 
   has_many   :sequence_pdr_infos
   has_many   :sequences, :through => :sequence_pdr_infos
