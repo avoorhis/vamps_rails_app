@@ -150,8 +150,8 @@ ActiveRecord::Schema.define(version: 20130917211303) do
 
   create_table "ranks", force: true do |t|
     t.string  "rank",        limit: 32, default: "", null: false
-    t.integer "rank_number", limit: 1,  default: 0,  null: false
-
+    t.integer "rank_number", limit: 1,               null: false
+  end
 
   add_index "ranks", ["rank"], name: "rank", unique: true, using: :btree
 
@@ -240,28 +240,6 @@ ActiveRecord::Schema.define(version: 20130917211303) do
   end
 
   add_index "taxonomies_old", ["taxonomy"], name: "taxonomy", unique: true, using: :btree
-
-  create_table "taxonomies_view", id: false, force: true do |t|
-    t.integer "id",              limit: 1, null: false
-    t.integer "superkingdom_id", limit: 1, null: false
-    t.integer "superkingdom",    limit: 1, null: false
-    t.integer "phylum_id",       limit: 1, null: false
-    t.integer "phylum",          limit: 1, null: false
-    t.integer "klass_id",        limit: 1, null: false
-    t.integer "klass",           limit: 1, null: false
-    t.integer "order_id",        limit: 1, null: false
-    t.integer "order",           limit: 1, null: false
-    t.integer "family_id",       limit: 1, null: false
-    t.integer "family",          limit: 1, null: false
-    t.integer "genus_id",        limit: 1, null: false
-    t.integer "genus",           limit: 1, null: false
-    t.integer "species_id",      limit: 1, null: false
-    t.integer "species",         limit: 1, null: false
-    t.integer "strain_id",       limit: 1, null: false
-    t.integer "strain",          limit: 1, null: false
-    t.integer "created_at",      limit: 1, null: false
-    t.integer "updated_at",      limit: 1, null: false
-  end
 
   create_table "users", force: true do |t|
     t.string   "username",               limit: 20

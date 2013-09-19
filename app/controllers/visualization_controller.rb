@@ -2,7 +2,6 @@ class VisualizationController < ApplicationController
   
   before_filter :authenticate_user!
   
-
   def parse_view
     # TEST:
     
@@ -223,31 +222,49 @@ end
 #  GET DATASET COUNTS
 #
   def get_dataset_counts()
+    # TODO: Move to the model and simplify
+    dataset_counts = Hash.new
+    d_ids = [5,6,7] #TODO: take the ids from params[:dataset] and move to the main
+    @datasets = Dataset.all.find(d_ids) #TODO: move to the main
+    @datasets.each do |dataset|
+      sum = 0
+      dataset.sequence_pdr_infos.each do |i|
+        sum += i.seq_count
+      end
+      dataset_counts[dataset[:id]] = sum
+    end
     
-    sql = "SELECT datasets.project_id, dataset_id, sum(seq_count) FROM sequence_pdr_infos
-      JOIN datasets ON (dataset_id = datasets.id)
-      JOIN projects ON (project_id = projects.id)
-      "      
-
-    where    = "  WHERE (\n"
-    #@master_sample_data.each do |pid,d_array|  
-    @ordered_datasets.each do |p|     
-         
-        # p[:datasets]
-        d_array = p[:datasets].map { |x| x[:did] }
-        puts d_array
-        d_sql = create_comma_list(d_array)
-        where    += "(projects.id = '#{p[:pid]}' "
-        where    += "AND datasets.id IN (#{d_sql}) )\nOR "
-    end 
-    where = where[0..-4]
-    where  += ")\n"    
-    sql = sql + where + "
-      GROUP BY datasets.project_id, dataset_id
-    "
-    puts sql
-    result = ActiveRecord::Base.connection.select_rows(sql)
-    return result
+    puts "get_dataset_counts = "
+    puts dataset_counts.inspect
+    
+    return dataset_counts
+    
+    # sql = "SELECT datasets.project_id, dataset_id, sum(seq_count) FROM sequence_pdr_infos
+    #   JOIN datasets ON (dataset_id = datasets.id)
+    #   JOIN projects ON (project_id = projects.id)
+    #   "      
+    # 
+    # where    = "  WHERE (\n"
+    # #@master_sample_data.each do |pid,d_array|  
+    # @ordered_datasets.each do |p|     
+    #      
+    #     # p[:datasets]
+    #     d_array = p[:datasets].map { |x| x[:did] }
+    #     puts d_array
+    #     d_sql = create_comma_list(d_array)
+    #     where    += "(projects.id = '#{p[:pid]}' "
+    #     where    += "AND datasets.id IN (#{d_sql}) )\nOR "
+    # end 
+    # where = where[0..-4]
+    # where  += ")\n"    
+    # sql = sql + where + "
+    #   GROUP BY datasets.project_id, dataset_id
+    # "
+    # puts sql
+    # result = ActiveRecord::Base.connection.select_rows(sql)
+    # puts "get_dataset_counts = "
+    # puts result.inspect
+    # return result
   end
 
 #
