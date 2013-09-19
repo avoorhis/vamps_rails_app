@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   
   def do_common_stuff
     @ranks   = Rank.all.sorted
-    @domains = Rank.find_by(rank: "superkingdom").taxa.order(:taxon)
+    @domains = Superkingdom.all
   end
   
   def make_taxa_by_rank()
