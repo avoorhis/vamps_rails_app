@@ -2,8 +2,8 @@
 	"toggleAll('domain_select');return false;"%>Toggle Domains
 <% @domains.each do |domain| %>
     <br>
-    <%= check_box_tag("domains[]", domain.taxon, true, :class=>'domain_select') %>
-    <%= label_tag(domain.taxon, domain.taxon.capitalize) %>
+    <%= check_box_tag("domains[]", domain.superkingdom, true, :class=>'domain_select') %>
+    <%= label_tag(domain.superkingdom, domain.superkingdom.capitalize) %>
 <% end %>
 
 <br>
