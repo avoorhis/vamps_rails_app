@@ -4,9 +4,9 @@
 <%= render "downloads" %>
 
 <div  id='bars_table_div' >
-<table id ='bars_table'>
-	<% puts 'tax '+@taxonomy_by_site_hash.inspect %>
-<% @ordered_datasets.each do |pj| %>       
+<table id ='bars_table' style=''>
+<% puts 'tax '+@taxonomy_by_site_hash.inspect %>
+<% @ordered_projects.each do |pj| %>       
   <% pj[:datasets].each do |ds|	%>
     <tr id=''><td nowrap='nowrap'><%= pj[:pname] %>--<%= ds[:dname] %></td>
 	<td>

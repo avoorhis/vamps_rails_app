@@ -63,12 +63,11 @@ function open_datasets(pid, project)
   //alert('in open')
   ds_div = document.getElementById(pid+'_ds_div');
   cbs = document.getElementsByName(project+'--ds-ids[]')
-  
+  toggle = document.getElementById(project+'_toggle')
   // if closed it will open
   if(ds_div.style.display == 'inline'){
     
     // uncheck project
-
     if(cbs[0].checked == true) {  
       document.getElementById(project+'--pj-id').checked = false
       for(var i=0; i < cbs.length; i++) { 
@@ -80,14 +79,13 @@ function open_datasets(pid, project)
         cbs[i].checked=true        
       }
     }
-
-
     
   }else{
    
     // check project
     ds_div.style.display = 'inline'
     document.getElementById(project+'--pj-id').checked = true
+    toggle.innerHTML = "<img alt='minus' src='assets/tree_minus.gif' />"
     // now set all the ds checkboxes to 'checked'
     for(var i=0; i < cbs.length; i++) {
       if(cbs[i].type == 'checkbox') {

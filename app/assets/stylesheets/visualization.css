@@ -2,6 +2,9 @@
   Place all the styles related to the matching controller here.
   They will automatically be included in application.css.
 */
+
+
+
 #tax_table_div{
 	margin:10px 0 0 10px;
 	
@@ -23,6 +26,7 @@
 }
 #bars_table{
 	border-collapse:collapse;
+	border:1px solid black;
 }
 #bars_table td {
 	line-height:0px;

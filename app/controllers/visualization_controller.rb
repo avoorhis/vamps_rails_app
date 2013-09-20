@@ -9,10 +9,10 @@ class VisualizationController < ApplicationController
     @datasets_test = %w[7_Stockton 8_Stockton 9_Stockton]
 
     
-    @ordered_datasets = create_ordered_datasets() 
+    @ordered_projects, @ordered_datasets = create_ordered_datasets() 
     
     puts 'ordered datasets: ' +@ordered_datasets.inspect
-   
+    
     if not @ordered_datasets.any?
       flash.alert = 'Choose some data!'
       redirect_to visualization_index_path
@@ -52,12 +52,17 @@ class VisualizationController < ApplicationController
     #     0;SLM_NIH_Bv4v5;1St_121_Stockton,
     #     0;SLM_NIH_Bv4v5;1St_120_Richmond,
     
+    # sql version:
     @taxQuery    = create_tax_query()
-    print @taxQuery
+    #print @taxQuery
     sql_result      = Project.find_by_sql(@taxQuery)
     taxonomy_hash = create_sorted_taxonomy_by_site(sql_result)
+    
+    # this seems slow to me:
+    #taxonomy_hash = get_data_using_rails_object()
+    #puts "NEW TAX "+new_tax.inspect
     #puts "before fill with zeros:"
-    #puts taxonomy_hash
+    #puts "OLD TAX "+taxonomy_hash.inspect
     @taxonomy_by_site_hash = fill_in_zeros(taxonomy_hash)
     #puts "after fill with zeros:"
     #puts @taxonomy_by_site_hash
@@ -109,17 +114,92 @@ class VisualizationController < ApplicationController
 ################################################################################
   private
 
+
+#
+#
+#
+def get_data_using_rails_object()
+
+  taxonomy_hash =  {} 
+  did_array = @ordered_datasets.map { |x| x[:did] }
+  #puts did_array
+  d_sql = create_comma_list(did_array)
+  @my_pdrs = SequencePdrInfo.where "dataset_id in(#{d_sql})"
+  @my_pdrs.find_each do |pdr|
+
+    dataset = pdr.dataset[:dataset]
+    project = pdr.dataset.project[:project]
+    count = pdr.seq_count
+    puts pdr[:sequence_id]
+    uniq = SequenceUniqInfo.find_by_sequence_id(pdr[:sequence_id])
+    puts uniq
+    tax_string =""
+    unless uniq.taxonomy.nil?
+      (0..@rank_number).each do
+
+      end
+      taxa = 
+        [
+          uniq.taxonomy.superkingdom[:superkingdom],
+          uniq.taxonomy.phylum[:phylum],
+          uniq.taxonomy.klass[:klass],
+          uniq.taxonomy.order[:order],
+          uniq.taxonomy.family[:family],
+          uniq.taxonomy.genus[:genus],
+          uniq.taxonomy.species[:species],
+          uniq.taxonomy.strain[:strain]
+        ]
+        
+      puts taxa
+      # create taxonomy string based on @rank_number
+      tax_string = taxa.take(@rank_number+1).join(';')
+
+    
+      if taxonomy_hash.has_key?(tax_string) then
+        if taxonomy_hash[tax_string].has_key?(project) then
+          if taxonomy_hash[tax_string][project].has_key?(dataset) then
+            # sum knt for this ts, pj and ds
+            taxonomy_hash[tax_string][project][dataset] += count 
+          else
+            #new ds
+            taxonomy_hash[tax_string][project].merge!(dataset=>count) 
+          end          
+
+        else
+          # new pj
+          taxonomy_hash[tax_string].merge!(project => {dataset=>count})
+        end
+      else
+        # new tax: add new hash if not already there
+        taxonomy_hash[tax_string] = {project=>{dataset=>count}}
+      end 
+    end 
+
+  end
+  return taxonomy_hash
+
+end
+
 #
 #  GET ORDERED DATASETS
 #
 def create_ordered_datasets() 
-  # Retains order: [ {'p1'=>['d1','d2','d3']}, {'p2'=>['d4','d5','d6']} ]
-  # Retains order: [  {:pid=>pid, :name=>"pname", :datasets=>[{:did=>did_1,:dname=>"dname_1"},{}] }, 
+  # gets an ordered array of datasets:  
+  # dataset_array:  [{:did=>did, :dname=>"dname"},{:did=>did, :dname=>"dname"}}
+
+  # project_array:
+  # Retains order: [  {:pid=>pid, :pname=>"pname", :datasets=>[{:did=>did_1,:dname=>"dname_1"},{}] }, 
   #                   {}
   #                   {} 
   #                 ]
-  temp_project_array = []
+
+  
+
+
+
+  project_array = []
   temp_dataset_array = []
+  dataset_array = []
   pid = -1  #initialize
   params.each do |k,v|
     
@@ -135,14 +215,15 @@ def create_ordered_datasets()
       v.each do |did|
         dataset_name = Dataset.find_by_id(did).dataset
         temp_dataset_array << {:did=>did,:dname=>dataset_name}
+        dataset_array << {:did=>did,:dname=>dataset_name}
       end
-      temp_project_array << {:pid=>pid,:pname=>project_name, :datasets=> temp_dataset_array}
+      project_array << {:pid=>pid,:pname=>project_name, :datasets=> temp_dataset_array}
       temp_dataset_array = []
       pid = -1  # reset
     end
   end
 
-  return temp_project_array
+  return project_array, dataset_array
 end
 
 #
@@ -187,7 +268,7 @@ end
   def fill_in_zeros(tax_hash)
 
     tax_hash.each do |tax, pj_hash| 
-      @ordered_datasets.each do |pj| 
+      @ordered_projects.each do |pj| 
         if not pj_hash.include?(pj[:pname]) then
           # add the empty project
           pj_hash.merge!(pj[:pname] => {})
@@ -196,7 +277,7 @@ end
 
       pj_hash.each do |p, ds_hash|
         #puts 'ds_hash '+ds_hash.inspect
-        @ordered_datasets.each do |pj| 
+        @ordered_projects.each do |pj| 
           
           pj[:datasets].each do |ds|
             
@@ -303,6 +384,11 @@ end
     @superkingdom_list = Superkingdom.all
     # {"archaea"=>1,"bacteria"=>2, "organelle"=>3,"unknown"=>4,"eukarya"=>5}
 
+
+
+
+
+
     rank_ids, taxa_joins = make_taxa_by_rank()
     print "URA! rank_ids = #{rank_ids}\n taxa_joins = #{taxa_joins}"
     taxQuery = "SELECT distinct projects.project as project, datasets.dataset as dataset, CONCAT_WS(\";\", #{rank_ids}) AS taxonomy, seq_count AS knt, classifier
@@ -314,18 +400,13 @@ JOIN taxonomies ON (taxonomies.id = taxonomy_id)
 #{taxa_joins}
 "
 
-    where    = "  WHERE (\n"
-    @ordered_datasets.each do |p|     
-         
-        d_array = p[:datasets].map { |x| x[:did] }
-        puts d_array
-        d_sql = create_comma_list(d_array)
-        where    += "(projects.id = '#{p[:pid]}' "
-        where    += "AND datasets.id IN (#{d_sql}) )\nOR "
-    end 
-    where = where[0..-4]
-    where  += ")\n"           
-    # calculate seq_count/dataset_count AS frequency, dataset_count
+    where    = "  WHERE \n"
+    
+    did_array = @ordered_datasets.map { |x| x[:did] }
+    #puts did_array
+    d_sql = create_comma_list(did_array)
+    where    += "datasets.id IN (#{d_sql})\n "
+    
 
     ##DOMAINS
     unless @domains.length == 5 then
@@ -340,7 +421,6 @@ JOIN taxonomies ON (taxonomies.id = taxonomy_id)
       end 
       puts 'sk num '+sk_num.to_s    
       if @domains.length == 1
-
         where += " AND superkingdom_id ='#{sk_num[0]}'"
       else
         sql_superkingdom_ids     = sk_num.join("','")      
@@ -350,11 +430,11 @@ JOIN taxonomies ON (taxonomies.id = taxonomy_id)
     ##NAs
     if @nas == 'no' then
       # TODO
-      # and  taxon_string not like 'no_%' 
-        # and taxon_string not like 'NA%'
-        # and taxon_string not like '%;NA;%'
-        # and taxon_string not like '%;NA' 
-        # and taxon_string not like '%_NA'
+      where += " AND taxonomy not like 'no_%'"
+      where += " AND taxonomy not like 'NA%'"
+      where += " AND taxonomy not like '%;NA;%'"
+      where += " AND taxonomy not like '%;NA'" 
+      where += " AND taxonomy not like '%_NA'"
     end
 
     # there should be no GROUP BY or ORDER BY clause as it slows down the sql calls considerably
