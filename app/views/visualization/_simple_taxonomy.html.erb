@@ -1,6 +1,6 @@
 <%= radio_button_tag 'toggle' , 'toggle', false, :onclick =>
 	"toggleAll('domain_select');return false;"%>Toggle Domains
-<% @domains.each do |domain| %>
+<% @superkingdoms.each do |domain| %>
     <br>
     <%= check_box_tag("domains[]", domain.superkingdom, true, :class=>'domain_select') %>
     <%= label_tag(domain.superkingdom, domain.superkingdom.capitalize) %>

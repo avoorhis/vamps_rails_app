@@ -4,32 +4,6 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   before_filter :configure_permitted_parameters, if: :devise_controller?
-  before_filter :do_common_stuff
-  
-  def do_common_stuff
-    @ranks   = Rank.all.sorted
-    @domains = Superkingdom.all
-  end
-  
-  def make_taxa_by_rank()
-    # rank_id = Rank.find_by_rank(@tax_rank)
-  
-    rank_names        = %w[superkingdom  phylum  klass   order  family   genus  species strain ]
-    taxon_table_names = %w[superkingdoms phylums klasses orders families genera species strains]
-    rank_ids = ""
-    taxa_joins = ""
-    for n in 0..@rank_number 
-      rank_ids += ' t'+(n+1).to_s+".#{rank_names[n]},"
-      taxa_joins += "LEFT JOIN #{taxon_table_names[n]} AS t"+(n+1).to_s+" ON (#{rank_names[n]}_id = t"+(n+1).to_s+".id)\n"
-    end
-    
-    return rank_ids[0..-2], taxa_joins
-
-
-    
-  end    
-  
-  
   
   protected
 

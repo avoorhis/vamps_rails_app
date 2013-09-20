@@ -31,8 +31,8 @@
          
       <ul>
       <% @projects.each do |project| %>
-      <% puts project %>
-      <% puts project.datasets %>
+      <% puts project.inspect %>
+      <% puts project.datasets.inspect %>
       <% if not project.datasets.blank? then %>
         
         <li>

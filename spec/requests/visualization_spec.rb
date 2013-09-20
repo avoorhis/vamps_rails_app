@@ -9,7 +9,7 @@ describe "Projects and Datasets list" do
 
     @projects = @user.projects
     @ranks    = FactoryGirl.create(:rank)
-    @taxa     = Array.new(3) { FactoryGirl.build(:taxon) } 
+    # @taxa     = Array.new(3) { FactoryGirl.build(:taxon) } 
             
     visit "/visualization"      
   end

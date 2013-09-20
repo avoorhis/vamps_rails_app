@@ -6,8 +6,8 @@ class Rank < ActiveRecord::Base
   validates :rank, inclusion: { in: ["NA", "class", "domain", "family", "genus", "order", "phylum", "species", "strain", "superkingdom"], message: "%{value} is not a valid rank" }, uniqueness: true
   scope :sorted,  -> { order(:rank_number) }    
 
-
-def get_rank_number(n)
-	return :rank_number
-end
+# It's better to use a rails object: Rank.find(rank_id).rank_number
+# def get_rank_number(n)
+#   return :rank_number
+# end
 end
