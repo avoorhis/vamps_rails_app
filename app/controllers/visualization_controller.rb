@@ -3,12 +3,11 @@ class VisualizationController < ApplicationController
   before_filter :authenticate_user!
   
   def parse_view
-    # TEST:
-    
+    # TEST:    
     @projects_test = %w[SLM_NIH_v3]
     @datasets_test = %w[7_Stockton 8_Stockton 9_Stockton]
+    # ======
 
-    
     @ordered_datasets = create_ordered_datasets() 
     
     puts 'ordered datasets: ' +@ordered_datasets.inspect
@@ -29,9 +28,9 @@ class VisualizationController < ApplicationController
     # TODO: can we take a rank_id here, please?
     
     rank_id = params[:tax_id]
-    rank_obj = Rank.find_by_id(rank_id)
+    rank_obj = Rank.find(rank_id)
     @rank_number = rank_obj.rank_number
-    @rank_name = rank_obj.rank
+    @rank_name   = rank_obj.rank
     
     @view        = params[:view]
     # params[:datasets] are created in visualization.js::getDatasets()
@@ -82,8 +81,10 @@ class VisualizationController < ApplicationController
   end
 
   def index
-    @all_data = get_test_sample_object()
-    @projects = Project.all    
+    @all_data      = get_test_sample_object()
+    @projects      = Project.all    
+    @superkingdoms = Superkingdom.all
+    @ranks         = Rank.all.sorted    
   end
 
   def create
@@ -270,6 +271,8 @@ end
   
   # def make_taxa_by_rank()
   #   #rank_number = Rank.get_rank_number(@tax_rank)
+  #   #rank_number = Rank.find(@tax_rank).rank_number
+  
   #   #puts 'rank id: '+rank_number  # == rank.id
   
     
