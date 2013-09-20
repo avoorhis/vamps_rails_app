@@ -13,7 +13,8 @@ class Taxonomy < ActiveRecord::Base
 	belongs_to :species     
 	belongs_to :strain      
 
-  validates :taxonomy, uniqueness: true
+  validates_uniqueness_of :superkingdom_id, :scope => [:phylum_id, :klass_id, :order_id, :family_id, :genus_id, :species_id, :strain_id]
+  
 end
  
  
