@@ -3,5 +3,7 @@
 FactoryGirl.define do
   factory :species do
     sequence(:species){|n| "abyssi#{n}" }
+    # taxon.taxonomies   { Array.new(3) { FactoryGirl.build(:taxonomy) } }    
   end
 end
+
