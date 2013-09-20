@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "User registration" do
   before(:each) do
     @ranks    = FactoryGirl.create(:rank)
-    @taxa     = Array.new(3) { FactoryGirl.build(:taxon) } 
+    # @taxa     = Array.new(3) { FactoryGirl.build(:taxon) } 
     
     visit "/users/sign_up"      
     fill_in "Username", 			       :with => "test_user"
@@ -92,7 +92,7 @@ end
 describe "User not logged in" do
   before(:each) do
     @ranks    = FactoryGirl.create(:rank)
-    @taxa     = Array.new(3) { FactoryGirl.build(:taxon) } 
+    # @taxa     = Array.new(3) { FactoryGirl.build(:taxon) } 
   end  
   
   it "should not sign in if wrong credentials" do
