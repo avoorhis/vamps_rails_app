@@ -4,7 +4,7 @@ class SequenceUniqInfo < ActiveRecord::Base
   belongs_to :sequence
   # refssu_id?
   
-  has_one  :superkingdom, :through => :taxonomy
+  has_one  :domain      , :through => :taxonomy
   has_one  :phylum      , :through => :taxonomy
   has_one  :klass       , :through => :taxonomy
   has_one  :order       , :through => :taxonomy

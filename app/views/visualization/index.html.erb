@@ -51,7 +51,7 @@
                 <% project.datasets.each do |dataset| %>
                   <li>
                   <label class="dataset-select">
-                  <% box_name = project.project+'--ds-ids[]' %>
+                  <% box_name = 'dataset_ids[]' %>
                   <%= check_box_tag box_name, dataset.id, false , :onclick=>"check_project('#{project.id}','#{project.project}')" %>
                   <%= dataset.dataset %>
                   </label>
