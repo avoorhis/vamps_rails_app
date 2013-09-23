@@ -13,6 +13,3 @@ FactoryGirl.define do
       t.created_at Time.now
     end
 end
-
-
-# sequence(:dataset){|n| "#{n}_Stockton" }
