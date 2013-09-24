@@ -55,13 +55,12 @@ class VisualizationController < ApplicationController
     #     0;SLM_NIH_Bv4v5;1St_120_Richmond,
     
     # sql version:
-    @taxQuery    = create_tax_query()
-    #print @taxQuery
-    sql_result      = Project.find_by_sql(@taxQuery)
-    taxonomy_hash = create_sorted_taxonomy_by_site(sql_result)
+    #@taxQuery    = create_tax_query()
+    #sql_result      = Project.find_by_sql(@taxQuery)
+    #taxonomy_hash = create_sorted_taxonomy_by_site(sql_result)
     
     # this seems slow to me:
-    #taxonomy_hash = get_data_using_rails_object()
+    taxonomy_hash = get_data_using_rails_object()
     #puts "NEW TAX "+new_tax.inspect
     #puts "before fill with zeros:"
     #puts "OLD TAX "+taxonomy_hash.inspect
@@ -104,17 +103,6 @@ class VisualizationController < ApplicationController
 
   end
 
-  def heatmap
-
-  end
-
-  def bar_chart
-
-  end
-
-  def tax_table
-
-  end
   
 ################################################################################
   private
@@ -146,7 +134,7 @@ def get_data_using_rails_object()
 
     dataset_name = pdr.dataset[:dataset]
     project_name = pdr.dataset.project[:project]
-    count = pdr.seq_count
+    count = pdr[:seq_count]
 
     puts pdr[:sequence_id]
     uniq = SequenceUniqInfo.find_by_sequence_id(pdr[:sequence_id])

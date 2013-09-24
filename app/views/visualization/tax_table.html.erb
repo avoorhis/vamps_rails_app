@@ -29,14 +29,14 @@
 
 	<% @ordered_projects.each do |p| %>
 		
-	  		<td style='text-align:center;' colspan='<%= p[:datasets].length %>'> <%= p[:pname] %> </td>   
+	  		<td class='td-text-center' colspan='<%= p[:datasets].length %>'> <%= p[:pname] %> </td>   
 	  	
 	<% end %>
 	</tr>
-	<tr><th style='text-align:right;'>Datasets:</th>
+	<tr><th class='td-text-right' >Datasets:</th>
 	<% @ordered_projects.each do |p| %>
 		<% p[:datasets].each do |d| %>
-		  <td style='padding:0 2px 0 2px;'> <%= d[:dname] %> </td> 
+		  <td class='td-text-center' > <%= d[:dname] %> </td> 
 		<% end %>
 	<% end %>
 
@@ -44,14 +44,14 @@
     </tr>
 
 	<% @taxonomy_by_site_hash.each do |tax, data| %>
-	<tr><td nowrap='nowrap' style='text-align:left;padding:1px 3px;' ><%= tax %></td>
+	<tr><td nowrap='nowrap' class='td-text-left'  ><%= tax %></td>
 	
 	  <% data.each do |project, ds_hash|%>
 		<% ds_hash.each do |dataset|%>
 			<% ds = dataset[0] %>
 			<% count = dataset[1] %>
 			<% pd = project+'--'+ds %>
-			<td style='text-align:right;padding:1px 3px;'><%= count %></td>
+			<td class='td-text-right' ><%= count %></td>
 			<% if column_totals.has_key?(pd) then %>
 			  <% column_totals[pd] += count %>
 			<% else %>
@@ -62,13 +62,13 @@
 	  </tr>
 	<% end %>
 	<tr>
-	<td style='text-align:right;padding:1px 3px;'><b>TOTALS:</b></td>
+	<td class='td-text-right' ><b>TOTALS:</b></td>
 	<% column_totals.each do |t| %>
-  		<td style='text-align:right;padding:1px 3px;'><b><%= number_with_delimiter(t[1]) %></b></td>
+  		<td class='td-text-right' ><b><%= number_with_delimiter(t[1]) %></b></td>
 	<% end %>
 	</td>
 <% else %>
-	<tr><td style='padding:1px 3px;'><strong>NO DATA</strong></td></tr>
+	<tr><td class='td-text-center' ><strong>NO DATA</strong></td></tr>
 <% end %>
 
 </table>

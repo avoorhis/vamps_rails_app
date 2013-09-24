@@ -25,26 +25,30 @@
   	</td>
 
     <td valign='top'>
-    <div class='no_bullets' style='width:400px;height:500px;overflow:auto;'>
+    <div class='no_bullets'>
 
-        Projects 
+        <%= link_to "Projects", projects_path %> 
          
       <ul>
       <% @projects.each do |project| %>
       <% puts project.inspect %>
       <% puts project.datasets.inspect %>
       <% if not project.datasets.blank? then %>
-        
+      
+      <% tooltip = "Title: #{project[:title]}" %>
+      
+      <% tooltip += "Description: #{project[:project_description]}" %>           
         <li>
-          <label class="dataset-select">
-            <a href='#' id="<%= project.project+'_toggle' %>" style='font-size:9px;' onclick="toggle_selected_datasets('<%= project.id %>','<%= project.project %>'); return false;" ><img alt='plus' src='assets/tree_plus.gif' /></a>
-            <% project_cb_id = project.project+'--pj-id' %>
-            <%= check_box_tag project_cb_id, project.id, false, :onclick=>"open_datasets('#{project.id}','#{project.project}')" %>
-            <%= project.project %>
-
-            
-           
-          </label>  
+          <%= tooltip_for(tooltip) do %>
+            <label class="dataset-select">
+              <a href='#'  id="<%= project.project+'_toggle' %>" onclick="toggle_selected_datasets('<%= project.id %>','<%= project.project %>'); return false;" ><img alt='plus' src='assets/tree_plus.gif' /></a>
+              <% project_cb_id = project.project+'--pj-id' %>
+              <%= check_box_tag project_cb_id, project.id, false, :onclick=>"open_datasets('#{project.id}','#{project.project}')" %>
+              <%= project.project %>
+              (<%= link_to "?", controller: "projects", action: "show", id: project.id %>)          
+             
+            </label>  
+          <% end %>    
             <ul>
               <% project_dataset_div = project.id.to_s+'_ds_div' %>
               <div id='<%= project_dataset_div %>' style='display:none;'>  
@@ -84,5 +88,6 @@
 <% end %>
 
 <br>
+
 
 
