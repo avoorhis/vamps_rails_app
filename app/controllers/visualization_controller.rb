@@ -10,11 +10,11 @@ class VisualizationController < ApplicationController
 
 
     
-    @ordered_projects, @ordered_datasets, @ds_id_list = create_ordered_datasets() 
+    @ordered_projects, @ordered_datasets = create_ordered_datasets() 
 
-    
+    puts 'ordered projects: ' +@ordered_projects.inspect
     puts 'ordered datasets: ' +@ordered_datasets.inspect
-    puts 'ordered datasets list: ' +@ds_id_list.inspect
+    #puts 'ordered datasets list: ' +@ds_id_list.inspect
     if not @ordered_datasets.any?
       flash.alert = 'Choose some data!'
       redirect_to visualization_index_path
@@ -58,10 +58,10 @@ class VisualizationController < ApplicationController
     @taxQuery    = create_tax_query()
     #print @taxQuery
     sql_result      = Project.find_by_sql(@taxQuery)
-    #taxonomy_hash = create_sorted_taxonomy_by_site(sql_result)
+    taxonomy_hash = create_sorted_taxonomy_by_site(sql_result)
     
     # this seems slow to me:
-    taxonomy_hash = get_data_using_rails_object()
+    #taxonomy_hash = get_data_using_rails_object()
     #puts "NEW TAX "+new_tax.inspect
     #puts "before fill with zeros:"
     #puts "OLD TAX "+taxonomy_hash.inspect
@@ -129,7 +129,7 @@ def get_data_using_rails_object()
   # make this a list of strings so we can use eval() on later
   taxa = 
         [
-          "uniq.taxonomy.superkingdom[:superkingdom]",
+          "uniq.taxonomy.domain[:domain]",
           "uniq.taxonomy.phylum[:phylum]",
           "uniq.taxonomy.klass[:klass]",
           "uniq.taxonomy.order[:order]",
@@ -140,7 +140,7 @@ def get_data_using_rails_object()
         ]
   #did_array = @ordered_datasets.map { |x| x[:did] }
   #puts did_array
-  d_sql = create_comma_list(@ds_id_list)
+  d_sql = create_comma_list(params['dataset_ids'])
   @my_pdrs = SequencePdrInfo.where "dataset_id in(#{d_sql})"
   @my_pdrs.find_each do |pdr|
 
@@ -168,8 +168,7 @@ def get_data_using_rails_object()
           else
             #new ds
             taxonomy_hash[tax_string][project_name].merge!(dataset_name=>count) 
-          end          
-
+          end   
         else
           # new pj
           taxonomy_hash[tax_string].merge!(project_name => {dataset_name=>count})
@@ -199,38 +198,40 @@ def create_ordered_datasets()
   #                 ]
 
   
-
-
-
   project_array = []
   temp_dataset_array = []
   dataset_array = []
   ds_id_list = []
   pid = -1  #initialize
-  params.each do |k,v|
+  project_name = ''
+  #params.each do |key,value|
+  #ds_id_list = params['dataset_ids']
+  params['dataset_ids'].each do |did|
     
-    param_parts = k.split('--')
+    dataset = Dataset.find_by_id(did)
     
-    if param_parts[1] == 'pj-id'
 
-      pid = v.to_i
-    end
+    dataset_name = dataset[:dataset]
+    #puts project_name+' + '+dataset_name
+    #temp_dataset_array << {:did=>did,:dname=>dataset_name}
+    dataset_array << {:did=>did,:dname=>dataset_name}  
     
-    if param_parts[1] == 'ds-ids' and params[k].any?
-      project_name = param_parts[0]
-      ds_id_list.concat(v)
-      v.each do |did|
-        dataset_name = Dataset.find_by_id(did).dataset
-        temp_dataset_array << {:did=>did,:dname=>dataset_name}
-        dataset_array << {:did=>did,:dname=>dataset_name}
-      end
-      project_array << {:pid=>pid,:pname=>project_name, :datasets=> temp_dataset_array}
-      temp_dataset_array = []
-      pid = -1  # reset
+
+    project_name = dataset.project[:project]
+    pid = dataset.project_id
+
+    if index = project_array.find_index {|b| b[:pid] == pid} then
+      project_array[index][:datasets] << {:did=>did,:dname=>dataset_name}
+    else
+      project_array << {:pid=>pid,:pname=>project_name, :datasets=>[{:did=>did,:dname=>dataset_name}]  }
     end
+
+
+    
   end
 
-  return project_array, dataset_array, ds_id_list
+
+  return project_array, dataset_array
 end
 
 #
@@ -365,8 +366,8 @@ end
     
 
     #rank_id_names = %w[superkingdom_id phylum_id klass_id order_id family_id genus_id species_id strain_id]
-    rank_names        = %w[superkingdom  phylum  klass   order  family   genus  species strain ]
-    taxon_table_names = %w[superkingdoms phylums klasses orders families genera species strains]
+    rank_names        = %w[domain  phylum  klass   order  family   genus  species strain ]
+    taxon_table_names = %w[domains phylums klasses orders families genera species strains]
     rank_ids = ""
     taxa_joins = ""
     for n in 0..@rank_number 

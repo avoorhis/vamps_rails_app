@@ -33,27 +33,27 @@ function toggleAll(name)
 //
 // CHECK_FOR_SELECTED_DATASETS
 //
-function check_for_selected_datasets(form)
-{
+// function check_for_selected_datasets(form)
+// {
   
-  cbs = document.getElementsByName(project+'--ds-ids[]')
-  alert(cbs)
-  have_acheck = false
-  for(var i=0; i < cbs.length; i++) {
-    if(cbs[i].checked){
-      have_acheck = true
-    }
+//   cbs = document.getElementsByName(project+'--ds-ids[]')
+//   alert(cbs)
+//   have_acheck = false
+//   for(var i=0; i < cbs.length; i++) {
+//     if(cbs[i].checked){
+//       have_acheck = true
+//     }
               
-  }
-  if(have_acheck){
-    alert('submitting')
-    $(form).submit();
-  }else{
-    alert('Select some data!')
-    return;
-  }
-  return;
-}
+//   }
+//   if(have_acheck){
+//     alert('submitting')
+//     $(form).submit();
+//   }else{
+//     alert('Select some data!')
+//     return;
+//   }
+//   return;
+// }
 //
 // OPEN_DATASETS
 //
@@ -62,7 +62,7 @@ function open_datasets(pid, project)
   
   //alert('in open')
   ds_div = document.getElementById(pid+'_ds_div');
-  cbs = document.getElementsByName(project+'--ds-ids[]')
+  cbs = ds_div.getElementsByTagName('input')
   toggle = document.getElementById(project+'_toggle')
   // if closed it will open
   if(ds_div.style.display == 'inline'){
@@ -101,7 +101,8 @@ function open_datasets(pid, project)
 //
 function check_project(pid, project)
 {
-  cbs = document.getElementsByName(project+'--ds-ids[]')
+  ds_div = document.getElementById(pid+'_ds_div');
+  cbs = ds_div.getElementsByTagName('input')
   have_acheck = false
   for(var i=0; i < cbs.length; i++) {
     if(cbs[i].checked){
@@ -123,8 +124,8 @@ function check_project(pid, project)
 function toggle_selected_datasets(pid, project)
 {
 
-  cbs = document.getElementsByName(project+'--ds-ids[]')
-  ds_div = document.getElementById(pid+'_ds_div')
+  ds_div = document.getElementById(pid+'_ds_div');
+  cbs = ds_div.getElementsByTagName('input')
   toggle = document.getElementById(project+'_toggle')
   if(ds_div.style.display == 'inline'){
     ds_div.style.display = 'none'
@@ -149,29 +150,4 @@ function toggle_selected_datasets(pid, project)
 
 
 }
-//
-// TOGGLE_SELECTED_DATASETS
-//
-// function toggle_selected_datasets(pid, project)
-// {
-  
-//   cbs = document.getElementsByName(project+'--ds-ids[]')
-//   ds_div = document.getElementById(pid+'_ds_div')
-  
 
-  
-//   if(cbs[0].checked == true) {  
-//     document.getElementById(project+'--pj-id').checked = false
-//     for(var i=0; i < cbs.length; i++) { 
-//         cbs[i].checked=false        
-//     }
-//   }else{
-//     document.getElementById(project+'--pj-id').checked = true
-//     for(var i=0; i < cbs.length; i++) { 
-//         cbs[i].checked=true        
-//     }
-
-//   }
-
-
-// }
