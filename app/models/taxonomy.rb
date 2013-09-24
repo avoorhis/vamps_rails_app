@@ -4,7 +4,7 @@ class Taxonomy < ActiveRecord::Base
 	has_many :ranks,     :through => :sequence_uniq_infos  
   # has_many :datasets,  :through => :sequence_uniq_infos, :source => :sequence_pdr_infos 
 	
-	belongs_to :superkingdom
+	belongs_to :domain
 	belongs_to :phylum      
 	belongs_to :klass       
 	belongs_to :order
@@ -13,7 +13,8 @@ class Taxonomy < ActiveRecord::Base
 	belongs_to :species     
 	belongs_to :strain      
 
-  validates :taxonomy, uniqueness: true
+  validates_uniqueness_of :domain_id, :scope => [:phylum_id, :klass_id, :order_id, :family_id, :genus_id, :species_id, :strain_id]
+  
 end
  
  

@@ -85,14 +85,15 @@ class VisualizationController < ApplicationController
   end
   
   def get_datasets
+    @datasets - Dataset.find(params[:dataset_ids])
     return @datasets
   end
 
   def index
-    @all_data      = get_test_sample_object()
-    @projects      = Project.all    
-    @superkingdoms = Superkingdom.all
-    @ranks         = Rank.all.sorted    
+    @all_data = get_test_sample_object()
+    @projects = Project.all    
+    @domains  = Domain.all
+    @ranks    = Rank.all.sorted    
   end
 
   def create
@@ -153,7 +154,7 @@ def get_data_using_rails_object()
     puts uniq
     tax_string =""
     unless uniq.taxonomy.nil?
-      
+
       # create taxonomy string based on @rank_number
       #tax_string = taxa.take(@rank_number+1).join(';')
       tax_string = taxa.take(@rank_number+1).map!{ |x| eval(x) }.join(';')
@@ -362,6 +363,7 @@ end
     #puts 'rank id: '+rank_number  # == rank.id
   
     
+
     #rank_id_names = %w[superkingdom_id phylum_id klass_id order_id family_id genus_id species_id strain_id]
     rank_names        = %w[superkingdom  phylum  klass   order  family   genus  species strain ]
     taxon_table_names = %w[superkingdoms phylums klasses orders families genera species strains]
@@ -371,6 +373,7 @@ end
       rank_ids += ' t'+(n+1).to_s+".#{rank_names[n]},"
       taxa_joins += "LEFT JOIN #{taxon_table_names[n]} AS t"+(n+1).to_s+" ON (#{rank_names[n]}_id = t"+(n+1).to_s+".id)\n"
     end
+
     
     return rank_ids[0..-2], taxa_joins
   end    
@@ -382,21 +385,7 @@ end
     
 
     get_dataset_counts()
- 
     
-    # superkingdoms has to match what is in db table
-    # TODO: get it from db
-    #superkingdom  = Taxon.find_by_rank(@tax_rank)
-    # will this always be '10'?
-    
-    @superkingdom_list = Superkingdom.all
-    # {"archaea"=>1,"bacteria"=>2, "organelle"=>3,"unknown"=>4,"eukarya"=>5}
-
-
-
-
-
-
     rank_ids, taxa_joins = make_taxa_by_rank()
     print "URA! rank_ids = #{rank_ids}\n taxa_joins = #{taxa_joins}"
     taxQuery = "SELECT distinct projects.project as project, datasets.dataset as dataset, CONCAT_WS(\";\", #{rank_ids}) AS taxonomy, seq_count AS knt, classifier
@@ -420,8 +409,8 @@ JOIN taxonomies ON (taxonomies.id = taxonomy_id)
     unless @domains.length == 5 then
       
       sk_num = []
-      @superkingdom_list.each do |sk|
-          if @domains.include? sk.superkingdom then
+      @domains.each do |sk|
+          if @domains.include? sk.domain then
             
               sk_num << sk.id.to_s
             
@@ -429,10 +418,10 @@ JOIN taxonomies ON (taxonomies.id = taxonomy_id)
       end 
       puts 'sk num '+sk_num.to_s    
       if @domains.length == 1
-        where += " AND superkingdom_id ='#{sk_num[0]}'"
+        where += " AND domain_id ='#{sk_num[0]}'"
       else
-        sql_superkingdom_ids     = sk_num.join("','")      
-        where += " AND superkingdom_id in ('#{sql_superkingdom_ids}')"
+        sql_domain_ids     = sk_num.join("','")      
+        where += " AND domain_id in ('#{sql_domain_ids}')"
     end
     end
     ##NAs
