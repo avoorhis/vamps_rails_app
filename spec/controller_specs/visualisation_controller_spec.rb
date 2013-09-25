@@ -10,7 +10,7 @@ describe "Visualisation" do
     @datasets = "1St_156_Marathon", "1St_85_DELANO"
   end
 
-  it "does get needed info from db" do
+  it "should get needed info from db" do
     # SELECT project, dataset, taxon_string, knt, sdc.classifier, frequency, dataset_count
     sql = "SELECT project, dataset, taxonomy, knt, classifier, frequency, dataset_count 
            FROM "

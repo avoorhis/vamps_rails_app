@@ -7,9 +7,6 @@ class VisualizationController < ApplicationController
     @projects_test = %w[SLM_NIH_v3]
     @datasets_test = %w[7_Stockton 8_Stockton 9_Stockton]
     
-
-
-    
     @ordered_projects, @ordered_datasets = create_ordered_datasets() 
 
     puts 'ordered projects: ' +@ordered_projects.inspect
@@ -28,7 +25,6 @@ class VisualizationController < ApplicationController
     #domains  = Array[params[:bacteria], params[:archaea], params[:eukarya], params[:organelle], params[:unknown]]
     domains      = params[:domains]
     @domains     = domains.compact
-    # TODO: can we take a rank_id here, please?
     
     rank_id = params[:tax_id]
     rank_obj = Rank.find(rank_id)
@@ -41,18 +37,6 @@ class VisualizationController < ApplicationController
     #@datasets    = clean_datasets( params[:datasets] )
 
     # SLM_NIH_Bv4v5--1St_121_Stockton
-    
-    # TODO 
-    #   1) dhtmltree takes project and dataset together into "params[:datasets]", shouldn't it be separate params? 
-    #   2) no need for Project.find_by_sql - we have it from params
-    #   3) it repeates project with each dataset - better get it once
-    #   4) if click on a project only - does not select the underliyng datasets
-    #   5) it repeats "0" with each project/dataset - what this?
-    #   e.g
-    #     fromstandartTreeRow
-    #      "datasets"=>"0;SLM_NIH_Bv4v5,
-    #     0;SLM_NIH_Bv4v5;1St_121_Stockton,
-    #     0;SLM_NIH_Bv4v5;1St_120_Richmond,
     
     # sql version:
     #@taxQuery    = create_tax_query()
@@ -110,6 +94,13 @@ class VisualizationController < ApplicationController
 #
 #
 #
+
+def get_counts_per_dataset_id()
+  dat_count = Hash.new
+  @datasets.map {|d| sum = 0; d.sequence_pdr_infos.map {|spi| sum += spi.seq_count}; dat_count[d.id] = sum }
+  return dat_count
+end
+
 def get_data_using_rails_object()
 
   taxonomy_hash =  {} 
@@ -127,13 +118,16 @@ def get_data_using_rails_object()
         ]
   #did_array = @ordered_datasets.map { |x| x[:did] }
   #puts did_array
-  d_sql = create_comma_list(params['dataset_ids'])
-  @my_pdrs = SequencePdrInfo.where "dataset_id in(#{d_sql})"
-  @my_pdrs.find_each do |pdr|
+  # d_sql = create_comma_list(params['dataset_ids'])
+  # @my_pdrs = SequencePdrInfo.where "dataset_id in(#{d_sql})"
+  @my_pdrs = SequencePdrInfo.where(dataset_id: params["dataset_ids"])
+  
+  @my_pdrs.each do |pdr|
 
-    dataset_name = pdr.dataset[:dataset]
-    project_name = pdr.dataset.project[:project]
-    count = pdr[:seq_count]
+    dataset_id = pdr.dataset_id
+    # project_name = pdr.dataset.project[:project]
+    # to get_counts_per_dataset_id method above
+    # count = pdr[:seq_count]
 
     puts pdr[:sequence_id]
     uniq = SequenceUniqInfo.find_by_sequence_id(pdr[:sequence_id])
