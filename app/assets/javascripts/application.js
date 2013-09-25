@@ -12,7 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
-
+//= require jquery/jquery.qtip.min.js
 //= require turbolinks
 
 //= require ./mootools/mootools-beta-1.2b2

@@ -31,32 +31,39 @@
          
       <ul>
       <% @projects.each do |project| %>
+
+
+
       <% puts project.inspect %>
       <% puts project.datasets.inspect %>
       <% if not project.datasets.blank? then %>
       
-      <% tooltip = "Title: #{project[:title]}" %>
       
-      <% tooltip += "Description: #{project[:project_description]}" %>           
+
+              
         <li>
-          <%= tooltip_for(tooltip) do %>
-            <label class="dataset-select">
+         
+            <label class="project-select" >
               <a href='#'  id="<%= project.project+'_toggle' %>" onclick="toggle_selected_datasets('<%= project.id %>','<%= project.project %>'); return false;" ><img alt='plus' src='assets/tree_plus.gif' /></a>
-              <% project_cb_id = project.project+'--pj-id' %>
-              <%= check_box_tag project_cb_id, project.id, false, :onclick=>"open_datasets('#{project.id}','#{project.project}')" %>
+              <%= check_box_tag project.project+'--pj-id', project.id, false, :onclick=>"open_datasets('#{project.id}','#{project.project}')" %>
               <%= project.project %>
-              (<%= link_to "?", controller: "projects", action: "show", id: project.id %>)          
-             
+              (<%= link_to "?", controller: "projects", action: "show", id: project.id %>)           
             </label>  
-          <% end %>    
+            <div class="hidden" style='display:none;' >
+              <table>
+                <tr><td>Name:</td><td><%= project.project %></td></tr>
+                <tr><td>Title:</td><td><%= project.title %></td></tr>
+                <tr><td>Description:</td><td><%= project.project_description %></td></tr>
+              </table>
+            </div>
+      
             <ul>
               <% project_dataset_div = project.id.to_s+'_ds_div' %>
               <div id='<%= project_dataset_div %>' style='display:none;'>  
                 <% project.datasets.each do |dataset| %>
                   <li>
                   <label class="dataset-select">
-                  <% box_name = 'dataset_ids[]' %>
-                  <%= check_box_tag box_name, dataset.id, false , :onclick=>"check_project('#{project.id}','#{project.project}')" %>
+                  <%= check_box_tag 'dataset_ids[]', dataset.id, false , :onclick=>"check_project('#{project.id}','#{project.project}')" %>
                   <%= dataset.dataset %>
                   </label>
                   </li>

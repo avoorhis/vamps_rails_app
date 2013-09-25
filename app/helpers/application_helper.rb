@@ -1,4 +1,5 @@
 module ApplicationHelper
+	
   def tooltip_for(text, &block)
   # http://www.kevinwilliamyoung.com/posts/14
   content = capture(&block)
