@@ -3057,7 +3057,7 @@ ranks:
   - - 10
     - strain
   - - 11
-    - superkingdom
+    - domain
 
 ---
 run_infos:

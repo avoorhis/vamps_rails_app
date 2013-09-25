@@ -16,7 +16,7 @@ summed_data_cube	summed_data_cube_ibfk_2	projects				project_id				vamps2
 summed_data_cube	summed_data_cube_ibfk_3	datasets				dataset_id				vamps2
 summed_data_cube	summed_data_cube_ibfk_4	project_dataset			project_dataset_id		vamps2
 taxon_string	taxon_string_ibfk_1			rank_number				rank_number				vamps2
-taxonomies		taxonomies_ibfk_1			superkingdoms			superkingdom_id			vamps2
+taxonomies		taxonomies_ibfk_1			domains			domain_id			vamps2
 taxonomies		taxonomies_ibfk_10			ranks					rank_id					vamps2
 taxonomies		taxonomies_ibfk_2			taxon_string			taxon_string_id			vamps2
 taxonomies		taxonomies_ibfk_3			phyla					phylum_id				vamps2

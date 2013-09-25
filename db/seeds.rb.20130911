@@ -80,7 +80,7 @@ ranks = Rank.create([
 	{id:'20',rank:  "NA"}, 
 	
 	{id:'21',rank: "orderx"}, 
-	{id:'22',rank: "superkingdom"}
+	{id:'22',rank: "domain"}
 	])
 
 

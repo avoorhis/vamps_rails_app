@@ -102,7 +102,6 @@ class VisualizationController < ApplicationController
   def show
 
   end
-
   
 ################################################################################
   private
@@ -353,7 +352,7 @@ end
   
     
 
-    #rank_id_names = %w[superkingdom_id phylum_id klass_id order_id family_id genus_id species_id strain_id]
+    #rank_id_names = %w[domain_id phylum_id klass_id order_id family_id genus_id species_id strain_id]
     rank_names        = %w[domain  phylum  klass   order  family   genus  species strain ]
     taxon_table_names = %w[domains phylums klasses orders families genera species strains]
     rank_ids = ""

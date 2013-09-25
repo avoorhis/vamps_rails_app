@@ -2,7 +2,7 @@ class AddForeignKeyTaxonomies < ActiveRecord::Migration
   def self.up
     unless ActiveRecord::Base.connection.index_name_exists?('taxonomies', 'taxonomy_fk_strain_id', false)
       execute "ALTER TABLE `taxonomies`
-        ADD CONSTRAINT `taxonomy_fk_superkingdom_id` FOREIGN KEY (`superkingdom_id`) REFERENCES `superkingdoms` (`id`) ON UPDATE CASCADE"
+        ADD CONSTRAINT `taxonomy_fk_domain_id` FOREIGN KEY (`domain_id`) REFERENCES `domains` (`id`) ON UPDATE CASCADE"
       execute "ALTER TABLE `taxonomies`
         ADD CONSTRAINT `taxonomy_fk_phylum_id` FOREIGN KEY (`phylum_id`) REFERENCES `phylums` (`id`) ON UPDATE CASCADE"
       execute "ALTER TABLE `taxonomies`
@@ -21,7 +21,7 @@ class AddForeignKeyTaxonomies < ActiveRecord::Migration
   end
 
   def self.down
-    execute "ALTER TABLE taxonomies DROP FOREIGN KEY taxonomy_fk_superkingdom_id"
+    execute "ALTER TABLE taxonomies DROP FOREIGN KEY taxonomy_fk_domain_id"
     execute "ALTER TABLE taxonomies DROP FOREIGN KEY taxonomy_fk_phylum_id"
     execute "ALTER TABLE taxonomies DROP FOREIGN KEY taxonomy_fk_klass_id"
     execute "ALTER TABLE taxonomies DROP FOREIGN KEY taxonomy_fk_order_id"
