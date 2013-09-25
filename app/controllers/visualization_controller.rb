@@ -143,20 +143,20 @@ def get_data_using_rails_object()
 
       if taxonomy_hash.has_key?(tax_string) then
         if taxonomy_hash[tax_string].has_key?(project_name) then
-          if taxonomy_hash[tax_string][project_name].has_key?(dataset_name) then
+          if taxonomy_hash[tax_string][project_name].has_key?(dataset_id) then
             # sum knt for this ts, pj and ds
-            taxonomy_hash[tax_string][project_name][dataset_name] += count 
+            taxonomy_hash[tax_string][project_name][dataset_id] += count 
           else
             #new ds
-            taxonomy_hash[tax_string][project_name].merge!(dataset_name=>count) 
+            taxonomy_hash[tax_string][project_name].merge!(dataset_id=>count) 
           end   
         else
           # new pj
-          taxonomy_hash[tax_string].merge!(project_name => {dataset_name=>count})
+          taxonomy_hash[tax_string].merge!(project_name => {genus=>count})
         end
       else
         # new tax: add new hash if not already there
-        taxonomy_hash[tax_string] = {project_name=>{dataset_name=>count}}
+        taxonomy_hash[tax_string] = {project_name=>{genus=>count}}
       end 
     end 
 
@@ -167,7 +167,7 @@ end
 
 #
 #  GET ORDERED DATASETS
-#
+# Andy, why we need it?
 def create_ordered_datasets() 
   # gets an ordered array of datasets:  
   # dataset_array:  [{:did=>did, :dname=>"dname"},{:did=>did, :dname=>"dname"}}
