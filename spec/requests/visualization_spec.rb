@@ -8,6 +8,7 @@ describe "Projects and Datasets list" do
     login_as(@user, :scope => :user)
 
     @projects = @user.projects
+    Rank.delete_all
     @ranks    = FactoryGirl.create(:rank)
     # @taxa     = Array.new(3) { FactoryGirl.build(:taxon) } 
             

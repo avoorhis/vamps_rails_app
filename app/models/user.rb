@@ -16,6 +16,7 @@ class User < ActiveRecord::Base
   validates_uniqueness_of :email, :scope => [:first_name, :last_name, :institution]
   validates_uniqueness_of :username
          
+  attr_accessible :username, :email, :institution, :first_name, :last_name, :password, :password_confirmation, :remember_me
   # attr_accessible :email, :password, :password_confirmation, :remember_me
          
   #   has_and_belongs_to_many :contacts
