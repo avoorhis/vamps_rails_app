@@ -48,7 +48,8 @@
               <%= check_box_tag project.project+'--pj-id', project.id, false, :onclick=>"open_datasets('#{project.id}','#{project.project}')" %>
               <%= project.project %>
               (<%= link_to "?", controller: "projects", action: "show", id: project.id %>)           
-            </label>  
+            </label> 
+             
             <div class="hidden" style='display:none;' >
               <table>
                 <tr><td>Name:</td><td><%= project.project %></td></tr>

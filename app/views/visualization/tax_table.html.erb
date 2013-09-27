@@ -2,6 +2,13 @@
 
 <%= render "debug" %>
 
+
+
+
+
+
+
+
 <div  id='tax_table_div' >
 <table class='standard_table'>
 
@@ -9,11 +16,8 @@
 <% projects = [] %>
 <% column_totals = {} %>
 <% if @taxonomy_by_site_hash.any? %>
-	<tr><th style='text-align:right;'>Projects:</th>
-<!--
-## Getting data out of these nested hashes is way too difficult
-## especially if we have to sort the data 
--->
+	<tr><td></td><th style='text-align:right;'>Projects:</th>
+
 	<% @taxonomy_by_site_hash.each do |tax, data| %>
 	  <% data.each do |project, ds_hash|%>
 		<% ds_hash.each do |dataset|%>
@@ -33,19 +37,20 @@
 	  	
 	<% end %>
 	</tr>
-	<tr><th class='td-text-right' >Datasets:</th>
+	<tr><td class='td-text-center'>n</td><th class='td-text-right' >Datasets:</th>
 	<% @ordered_projects.each do |p| %>
 		<% p[:datasets].each do |d| %>
+
 		  <td class='td-text-center' > <%= d[:dname] %> </td> 
 		<% end %>
 	<% end %>
 
     
     </tr>
-
+    <% n=1 %>
 	<% @taxonomy_by_site_hash.each do |tax, data| %>
-	<tr><td nowrap='nowrap' class='td-text-left'  ><%= tax %></td>
-	
+	<tr><td class='td-text-right'><%= n %></td><td nowrap='nowrap' class='td-text-left'  ><%= tax %></td>
+	<% n += 1 %>
 	  <% data.each do |project, ds_hash|%>
 		<% ds_hash.each do |dataset|%>
 			<% ds = dataset[0] %>
@@ -61,7 +66,7 @@
 	  <% end %>
 	  </tr>
 	<% end %>
-	<tr>
+	<tr><td></td>
 	<td class='td-text-right' ><b>TOTALS:</b></td>
 	<% column_totals.each do |t| %>
   		<td class='td-text-right' ><b><%= number_with_delimiter(t[1]) %></b></td>

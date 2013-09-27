@@ -54,13 +54,15 @@ class VisualizationController < ApplicationController
     #     0;SLM_NIH_Bv4v5;1St_121_Stockton,
     #     0;SLM_NIH_Bv4v5;1St_120_Richmond,
     
-    # sql version:
-    #@taxQuery    = create_tax_query()
-    #sql_result      = Project.find_by_sql(@taxQuery)
-    #taxonomy_hash = create_sorted_taxonomy_by_site(sql_result)
+    # sql version with joins:
+    @taxQuery    = create_tax_query()
+    sql_result      = Project.find_by_sql(@taxQuery)
+    taxonomy_hash = create_sorted_taxonomy_by_site(sql_result)
     
     # this seems slow to me:
-    taxonomy_hash = get_data_using_rails_object()
+    #taxonomy_hash = get_data_using_rails_object()
+    @new_taxonomy_hash = get_data_using_rails_object3()
+    puts @new_taxonomy_hash
     #puts "NEW TAX "+new_tax.inspect
     #puts "before fill with zeros:"
     #puts "OLD TAX "+taxonomy_hash.inspect
@@ -111,6 +113,87 @@ class VisualizationController < ApplicationController
 #
 #
 #
+
+def get_data_using_rails_object3()
+  taxonomy_hash =  {} 
+  my_pdrs = SequencePdrInfo.where(dataset_id: params["dataset_ids"])
+
+  all_seq_ids = Hash.new{|hash, key| hash[key] = []}
+  my_pdrs.each do |pdr|
+      all_seq_ids[pdr.dataset_id] << pdr.sequence_id
+  end
+
+  all_uniq_seq_info_ids = Hash.new{|hash, key| hash[key] = []}
+  all_seq_ids.each do |dataset_id, seq_id_arr|
+      all_uniq_seq_info_ids[dataset_id] << SequenceUniqInfo.where(sequence_id: seq_id_arr)
+  end
+ 
+  all_taxonomy_ids = Hash.new{|hash, key| hash[key] = []}
+  all_uniq_seq_info_ids.each do |dataset_id, usi|
+    usi.each do |us|
+      us.each do |u|
+        all_taxonomy_ids[dataset_id] << u.taxonomy_id
+      end
+    end
+  end
+
+  all_taxonomy = Hash.new{|hash, key| hash[key] = []}
+  all_taxonomy_ids.each do |dataset_id, v_arr|
+      all_taxonomy[dataset_id] << Taxonomy.where(id: v_arr)
+  end
+
+  all_taxonomy.each do |did, tax_obj_list|
+      ds=Dataset.find(did)
+      dataset_name = ds.dataset
+      project_name = ds.project.project
+      tax_string=''
+      count=10
+      tax_obj_list.each do |t|
+        tax_string = [
+                       t[0].domain.domain,  t[0].phylum.phylum,
+                       t[0].klass.klass,    t[0].order.order,
+                       t[0].family.family,  t[0].genus.genus,
+                       t[0].species.species,t[0].strain.strain
+                      ].take(@rank_number+1).join(';')
+        puts 'tax_string: '+tax_string
+      end
+
+      if taxonomy_hash.has_key?(tax_string) then
+        if taxonomy_hash[tax_string].has_key?(project_name) then
+          if taxonomy_hash[tax_string][project_name].has_key?(dataset_name) then
+            # sum knt for this ts, pj and ds
+            taxonomy_hash[tax_string][project_name][dataset_name] += count 
+          else
+            #new ds
+            taxonomy_hash[tax_string][project_name].merge!(dataset_name=>count) 
+          end   
+        else
+          # new pj
+          taxonomy_hash[tax_string].merge!(project_name => {dataset_name=>count})
+        end
+      else
+        # new tax: add new hash if not already there
+        taxonomy_hash[tax_string] = {project_name=>{dataset_name=>count}}
+      end 
+
+  end
+ puts taxonomy_hash.inspect
+
+
+
+  return all_taxonomy
+end
+
+def get_data_using_rails_object2()
+
+  ds_ids = ['108', '109', '110', '111', '112', '113', '114', '115', '116', '117']
+  ds_ids = params['dataset_ids']
+  seq_ids     = SequencePdrInfo.find_all_by_dataset_id(ds_ids).map(&:sequence_id)
+  uniques_obj = SequenceUniqInfo.find_all_by_sequence_id(seq_ids)
+  tax_ids     = SequenceUniqInfo.find_all_by_sequence_id(seq_ids).map(&:taxonomy_id)
+  tax_objs = Taxonomy.find_all_by_id(tax_ids)
+end
+
 def get_data_using_rails_object()
 
   taxonomy_hash =  {} 
