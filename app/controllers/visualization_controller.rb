@@ -178,6 +178,7 @@ def get_data_using_rails_object2()
   uniques_obj = SequenceUniqInfo.find_all_by_sequence_id(seq_ids)
   tax_ids     = SequenceUniqInfo.find_all_by_sequence_id(seq_ids).map(&:taxonomy_id)
   tax_objs = Taxonomy.find_all_by_id(tax_ids)
+end
 
 def get_counts_per_dataset_id()
   dat_count = Hash.new
