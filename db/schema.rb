@@ -24,11 +24,11 @@ ActiveRecord::Schema.define(version: 20130917211303) do
   add_index "datasets", ["env_sample_source_id"], name: "dataset_fk_env_sample_source_id", using: :btree
   add_index "datasets", ["project_id"], name: "dataset_fk_project_id", using: :btree
 
-  create_table "dna_regions", force: true do |t|
-    t.string "dna_region", limit: 32
+  create_table "domains", force: true do |t|
+    t.string "domain", limit: 300, default: "", null: false
   end
 
-  add_index "dna_regions", ["dna_region"], name: "dna_region", unique: true, using: :btree
+  add_index "domains", ["domain"], name: "domain", unique: true, using: :btree
 
   create_table "env_sample_sources", force: true do |t|
     t.integer "env_sample_source_id", limit: 1,  default: 0, null: false
@@ -48,74 +48,6 @@ ActiveRecord::Schema.define(version: 20130917211303) do
   end
 
   add_index "genera", ["genus"], name: "genus", unique: true, using: :btree
-
-  create_table "ill_full_temp", id: false, force: true do |t|
-    t.integer "run_info_run_info_id",                                                                default: 0,      null: false
-    t.integer "run_info_run_key_id",                                                                                  null: false
-    t.integer "run_info_run_id",                                                                                      null: false
-    t.integer "run_info_lane",                            limit: 1,                                  default: 0,      null: false
-    t.integer "run_info_dataset_id",                                                                                  null: false
-    t.integer "run_info_project_id",                                                                                  null: false
-    t.string  "run_info_tubelabel",                       limit: 32,                                 default: "",     null: false
-    t.string  "run_info_barcode",                         limit: 4,                                  default: "",     null: false
-    t.string  "run_info_adaptor",                         limit: 3,                                  default: "",     null: false
-    t.integer "run_info_dna_region_id",                                                                               null: false
-    t.string  "run_info_amp_operator",                    limit: 5,                                  default: "",     null: false
-    t.string  "run_info_seq_operator",                    limit: 5,                                  default: "",     null: false
-    t.string  "run_info_barcode_index",                   limit: 12,                                 default: "",     null: false
-    t.string  "run_info_overlap",                         limit: 8,                                  default: "none", null: false
-    t.integer "run_info_insert_size",                     limit: 2,                                  default: 0,      null: false
-    t.string  "run_info_file_prefix",                     limit: 0,                                  default: "",     null: false
-    t.integer "run_info_read_length",                     limit: 2,                                                   null: false
-    t.integer "run_info_primer_suite_id",                                                                             null: false
-    t.integer "run_key_run_key_id",                                                                  default: 0,      null: false
-    t.string  "run_key",                                  limit: 25,                                 default: "",     null: false
-    t.integer "run_run_id",                                                                          default: 0,      null: false
-    t.string  "run_run",                                  limit: 16,                                 default: "",     null: false
-    t.string  "run_run_prefix",                           limit: 7,                                  default: "",     null: false
-    t.date    "run_date_trimmed"
-    t.integer "dna_region_dna_region_id",                                                            default: 0,      null: false
-    t.string  "dna_region_dna_region",                    limit: 32
-    t.integer "primer_suite_primer_suite_id",                                                        default: 0,      null: false
-    t.string  "primer_suite_primer_suite",                limit: 25,                                 default: "",     null: false
-    t.integer "sequence_pdr_info_sequence_pdr_info_id",                                              default: 0,      null: false
-    t.integer "sequence_pdr_info_run_info_id",                                                                        null: false
-    t.integer "sequence_pdr_info_sequence_id",                                                                        null: false
-    t.integer "sequence_pdr_info_seq_count",                                                                          null: false
-    t.integer "sequence_uniq_info_sequence_uniq_info_id",                                            default: 0,      null: false
-    t.integer "sequence_uniq_info_sequence_id",                                                                       null: false
-    t.integer "sequence_uniq_info_taxonomy_id",                                                                       null: false
-    t.decimal "sequence_uniq_info_gast_distance",                            precision: 7, scale: 5,                  null: false
-    t.integer "sequence_uniq_info_refssu_id",                                                                         null: false
-    t.integer "sequence_uniq_info_refssu_count",                                                     default: 0,      null: false
-    t.integer "sequence_uniq_info_rank_id",                                                                           null: false
-    t.text    "sequence_uniq_info_refhvr_ids",                                                                        null: false
-    t.integer "rank_rank_id",                                                                        default: 0,      null: false
-    t.string  "rank_rank",                                limit: 32,                                 default: "",     null: false
-    t.string  "taxonomy",                                 limit: 300
-    t.integer "sequence_sequence_id",                                                                default: 0,      null: false
-    t.binary  "sequence",                                 limit: 2147483647,                                          null: false
-    t.integer "project_project_id",                                                                  default: 0,      null: false
-    t.string  "project_project",                          limit: 32,                                 default: "",     null: false
-    t.string  "project_title",                            limit: 64,                                 default: "",     null: false
-    t.string  "project_project_description",                                                         default: "",     null: false
-    t.string  "project_rev_project_name",                 limit: 32,                                 default: "",     null: false
-    t.string  "project_funding",                          limit: 64,                                 default: "",     null: false
-    t.integer "env_sample_source_id"
-    t.integer "project_contact_id"
-    t.integer "env_sample_source_env_sample_source_id",                                              default: 0,      null: false
-    t.string  "env_sample_source_env_source_name",        limit: 50
-    t.integer "contact_contact_id",                                                                  default: 0,      null: false
-    t.string  "contact_contact",                          limit: 32
-    t.string  "contact_email",                            limit: 64
-    t.string  "contact_institution",                      limit: 128
-    t.string  "contact_vamps_name",                       limit: 20
-    t.string  "contact_first_name",                       limit: 20
-    t.string  "contact_last_name",                        limit: 20
-    t.integer "dataset_dataset_id",                                                                  default: 0,      null: false
-    t.string  "dataset_dataset",                          limit: 64,                                 default: "",     null: false
-    t.string  "dataset_dataset_description",              limit: 100,                                default: "",     null: false
-  end
 
   create_table "klasses", force: true do |t|
     t.string "klass", limit: 300, default: "", null: false
@@ -165,7 +97,6 @@ ActiveRecord::Schema.define(version: 20130917211303) do
   end
 
   add_index "sequence_pdr_infos", ["dataset_id", "sequence_id"], name: "uniq_seq_pd", unique: true, using: :btree
-  add_index "sequence_pdr_infos", ["dataset_id"], name: "sequence_pdr_info_fk_dataset_id", using: :btree
   add_index "sequence_pdr_infos", ["sequence_id"], name: "sequence_pdr_info_fk_sequence_id", using: :btree
 
   create_table "sequence_uniq_infos", force: true do |t|
@@ -205,14 +136,8 @@ ActiveRecord::Schema.define(version: 20130917211303) do
 
   add_index "strains", ["strain"], name: "strain", unique: true, using: :btree
 
-  create_table "superkingdoms", force: true do |t|
-    t.string "superkingdom", limit: 300, default: "", null: false
-  end
-
-  add_index "superkingdoms", ["superkingdom"], name: "superkingdom", unique: true, using: :btree
-
   create_table "taxonomies", force: true do |t|
-    t.integer  "superkingdom_id"
+    t.integer  "domain_id"
     t.integer  "phylum_id"
     t.integer  "klass_id"
     t.integer  "order_id"
@@ -224,6 +149,7 @@ ActiveRecord::Schema.define(version: 20130917211303) do
     t.datetime "updated_at"
   end
 
+  add_index "taxonomies", ["domain_id", "phylum_id", "klass_id", "order_id", "family_id", "genus_id", "species_id", "strain_id"], name: "all_names", unique: true, using: :btree
   add_index "taxonomies", ["family_id"], name: "taxonomy_fk_family_id", using: :btree
   add_index "taxonomies", ["genus_id"], name: "taxonomy_fk_genus_id", using: :btree
   add_index "taxonomies", ["klass_id"], name: "taxonomy_fk_klass_id", using: :btree
@@ -231,15 +157,6 @@ ActiveRecord::Schema.define(version: 20130917211303) do
   add_index "taxonomies", ["phylum_id"], name: "taxonomy_fk_phylum_id", using: :btree
   add_index "taxonomies", ["species_id"], name: "taxonomy_fk_species_id", using: :btree
   add_index "taxonomies", ["strain_id"], name: "taxonomy_fk_strain_id", using: :btree
-  add_index "taxonomies", ["superkingdom_id", "phylum_id", "klass_id", "order_id", "family_id", "genus_id", "species_id", "strain_id"], name: "all_names", unique: true, using: :btree
-
-  create_table "taxonomies_old", force: true do |t|
-    t.string   "taxonomy",   limit: 300
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "taxonomies_old", ["taxonomy"], name: "taxonomy", unique: true, using: :btree
 
   create_table "users", force: true do |t|
     t.string   "username",               limit: 20

@@ -1,6 +1,6 @@
 FactoryGirl.define do
     factory :rank do |rank|
-      rank.rank  "superkingdom"
-      rank.rank_number 12
+      rank.rank  "domain"
+      rank.rank_number 0
     end
 end

@@ -2,7 +2,7 @@
 
 FactoryGirl.define do
     factory :taxonomy do |t|
-      sequence(:superkingdom_id){|n| n}
+      sequence(:domain_id){|n| n}
       sequence(:phylum_id){|n| n}
       sequence(:klass_id ){|n| n}
       sequence(:order_id){|n| n}

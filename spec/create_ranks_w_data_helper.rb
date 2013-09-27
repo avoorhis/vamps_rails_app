@@ -7,22 +7,22 @@ ranks_array = [{:rank => "NA", :rank_number => 10},
 {:rank => "order", :rank_number => 3},
 {:rank => "phylum", :rank_number => 1},
 {:rank => "species", :rank_number => 6},
-{:rank => "strain", :rank_number => 7},
-{:rank => "superkingdom", :rank_number => 12}]
+{:rank => "strain", :rank_number => 7}
+]
 
 @ranks = Array.new
 ranks_array.each do |my_hash|
    @ranks.push(FactoryGirl.create(:rank, rank: my_hash[:rank], rank_number: my_hash[:rank_number]))       
 end
 
-superkingdom_arr = [{:superkingdom => "Archaea"},
-{:superkingdom => "Bacteria"},
-{:superkingdom => "Eukarya"},
-{:superkingdom => "Organelle"},
-{:superkingdom => "Unknown"}]
-@superkingdoms = Array.new
-superkingdom_arr.each do |my_hash|
-   @superkingdoms.push(FactoryGirl.create(:superkingdom, superkingdom: my_hash[:superkingdom]))       
+domain_arr = [{:domain => "Archaea"},
+{:domain => "Bacteria"},
+{:domain => "Eukarya"},
+{:domain => "Organelle"},
+{:domain => "Unknown"}]
+@domains = Array.new
+domain_arr.each do |my_hash|
+   @domains.push(FactoryGirl.create(:domain, domain: my_hash[:domain]))       
 end
 
 phylum_arr       = [{:phylum => "Bacteroidetes"},

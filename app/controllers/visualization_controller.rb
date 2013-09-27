@@ -7,9 +7,6 @@ class VisualizationController < ApplicationController
     @projects_test = %w[SLM_NIH_v3]
     @datasets_test = %w[7_Stockton 8_Stockton 9_Stockton]
     
-
-
-    
     @ordered_projects, @ordered_datasets = create_ordered_datasets() 
 
     puts 'ordered projects: ' +@ordered_projects.inspect
@@ -28,7 +25,6 @@ class VisualizationController < ApplicationController
     #domains  = Array[params[:bacteria], params[:archaea], params[:eukarya], params[:organelle], params[:unknown]]
     domains      = params[:domains]
     @domains     = domains.compact
-    # TODO: can we take a rank_id here, please?
     
     rank_id = params[:tax_id]
     rank_obj = Rank.find(rank_id)
@@ -42,22 +38,12 @@ class VisualizationController < ApplicationController
 
     # SLM_NIH_Bv4v5--1St_121_Stockton
     
-    # TODO 
-    #   1) dhtmltree takes project and dataset together into "params[:datasets]", shouldn't it be separate params? 
-    #   2) no need for Project.find_by_sql - we have it from params
-    #   3) it repeates project with each dataset - better get it once
-    #   4) if click on a project only - does not select the underliyng datasets
-    #   5) it repeats "0" with each project/dataset - what this?
-    #   e.g
-    #     fromstandartTreeRow
-    #      "datasets"=>"0;SLM_NIH_Bv4v5,
-    #     0;SLM_NIH_Bv4v5;1St_121_Stockton,
-    #     0;SLM_NIH_Bv4v5;1St_120_Richmond,
-    
-    # sql version with joins:
-    @taxQuery    = create_tax_query()
-    sql_result      = Project.find_by_sql(@taxQuery)
-    taxonomy_hash = create_sorted_taxonomy_by_site(sql_result)
+
+    # sql version:
+    #@taxQuery    = create_tax_query()
+    #sql_result      = Project.find_by_sql(@taxQuery)
+    #taxonomy_hash = create_sorted_taxonomy_by_site(sql_result)
+
     
     # this seems slow to me:
     #taxonomy_hash = get_data_using_rails_object()
@@ -104,7 +90,6 @@ class VisualizationController < ApplicationController
   def show
 
   end
-
   
 ################################################################################
   private
@@ -113,6 +98,7 @@ class VisualizationController < ApplicationController
 #
 #
 #
+
 
 def get_data_using_rails_object3()
   taxonomy_hash =  {} 
@@ -192,6 +178,12 @@ def get_data_using_rails_object2()
   uniques_obj = SequenceUniqInfo.find_all_by_sequence_id(seq_ids)
   tax_ids     = SequenceUniqInfo.find_all_by_sequence_id(seq_ids).map(&:taxonomy_id)
   tax_objs = Taxonomy.find_all_by_id(tax_ids)
+
+def get_counts_per_dataset_id()
+  dat_count = Hash.new
+  @datasets.map {|d| sum = 0; d.sequence_pdr_infos.map {|spi| sum += spi.seq_count}; dat_count[d.id] = sum }
+  return dat_count
+
 end
 
 def get_data_using_rails_object()
@@ -211,13 +203,16 @@ def get_data_using_rails_object()
         ]
   #did_array = @ordered_datasets.map { |x| x[:did] }
   #puts did_array
-  d_sql = create_comma_list(params['dataset_ids'])
-  @my_pdrs = SequencePdrInfo.where "dataset_id in(#{d_sql})"
-  @my_pdrs.find_each do |pdr|
+  # d_sql = create_comma_list(params['dataset_ids'])
+  # @my_pdrs = SequencePdrInfo.where "dataset_id in(#{d_sql})"
+  @my_pdrs = SequencePdrInfo.where(dataset_id: params["dataset_ids"])
+  
+  @my_pdrs.each do |pdr|
 
-    dataset_name = pdr.dataset[:dataset]
-    project_name = pdr.dataset.project[:project]
-    count = pdr[:seq_count]
+    dataset_id = pdr.dataset_id
+    # project_name = pdr.dataset.project[:project]
+    # to get_counts_per_dataset_id method above
+    # count = pdr[:seq_count]
 
     puts pdr[:sequence_id]
     uniq = SequenceUniqInfo.find_by_sequence_id(pdr[:sequence_id])
@@ -233,20 +228,20 @@ def get_data_using_rails_object()
 
       if taxonomy_hash.has_key?(tax_string) then
         if taxonomy_hash[tax_string].has_key?(project_name) then
-          if taxonomy_hash[tax_string][project_name].has_key?(dataset_name) then
+          if taxonomy_hash[tax_string][project_name].has_key?(dataset_id) then
             # sum knt for this ts, pj and ds
-            taxonomy_hash[tax_string][project_name][dataset_name] += count 
+            taxonomy_hash[tax_string][project_name][dataset_id] += count 
           else
             #new ds
-            taxonomy_hash[tax_string][project_name].merge!(dataset_name=>count) 
+            taxonomy_hash[tax_string][project_name].merge!(dataset_id=>count) 
           end   
         else
           # new pj
-          taxonomy_hash[tax_string].merge!(project_name => {dataset_name=>count})
+          taxonomy_hash[tax_string].merge!(project_name => {genus=>count})
         end
       else
         # new tax: add new hash if not already there
-        taxonomy_hash[tax_string] = {project_name=>{dataset_name=>count}}
+        taxonomy_hash[tax_string] = {project_name=>{genus=>count}}
       end 
     end 
 
@@ -257,7 +252,7 @@ end
 
 #
 #  GET ORDERED DATASETS
-#
+# Andy, why we need it?
 def create_ordered_datasets() 
   # gets an ordered array of datasets:  
   # dataset_array:  [{:did=>did, :dname=>"dname"},{:did=>did, :dname=>"dname"}}
@@ -436,7 +431,7 @@ end
   
     
 
-    #rank_id_names = %w[superkingdom_id phylum_id klass_id order_id family_id genus_id species_id strain_id]
+    #rank_id_names = %w[domain_id phylum_id klass_id order_id family_id genus_id species_id strain_id]
     rank_names        = %w[domain  phylum  klass   order  family   genus  species strain ]
     taxon_table_names = %w[domains phylums klasses orders families genera species strains]
     rank_ids = ""

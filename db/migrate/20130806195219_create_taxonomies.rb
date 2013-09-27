@@ -1,7 +1,7 @@
 class CreateTaxonomies < ActiveRecord::Migration
   def change
     create_table "taxonomies", force: true do |t|
-      t.integer  "superkingdom_id"
+      t.integer  "domain_id"
       t.integer  "phylum_id"
       t.integer  "klass_id"
       t.integer  "order_id"
@@ -12,6 +12,6 @@ class CreateTaxonomies < ActiveRecord::Migration
       t.timestamps
     end
 
-    add_index "taxonomies", ["superkingdom_id", "phylum_id", "klass_id", "order_id", "family_id", "genus_id", "species_id", "strain_id"], name: "all_names", unique: true    
+    add_index "taxonomies", ["domain_id", "phylum_id", "klass_id", "order_id", "family_id", "genus_id", "species_id", "strain_id"], name: "all_names", unique: true    
   end
 end
