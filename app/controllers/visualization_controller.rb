@@ -109,21 +109,25 @@ class VisualizationController < ApplicationController
 #
 #
 
-
-def get_data_using_rails_object3()
-  taxonomy_hash =  {} 
+def get_seq_ids()
   my_pdrs = SequencePdrInfo.where(dataset_id: params["dataset_ids"])
 
   all_seq_ids = Hash.new{|hash, key| hash[key] = []}
   my_pdrs.each do |pdr|
       all_seq_ids[pdr.dataset_id] << pdr.sequence_id
   end
+  return all_seq_ids
+end
 
+def get_uniq_seq_info_ids(all_seq_ids)
   all_uniq_seq_info_ids = Hash.new{|hash, key| hash[key] = []}
   all_seq_ids.each do |dataset_id, seq_id_arr|
       all_uniq_seq_info_ids[dataset_id] << SequenceUniqInfo.where(sequence_id: seq_id_arr)
   end
- 
+  return all_uniq_seq_info_ids
+end
+
+def get_all_taxonomy_ids(all_uniq_seq_info_ids) 
   all_taxonomy_ids = Hash.new{|hash, key| hash[key] = []}
   all_uniq_seq_info_ids.each do |dataset_id, usi|
     usi.each do |us|
@@ -131,13 +135,25 @@ def get_data_using_rails_object3()
         all_taxonomy_ids[dataset_id] << u.taxonomy_id
       end
     end
-  end
+  end  
+  return all_taxonomy_ids
+end
 
+def get_all_taxonomy(all_taxonomy_ids)
   all_taxonomy = Hash.new{|hash, key| hash[key] = []}
   all_taxonomy_ids.each do |dataset_id, v_arr|
       all_taxonomy[dataset_id] << Taxonomy.where(id: v_arr)
   end
+  return all_taxonomy
+end
 
+def get_data_using_rails_object3()
+  taxonomy_hash =  {} 
+  all_seq_ids           = get_seq_ids()  
+  all_uniq_seq_info_ids = get_uniq_seq_info_ids(all_seq_ids)
+  all_taxonomy_ids      = get_all_taxonomy_ids(all_uniq_seq_info_ids)
+  all_taxonomy          = get_all_taxonomy(all_taxonomy_ids)
+  
   all_taxonomy.each do |did, tax_obj_list|
       ds=Dataset.find(did)
       dataset_name = ds.dataset
@@ -173,22 +189,19 @@ def get_data_using_rails_object3()
       end 
 
   end
- puts taxonomy_hash.inspect
-
-
-
+  puts taxonomy_hash.inspect
   return all_taxonomy
 end
 
-def get_data_using_rails_object2()
-
-  ds_ids = ['108', '109', '110', '111', '112', '113', '114', '115', '116', '117']
-  ds_ids = params['dataset_ids']
-  seq_ids     = SequencePdrInfo.find_all_by_dataset_id(ds_ids).map(&:sequence_id)
-  uniques_obj = SequenceUniqInfo.find_all_by_sequence_id(seq_ids)
-  tax_ids     = SequenceUniqInfo.find_all_by_sequence_id(seq_ids).map(&:taxonomy_id)
-  tax_objs = Taxonomy.find_all_by_id(tax_ids)
-end
+# def get_data_using_rails_object2()
+# 
+#   ds_ids = ['108', '109', '110', '111', '112', '113', '114', '115', '116', '117']
+#   ds_ids = params['dataset_ids']
+#   seq_ids     = SequencePdrInfo.find_all_by_dataset_id(ds_ids).map(&:sequence_id)
+#   uniques_obj = SequenceUniqInfo.find_all_by_sequence_id(seq_ids)
+#   tax_ids     = SequenceUniqInfo.find_all_by_sequence_id(seq_ids).map(&:taxonomy_id)
+#   tax_objs = Taxonomy.find_all_by_id(tax_ids)
+# end
 
 def get_counts_per_dataset_id()
   dat_count = Hash.new
@@ -197,73 +210,73 @@ def get_counts_per_dataset_id()
 
 end
 
-def get_data_using_rails_object()
-
-  taxonomy_hash =  {} 
-  # make this a list of strings so we can use eval() on later
-  taxa = 
-        [
-          "uniq.taxonomy.domain[:domain]",
-          "uniq.taxonomy.phylum[:phylum]",
-          "uniq.taxonomy.klass[:klass]",
-          "uniq.taxonomy.order[:order]",
-          "uniq.taxonomy.family[:family]",
-          "uniq.taxonomy.genus[:genus]",
-          "uniq.taxonomy.species[:species]",
-          "uniq.taxonomy.strain[:strain]"
-        ]
-  #did_array = @ordered_datasets.map { |x| x[:did] }
-  #puts did_array
-  # d_sql = create_comma_list(params['dataset_ids'])
-  # @my_pdrs = SequencePdrInfo.where "dataset_id in(#{d_sql})"
-  @my_pdrs = SequencePdrInfo.where(dataset_id: params["dataset_ids"])
-  
-  @my_pdrs.each do |pdr|
-
-    dataset_id = pdr.dataset_id
-    # project_name = pdr.dataset.project[:project]
-    # to get_counts_per_dataset_id method above
-    # count = pdr[:seq_count]
-
-    puts pdr[:sequence_id]
-    uniq = SequenceUniqInfo.find_by_sequence_id(pdr[:sequence_id])
-
-    puts uniq
-    tax_string =""
-    unless uniq.taxonomy.nil?
-
-      # create taxonomy string based on @rank_number
-      #tax_string = taxa.take(@rank_number+1).join(';')
-      tax_string = taxa.take(@rank_number+1).map!{ |x| eval(x) }.join(';')
-      
-
-      if taxonomy_hash.has_key?(tax_string) then
-        if taxonomy_hash[tax_string].has_key?(project_name) then
-          if taxonomy_hash[tax_string][project_name].has_key?(dataset_id) then
-            # sum knt for this ts, pj and ds
-            taxonomy_hash[tax_string][project_name][dataset_id] += count 
-          else
-            #new ds
-            taxonomy_hash[tax_string][project_name].merge!(dataset_id=>count) 
-          end   
-        else
-          # new pj
-          taxonomy_hash[tax_string].merge!(project_name => {genus=>count})
-        end
-      else
-        # new tax: add new hash if not already there
-        taxonomy_hash[tax_string] = {project_name=>{genus=>count}}
-      end 
-    end 
-
-  end
-  return taxonomy_hash
-
-end
+# def get_data_using_rails_object()
+# 
+#   taxonomy_hash =  {} 
+#   # make this a list of strings so we can use eval() on later
+#   taxa = 
+#         [
+#           "uniq.taxonomy.domain[:domain]",
+#           "uniq.taxonomy.phylum[:phylum]",
+#           "uniq.taxonomy.klass[:klass]",
+#           "uniq.taxonomy.order[:order]",
+#           "uniq.taxonomy.family[:family]",
+#           "uniq.taxonomy.genus[:genus]",
+#           "uniq.taxonomy.species[:species]",
+#           "uniq.taxonomy.strain[:strain]"
+#         ]
+#   #did_array = @ordered_datasets.map { |x| x[:did] }
+#   #puts did_array
+#   # d_sql = create_comma_list(params['dataset_ids'])
+#   # @my_pdrs = SequencePdrInfo.where "dataset_id in(#{d_sql})"
+#   @my_pdrs = SequencePdrInfo.where(dataset_id: params["dataset_ids"])
+#   
+#   @my_pdrs.each do |pdr|
+# 
+#     dataset_id = pdr.dataset_id
+#     # project_name = pdr.dataset.project[:project]
+#     # to get_counts_per_dataset_id method above
+#     # count = pdr[:seq_count]
+# 
+#     puts pdr[:sequence_id]
+#     uniq = SequenceUniqInfo.find_by_sequence_id(pdr[:sequence_id])
+# 
+#     puts uniq
+#     tax_string =""
+#     unless uniq.taxonomy.nil?
+# 
+#       # create taxonomy string based on @rank_number
+#       #tax_string = taxa.take(@rank_number+1).join(';')
+#       tax_string = taxa.take(@rank_number+1).map!{ |x| eval(x) }.join(';')
+#       
+# 
+#       if taxonomy_hash.has_key?(tax_string) then
+#         if taxonomy_hash[tax_string].has_key?(project_name) then
+#           if taxonomy_hash[tax_string][project_name].has_key?(dataset_id) then
+#             # sum knt for this ts, pj and ds
+#             taxonomy_hash[tax_string][project_name][dataset_id] += count 
+#           else
+#             #new ds
+#             taxonomy_hash[tax_string][project_name].merge!(dataset_id=>count) 
+#           end   
+#         else
+#           # new pj
+#           taxonomy_hash[tax_string].merge!(project_name => {genus=>count})
+#         end
+#       else
+#         # new tax: add new hash if not already there
+#         taxonomy_hash[tax_string] = {project_name=>{genus=>count}}
+#       end 
+#     end 
+# 
+#   end
+#   return taxonomy_hash
+# 
+# end
 
 #
 #  GET ORDERED DATASETS
-# Andy, why we need it?
+# Andy, why do we need it?
 def create_ordered_datasets() 
   # gets an ordered array of datasets:  
   # dataset_array:  [{:did=>did, :dname=>"dname"},{:did=>did, :dname=>"dname"}}
