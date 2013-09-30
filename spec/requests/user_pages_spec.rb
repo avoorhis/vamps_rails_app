@@ -1,4 +1,5 @@
 require 'spec_helper'
+# Capybara.default_wait_time = 5
 
 describe "User registration" do
   before(:each) do
