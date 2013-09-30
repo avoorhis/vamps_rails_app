@@ -72,13 +72,23 @@ class VisualizationController < ApplicationController
   end
   
   def get_datasets
-    @datasets - Dataset.find(params[:dataset_ids])
+    @datasets_per_pr = Dataset.find(params[:dataset_ids])
     return @datasets
+  end
+  
+  def make_datasets_by_project_hash()
+    datasets_by_project = Hash.new
+    @projects.each do |p|
+      datasets_by_project[p] = @datasets.select{|d| d.project_id == p.id}
+    end
+    return datasets_by_project
   end
 
   def index
     @all_data = get_test_sample_object()
     @projects = Project.all    
+    @datasets = Dataset.all    
+    @datasets_by_project = make_datasets_by_project_hash
     @domains  = Domain.all
     @ranks    = Rank.all.sorted    
   end
@@ -182,7 +192,7 @@ end
 
 def get_counts_per_dataset_id()
   dat_count = Hash.new
-  @datasets.map {|d| sum = 0; d.sequence_pdr_infos.map {|spi| sum += spi.seq_count}; dat_count[d.id] = sum }
+  @datasets_per_pr.map {|d| sum = 0; d.sequence_pdr_infos.map {|spi| sum += spi.seq_count}; dat_count[d.id] = sum }
   return dat_count
 
 end
@@ -375,8 +385,8 @@ end
     # TODO: Move to the model and simplify
     dataset_counts = Hash.new
     d_ids = [5,6,7] #TODO: take the ids from params[:dataset] and move to the main
-    @datasets = Dataset.all.find(d_ids) #TODO: move to the main
-    @datasets.each do |dataset|
+    @datasets_per_pr = Dataset.all.find(d_ids) #TODO: move to the main
+    @datasets_per_pr.each do |dataset|
       sum = 0
       dataset.sequence_pdr_infos.each do |i|
         sum += i.seq_count

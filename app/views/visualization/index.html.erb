@@ -30,13 +30,10 @@
         <%= link_to "Projects", projects_path %> 
          
       <ul>
-      <% @projects.each do |project| %>
+      <% @datasets_by_project.each do |project, dataset_hash| %>
 
 
-
-      <% puts project.inspect %>
-      <% puts project.datasets.inspect %>
-      <% if not project.datasets.blank? then %>
+      <% if not dataset_hash.blank? then %>
       
       
 
@@ -61,7 +58,7 @@
             <ul>
               <% project_dataset_div = project.id.to_s+'_ds_div' %>
               <div id='<%= project_dataset_div %>' style='display:none;'>  
-                <% project.datasets.each do |dataset| %>
+                <% dataset_hash.each do |dataset| %>
                   <li>
                   <label class="dataset-select">
                   <%= check_box_tag 'dataset_ids[]', dataset.id, false , :onclick=>"check_project('#{project.id}','#{project.project}')" %>

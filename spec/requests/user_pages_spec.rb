@@ -117,6 +117,7 @@ describe "User not logged in" do
   end
 
   it "should redirect to sign in if not logged in" do
+    Rank.delete_all
     visit "/visualization"
     # puts page.body
     
