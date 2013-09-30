@@ -4,9 +4,6 @@ class VisualizationController < ApplicationController
   
   def parse_view
     # TEST:    
-    @projects_test = %w[SLM_NIH_v3]
-    @datasets_test = %w[7_Stockton 8_Stockton 9_Stockton]
-    
     @ordered_projects, @ordered_datasets = create_ordered_datasets() 
 
     puts 'ordered projects: ' +@ordered_projects.inspect
@@ -52,7 +49,7 @@ class VisualizationController < ApplicationController
     #puts "NEW TAX "+new_tax.inspect
     #puts "before fill with zeros:"
     #puts "OLD TAX "+taxonomy_hash.inspect
-    @taxonomy_by_site_hash = fill_in_zeros(taxonomy_hash)
+    @taxonomy_by_site_hash = fill_in_zeros(@new_taxonomy_hash)
     #puts "after fill with zeros:"
     #puts @taxonomy_by_site_hash
   
@@ -67,39 +64,39 @@ class VisualizationController < ApplicationController
     end    
   end
 
-  def get_taxonomy_by_site
-    return @taxonomy_by_site
-  end
+  # def get_taxonomy_by_site
+  #   return @taxonomy_by_site
+  # end
   
-  def get_datasets
-    @datasets_per_pr = Dataset.find(params[:dataset_ids])
-    return @datasets
-  end
+  # def get_datasets
+  #   @datasets_per_pr = Dataset.find(params[:dataset_ids])
+  #   return @datasets
+  # end
   
   def make_datasets_by_project_hash()
+    projects = Project.all    
+    datasets = Dataset.all        
     datasets_by_project = Hash.new
-    @projects.each do |p|
-      datasets_by_project[p] = @datasets.select{|d| d.project_id == p.id}
+    projects.each do |p|
+      datasets_by_project[p] = datasets.select{|d| d.project_id == p.id}
     end
     return datasets_by_project
   end
 
   def index
     @all_data = get_test_sample_object()
-    @projects = Project.all    
-    @datasets = Dataset.all    
-    @datasets_by_project = make_datasets_by_project_hash
+    @datasets_by_project = make_datasets_by_project_hash()
     @domains  = Domain.all
     @ranks    = Rank.all.sorted    
   end
 
-  def create
-
-  end
-
-  def show
-
-  end
+  # def create
+  # 
+  # end
+  # 
+  # def show
+  # 
+  # end
   
 ################################################################################
   private
@@ -154,6 +151,10 @@ def get_data_using_rails_object3()
   all_taxonomy_ids      = get_all_taxonomy_ids(all_uniq_seq_info_ids)
   all_taxonomy          = get_all_taxonomy(all_taxonomy_ids)
   
+  # puts "URA55" + all_taxonomy.inspect
+  # URA55{2=>[#<ActiveRecord::Relation [#<Taxonomy id: 81, domain_id: 2, phylum_id: 2, klass_id: 2, order_id: 9, family_id: 40, genus_id: 46, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 82, domain_id: 2, phylum_id: 3, klass_id: 3, order_id: 16, family_id: 18, genus_id: 129, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 83, domain_id: 2, phylum_id: 3, klass_id: 3, order_id: 24, family_id: 64, genus_id: 92, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 84, domain_id: 2, phylum_id: 3, klass_id: 3, order_id: 21, family_id: 28, genus_id: 27, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 85, domain_id: 2, phylum_id: 3, klass_id: 4, order_id: 7, family_id: 7, genus_id: 38, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 86, domain_id: 2, phylum_id: 4, klass_id: 32, order_id: 5, family_id: 5, genus_id: 39, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 87, domain_id: 2, phylum_id: 3, klass_id: 5, order_id: 22, family_id: 29, genus_id: 129, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 88, domain_id: 2, phylum_id: 3, klass_id: 5, order_id: 6, family_id: 27, genus_id: 26, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 89, domain_id: 2, phylum_id: 3, klass_id: 4, order_id: 7, family_id: 7, genus_id: 129, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 90, domain_id: 2, phylum_id: 4, klass_id: 32, order_id: 5, family_id: 13, genus_id: 13, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, ...]>]}
+
+  # TODO: Andy, could we please use dataset_id in the taxa hash? We can connect it with dataset/project names in a separate hash to show in a view, by calling the ids
   all_taxonomy.each do |did, tax_obj_list|
       ds=Dataset.find(did)
       dataset_name = ds.dataset
@@ -327,38 +328,38 @@ end
 #
 #  CREATE SORTED TAXONOMY BY SITE
 #
-def create_sorted_taxonomy_by_site(result)
-    taxonomy_hash =  {} 
-    
-    for res in result
-      pj  = res["project"]
-      ds  = res["dataset"]
-      #pd = pj+'--'+ds
-      ts  = res["taxonomy"]
-      knt = res["knt"]
-      
-      if taxonomy_hash.has_key?(ts) then
-        if taxonomy_hash[ts].has_key?(pj) then
-          if taxonomy_hash[ts][pj].has_key?(ds) then
-            # sum knt for this ts, pj and ds
-            taxonomy_hash[ts][pj][ds] += knt 
-          else
-            #new ds
-            taxonomy_hash[ts][pj].merge!(ds=>knt) 
-          end          
-
-        else
-          # new pj
-          taxonomy_hash[ts].merge!(pj => {ds=>knt})
-        end
-      else
-        # new tax: add new hash if not already there
-        taxonomy_hash[ts] = {pj=>{ds=>knt}}
-      end    
-    end
-
-    return taxonomy_hash
-end
+# def create_sorted_taxonomy_by_site(result)
+#     taxonomy_hash =  {} 
+#     
+#     for res in result
+#       pj  = res["project"]
+#       ds  = res["dataset"]
+#       #pd = pj+'--'+ds
+#       ts  = res["taxonomy"]
+#       knt = res["knt"]
+#       
+#       if taxonomy_hash.has_key?(ts) then
+#         if taxonomy_hash[ts].has_key?(pj) then
+#           if taxonomy_hash[ts][pj].has_key?(ds) then
+#             # sum knt for this ts, pj and ds
+#             taxonomy_hash[ts][pj][ds] += knt 
+#           else
+#             #new ds
+#             taxonomy_hash[ts][pj].merge!(ds=>knt) 
+#           end          
+# 
+#         else
+#           # new pj
+#           taxonomy_hash[ts].merge!(pj => {ds=>knt})
+#         end
+#       else
+#         # new tax: add new hash if not already there
+#         taxonomy_hash[ts] = {pj=>{ds=>knt}}
+#       end    
+#     end
+# 
+#     return taxonomy_hash
+# end
 
 #
 #  FILL IN ZEROS
@@ -472,86 +473,86 @@ end
 #
 #  CREATE TAX QUERY
 #
-  def create_tax_query()
-    
+#   def create_tax_query()
+#     
+# 
+#     get_dataset_counts()
+#     
+#     rank_ids, taxa_joins = make_taxa_by_rank()
+#     print "URA! rank_ids = #{rank_ids}\n taxa_joins = #{taxa_joins}"
+#     taxQuery = "SELECT distinct projects.project as project, datasets.dataset as dataset, CONCAT_WS(\";\", #{rank_ids}) AS taxonomy, seq_count AS knt, classifier
+# FROM sequence_pdr_infos"
+# join = "\nJOIN datasets ON (dataset_id = datasets.id)
+# JOIN projects ON (project_id = projects.id) 
+# JOIN sequence_uniq_infos USING(sequence_id)
+# JOIN taxonomies ON (taxonomies.id = taxonomy_id)
+# #{taxa_joins}
+# "
+# 
+#     where    = "  WHERE \n"
+#     
+#     did_array = @ordered_datasets.map { |x| x[:did] }
+#     #puts did_array
+#     d_sql = create_comma_list(did_array)
+#     where    += "datasets.id IN (#{d_sql})\n "
+#     
+# 
+#     ##DOMAINS
+#     unless @domains.length == 5 then
+#       
+#       sk_num = []
+#       @domains.each do |sk|
+#           if @domains.include? sk.domain then
+#             
+#               sk_num << sk.id.to_s
+#             
+#           end
+#       end 
+#       puts 'sk num '+sk_num.to_s    
+#       if @domains.length == 1
+#         where += " AND domain_id ='#{sk_num[0]}'"
+#       else
+#         sql_domain_ids     = sk_num.join("','")      
+#         where += " AND domain_id in ('#{sql_domain_ids}')"
+#     end
+#     end
+#     ##NAs
+#     if @nas == 'no' then
+#       # TODO
+#       where += " AND taxonomy not like 'no_%'"
+#       where += " AND taxonomy not like 'NA%'"
+#       where += " AND taxonomy not like '%;NA;%'"
+#       where += " AND taxonomy not like '%;NA'" 
+#       where += " AND taxonomy not like '%_NA'"
+#     end
+# 
+#     # there should be no GROUP BY or ORDER BY clause as it slows down the sql calls considerably
+#     # but the seq_count has to be summed for each unique: project,dataset,taxonomy
+#     group = "\nGROUP BY project, dataset, taxonomy"
+#    
+# 
+#     @taxQuery = taxQuery + join + where
+#   end
 
-    get_dataset_counts()
-    
-    rank_ids, taxa_joins = make_taxa_by_rank()
-    print "URA! rank_ids = #{rank_ids}\n taxa_joins = #{taxa_joins}"
-    taxQuery = "SELECT distinct projects.project as project, datasets.dataset as dataset, CONCAT_WS(\";\", #{rank_ids}) AS taxonomy, seq_count AS knt, classifier
-FROM sequence_pdr_infos"
-join = "\nJOIN datasets ON (dataset_id = datasets.id)
-JOIN projects ON (project_id = projects.id) 
-JOIN sequence_uniq_infos USING(sequence_id)
-JOIN taxonomies ON (taxonomies.id = taxonomy_id)
-#{taxa_joins}
-"
-
-    where    = "  WHERE \n"
-    
-    did_array = @ordered_datasets.map { |x| x[:did] }
-    #puts did_array
-    d_sql = create_comma_list(did_array)
-    where    += "datasets.id IN (#{d_sql})\n "
-    
-
-    ##DOMAINS
-    unless @domains.length == 5 then
-      
-      sk_num = []
-      @domains.each do |sk|
-          if @domains.include? sk.domain then
-            
-              sk_num << sk.id.to_s
-            
-          end
-      end 
-      puts 'sk num '+sk_num.to_s    
-      if @domains.length == 1
-        where += " AND domain_id ='#{sk_num[0]}'"
-      else
-        sql_domain_ids     = sk_num.join("','")      
-        where += " AND domain_id in ('#{sql_domain_ids}')"
-    end
-    end
-    ##NAs
-    if @nas == 'no' then
-      # TODO
-      where += " AND taxonomy not like 'no_%'"
-      where += " AND taxonomy not like 'NA%'"
-      where += " AND taxonomy not like '%;NA;%'"
-      where += " AND taxonomy not like '%;NA'" 
-      where += " AND taxonomy not like '%_NA'"
-    end
-
-    # there should be no GROUP BY or ORDER BY clause as it slows down the sql calls considerably
-    # but the seq_count has to be summed for each unique: project,dataset,taxonomy
-    group = "\nGROUP BY project, dataset, taxonomy"
-   
-
-    @taxQuery = taxQuery + join + where
-  end
-
-  def clean_datasets(ds_string)
-    project_datasets_array = []
-
-    # 0;AB_PRI_Ev9,0;AB_PRI_Ev9;PRI_0037,0;AB_PRI_Ev9;PRI_0038,0;AB_SAND_Bv6;HS122,0;AB_SAND_Bv6 
-    # first split string on commas:
-    pd_array = ds_string.split(',')
-    # {0;AB_PRI_Ev9},{0;AB_PRI_Ev9;PRI_0037},{0;AB_PRI_Ev9;PRI_0038},{0;AB_SAND_Bv6;HS122},{0;AB_SAND_Bv6}
-    # foreach split on semi-colon:
-    pd_array.each do |dirty_pd|
-      pd = dirty_pd.split(';')
-      # if length of pd is 2 ignore it
-      # else concat parts 2 and 3 and push onto array
-      if pd.length == 3 then
-        project_datasets_array << pd[1]+'--'+pd[2]
-      end
-    end
-    return project_datasets_array
-
-  end
+  # def clean_datasets(ds_string)
+  #   project_datasets_array = []
+  # 
+  #   # 0;AB_PRI_Ev9,0;AB_PRI_Ev9;PRI_0037,0;AB_PRI_Ev9;PRI_0038,0;AB_SAND_Bv6;HS122,0;AB_SAND_Bv6 
+  #   # first split string on commas:
+  #   pd_array = ds_string.split(',')
+  #   # {0;AB_PRI_Ev9},{0;AB_PRI_Ev9;PRI_0037},{0;AB_PRI_Ev9;PRI_0038},{0;AB_SAND_Bv6;HS122},{0;AB_SAND_Bv6}
+  #   # foreach split on semi-colon:
+  #   pd_array.each do |dirty_pd|
+  #     pd = dirty_pd.split(';')
+  #     # if length of pd is 2 ignore it
+  #     # else concat parts 2 and 3 and push onto array
+  #     if pd.length == 3 then
+  #       project_datasets_array << pd[1]+'--'+pd[2]
+  #     end
+  #   end
+  #   return project_datasets_array
+  # 
+  # end
 
   def get_test_sample_object
     
