@@ -166,6 +166,7 @@ def get_all_taxa(rank_names)
 end  
 
 def make_taxa_string()
+  taxon_arr  = []
   rank_names = get_ranks()  
   all_taxa   = get_all_taxa(rank_names)
   taxonomy   = Taxonomy.find(81) #todo: take from taxonomy_per_d
@@ -173,21 +174,19 @@ def make_taxa_string()
   # puts "URA7" + all_taxa.inspect
   rank_names.each do |rank_name|
     id_name = rank_name + "_id"
-    # puts "URA " + rank_name
-    puts "URA1 " + taxonomy.inspect
     all_taxa[rank_name].each do |taxa_arr|
-      taxonomy.attributes.each  do |k, v|
-        if (k == id_name)
-          puts "value = " + v.to_s
+      taxonomy.attributes.each  do |k, val|
+        if (k == id_name) && (taxa_arr.id == val)
+          res = taxa_arr.send(rank_name)
+          taxon_arr << res
         end
       end
-      # puts taxa_arr.inspect
-      # taxonomy.
       # datasets.select{|d| d.project_id == p.id}
     end
-    puts "=" * 10
-    
   end
+  puts taxon_arr.inspect
+  puts "=" * 10
+  
   # datasets.select{|d| d.project_id == p.id}
   
   #<Taxonomy id: 81, domain_id: 2, phylum_id: 2, klass_id: 2, order_id: 9, family_id: 40, genus_id: 46, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">
