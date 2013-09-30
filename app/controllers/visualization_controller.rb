@@ -136,7 +136,11 @@ def get_all_taxonomy_ids(all_uniq_seq_info_ids)
   return all_taxonomy_ids
 end
 
-def get_all_taxonomy(all_taxonomy_ids)
+def get_all_taxonomy()
+  all_seq_ids           = get_seq_ids()  
+  all_uniq_seq_info_ids = get_uniq_seq_info_ids(all_seq_ids)
+  all_taxonomy_ids      = get_all_taxonomy_ids(all_uniq_seq_info_ids)
+  
   all_taxonomy = Hash.new{|hash, key| hash[key] = []}
   all_taxonomy_ids.each do |dataset_id, v_arr|
       all_taxonomy[dataset_id] << Taxonomy.where(id: v_arr)
@@ -146,10 +150,7 @@ end
 
 def get_data_using_rails_object3()
   taxonomy_hash =  {} 
-  all_seq_ids           = get_seq_ids()  
-  all_uniq_seq_info_ids = get_uniq_seq_info_ids(all_seq_ids)
-  all_taxonomy_ids      = get_all_taxonomy_ids(all_uniq_seq_info_ids)
-  all_taxonomy          = get_all_taxonomy(all_taxonomy_ids)
+  all_taxonomy  = get_all_taxonomy()
   
   # puts "URA55" + all_taxonomy.inspect
   # URA55{2=>[#<ActiveRecord::Relation [#<Taxonomy id: 81, domain_id: 2, phylum_id: 2, klass_id: 2, order_id: 9, family_id: 40, genus_id: 46, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 82, domain_id: 2, phylum_id: 3, klass_id: 3, order_id: 16, family_id: 18, genus_id: 129, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 83, domain_id: 2, phylum_id: 3, klass_id: 3, order_id: 24, family_id: 64, genus_id: 92, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 84, domain_id: 2, phylum_id: 3, klass_id: 3, order_id: 21, family_id: 28, genus_id: 27, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 85, domain_id: 2, phylum_id: 3, klass_id: 4, order_id: 7, family_id: 7, genus_id: 38, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 86, domain_id: 2, phylum_id: 4, klass_id: 32, order_id: 5, family_id: 5, genus_id: 39, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 87, domain_id: 2, phylum_id: 3, klass_id: 5, order_id: 22, family_id: 29, genus_id: 129, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 88, domain_id: 2, phylum_id: 3, klass_id: 5, order_id: 6, family_id: 27, genus_id: 26, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 89, domain_id: 2, phylum_id: 3, klass_id: 4, order_id: 7, family_id: 7, genus_id: 129, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 90, domain_id: 2, phylum_id: 4, klass_id: 32, order_id: 5, family_id: 13, genus_id: 13, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, ...]>]}
