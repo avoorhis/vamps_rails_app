@@ -1,6 +1,7 @@
 class VisualizationController < ApplicationController
   
-  before_filter :authenticate_user!
+  before_filter :authenticate_user!; Capybara.default_wait_time = 5
+  
   
   def parse_view
     # TEST:    
@@ -109,59 +110,105 @@ class VisualizationController < ApplicationController
 def get_seq_ids()
   my_pdrs = SequencePdrInfo.where(dataset_id: params["dataset_ids"])
 
-  all_seq_ids = Hash.new{|hash, key| hash[key] = []}
+  seq_ids_per_d = Hash.new{|hash, key| hash[key] = []}
   my_pdrs.each do |pdr|
-      all_seq_ids[pdr.dataset_id] << pdr.sequence_id
+      seq_ids_per_d[pdr.dataset_id] << pdr.sequence_id
   end
-  return all_seq_ids
+  return seq_ids_per_d
 end
 
-def get_uniq_seq_info_ids(all_seq_ids)
-  all_uniq_seq_info_ids = Hash.new{|hash, key| hash[key] = []}
-  all_seq_ids.each do |dataset_id, seq_id_arr|
-      all_uniq_seq_info_ids[dataset_id] << SequenceUniqInfo.where(sequence_id: seq_id_arr)
+def get_uniq_seq_info_ids(seq_ids_per_d)
+  uniq_seq_info_ids_per_d = Hash.new{|hash, key| hash[key] = []}
+  seq_ids_per_d.each do |dataset_id, seq_id_arr|
+      uniq_seq_info_ids_per_d[dataset_id] << SequenceUniqInfo.where(sequence_id: seq_id_arr)
   end
-  return all_uniq_seq_info_ids
+  return uniq_seq_info_ids_per_d
 end
 
-def get_all_taxonomy_ids(all_uniq_seq_info_ids) 
-  all_taxonomy_ids = Hash.new{|hash, key| hash[key] = []}
-  all_uniq_seq_info_ids.each do |dataset_id, usi|
+def get_taxonomy_ids_per_d(uniq_seq_info_ids_per_d) 
+  taxonomy_ids_per_d = Hash.new{|hash, key| hash[key] = []}
+  uniq_seq_info_ids_per_d.each do |dataset_id, usi|
     usi.each do |us|
       us.each do |u|
-        all_taxonomy_ids[dataset_id] << u.taxonomy_id
+        taxonomy_ids_per_d[dataset_id] << u.taxonomy_id
       end
     end
   end  
-  return all_taxonomy_ids
+  return taxonomy_ids_per_d
 end
 
-def get_all_taxonomy()
-  all_seq_ids           = get_seq_ids()  
-  all_uniq_seq_info_ids = get_uniq_seq_info_ids(all_seq_ids)
-  all_taxonomy_ids      = get_all_taxonomy_ids(all_uniq_seq_info_ids)
+def get_taxonomy_per_d()
+  seq_ids_per_d           = get_seq_ids()  
+  uniq_seq_info_ids_per_d = get_uniq_seq_info_ids(seq_ids_per_d)
+  taxonomy_ids_per_d      = get_taxonomy_ids_per_d(uniq_seq_info_ids_per_d)
   
-  all_taxonomy = Hash.new{|hash, key| hash[key] = []}
-  all_taxonomy_ids.each do |dataset_id, v_arr|
-      all_taxonomy[dataset_id] << Taxonomy.where(id: v_arr)
+  taxonomy_per_d          = Hash.new{|hash, key| hash[key] = []}
+  taxonomy_ids_per_d.each do |dataset_id, v_arr|
+      taxonomy_per_d[dataset_id] << Taxonomy.where(id: v_arr)
   end
-  return all_taxonomy
+  return taxonomy_per_d
 end
+
+def get_ranks()
+  ranks      = Rank.all.sorted 
+  rank_names = []     
+  ranks.map {|rank| rank.rank == "class" ? rank_names << "klass" : rank_names << rank.rank}
+  rank_names.delete("NA")
+  return rank_names
+end
+
+def get_all_taxa(rank_names)
+  all_taxa   = Hash.new{|hash, key| hash[key] = []}
+  rank_names.each do |rank_name|
+    all_taxa[rank_name + "_id"] = rank_name.camelize.constantize.all
+  end
+  return all_taxa
+end  
+
+def make_taxa_string()
+  rank_names = get_ranks()  
+  all_taxa   = get_all_taxa(rank_names)
+  taxonomy   = Taxonomy.find(81)
+  # taxonomy
+  # puts "URA7" + all_taxa.inspect
+  rank_names.each do |rank_name|
+    id_name = rank_name + "_id"
+    # puts "URA " + rank_name
+    # all_taxa.select{|t| t.}
+  end
+  # datasets.select{|d| d.project_id == p.id}
+  
+  #<Taxonomy id: 81, domain_id: 2, phylum_id: 2, klass_id: 2, order_id: 9, family_id: 40, genus_id: 46, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">
+  
+end
+
+def make_taxa_string_by_rank()
+  
+end
+
+def make_taxa_strings_per_d()
+  
+end
+
 
 def get_data_using_rails_object3()
-  taxonomy_hash =  {} 
-  all_taxonomy  = get_all_taxonomy()
+  taxonomy_hash  = {} 
+  taxonomy_per_d = get_taxonomy_per_d()
+  # all_taxa       = get_all_taxa()
   
-  # puts "URA55" + all_taxonomy.inspect
+  make_taxa_string()
+  # puts "URA55" + all_taxa.inspect
+  # domain"=>#<ActiveRecord::Relation [#<Domain id: 1, domain: "Archaea">, #<Domain id: 2, domain: "Bacteria">, #<Domain id: 5, domain: "Eukarya">, #<Domain id: 3, domain: "Organelle">, #<Domain id: 4, domain: "Unknown">]>, "phylum"=>#<ActiveRecord::Relation [#<Phylum id: 4, phylum: "Actinobacteria">
+  # taxonomy_per_d:
   # URA55{2=>[#<ActiveRecord::Relation [#<Taxonomy id: 81, domain_id: 2, phylum_id: 2, klass_id: 2, order_id: 9, family_id: 40, genus_id: 46, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 82, domain_id: 2, phylum_id: 3, klass_id: 3, order_id: 16, family_id: 18, genus_id: 129, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 83, domain_id: 2, phylum_id: 3, klass_id: 3, order_id: 24, family_id: 64, genus_id: 92, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 84, domain_id: 2, phylum_id: 3, klass_id: 3, order_id: 21, family_id: 28, genus_id: 27, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 85, domain_id: 2, phylum_id: 3, klass_id: 4, order_id: 7, family_id: 7, genus_id: 38, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 86, domain_id: 2, phylum_id: 4, klass_id: 32, order_id: 5, family_id: 5, genus_id: 39, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 87, domain_id: 2, phylum_id: 3, klass_id: 5, order_id: 22, family_id: 29, genus_id: 129, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 88, domain_id: 2, phylum_id: 3, klass_id: 5, order_id: 6, family_id: 27, genus_id: 26, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 89, domain_id: 2, phylum_id: 3, klass_id: 4, order_id: 7, family_id: 7, genus_id: 129, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 90, domain_id: 2, phylum_id: 4, klass_id: 32, order_id: 5, family_id: 13, genus_id: 13, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, ...]>]}
 
-  # TODO: Andy, could we please use dataset_id in the taxa hash? We can connect it with dataset/project names in a separate hash to show in a view, by calling the ids
+  # TODO: Andy, could we please use dataset_id in the new taxa hash? We can connect it with dataset/project names in a separate hash to show in a view, by calling the ids
   all_taxonomy.each do |did, tax_obj_list|
-      ds=Dataset.find(did)
-      dataset_name = ds.dataset
-      project_name = ds.project.project
-      tax_string=''
-      count=10
+      # ds=Dataset.find(did)
+      # dataset_name = ds.dataset
+      # project_name = ds.project.project
+      tax_string = ''
+      count      = 10
       tax_obj_list.each do |t|
         tax_string = [
                        t[0].domain.domain,  t[0].phylum.phylum,
