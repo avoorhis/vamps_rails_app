@@ -172,23 +172,21 @@ def make_taxa_string()
   # taxonomy
   # puts "URA7" + all_taxa.inspect
   rank_names.each do |rank_name|
-    # id_name = rank_name + "_id"
+    id_name = rank_name + "_id"
     # puts "URA " + rank_name
+    puts "URA1 " + taxonomy.inspect
     all_taxa[rank_name].each do |taxa_arr|
-      puts "URA1 "
-      puts taxa_arr.inspect
+      taxonomy.attributes.each  do |k, v|
+        if (k == id_name)
+          puts "value = " + v.to_s
+        end
+      end
+      # puts taxa_arr.inspect
+      # taxonomy.
+      # datasets.select{|d| d.project_id == p.id}
     end
     puts "=" * 10
     
-    # all_taxa.each do |taxa|
-    #   # tt = taxa[rank_name]
-    #   puts taxa.inspect
-    #   puts "=" * 10
-    #   # .each do |taxon_obj|
-    #   #         puts "taxon_obj id = " + taxon_obj.id
-    #   # end
-    # end
-    # puts all_taxa.select{|t| t[rank_name]}
   end
   # datasets.select{|d| d.project_id == p.id}
   
