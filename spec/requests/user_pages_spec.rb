@@ -7,6 +7,7 @@ describe "User registration" do
     # @taxa     = Array.new(3) { FactoryGirl.build(:taxon) } 
     
     visit "/users/sign_up"      
+    find_field('Username').value    
     fill_in "Username", 			       :with => "test_user"
     fill_in "Email", 			           :with => "test_user@example.com"
     fill_in "Password", 			       :with => "12345678"
@@ -15,10 +16,13 @@ describe "User registration" do
     fill_in "First name", 			     :with => "Test"
     fill_in "Last name", 			       :with => "User"
     
-    click_button "Sign up"    
+    find_button('Sign up').click
+    # click_button "Sign up"    
   end
   
   it "should create a user and displays a confirmation link" do
+    puts page.body
+    
     page.should have_no_content("Welcome! You have signed up successfully.")
     page.should have_content("A message with a confirmation link has been sent to your email address. Please open the link to activate your account")
   end
@@ -37,9 +41,11 @@ describe "User registration" do
     user.confirm!
     user.save!
     click_link "Login"            
+    find_field('Username').value    
     fill_in "Username", :with => user.username
     fill_in "Password", :with => '12345678'
-    click_button "Sign in"
+    # click_button "Sign in"
+    find_button('Sign in').click
     # puts user.inspect
     
     page.should have_no_content("Invalid username or password.")
@@ -50,6 +56,8 @@ end
 describe "User login_as" do
 
   before(:each) do
+    User.delete_all
+    Rank.delete_all
     @user = FactoryGirl.create(:user)
     @user.confirm!
     login_as(@user, :scope => :user)
@@ -98,9 +106,11 @@ describe "User not logged in" do
   
   it "should not sign in if wrong credentials" do
     visit "/users/sign_in"
+    find_field('Username').value
     fill_in "Username", :with => "wrong_user"
     fill_in "Password", :with => "bad password"
-    click_button "Sign in"
+    find_button('Sign in').click
+    # click_button "Sign in"
     # puts page.body
     
     page.should have_content("Invalid username or password")

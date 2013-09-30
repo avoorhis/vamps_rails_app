@@ -42,6 +42,7 @@ group :test do
 	gem 'guard-rspec'
 	gem 'launchy'
   gem 'seed_dump'
+  gem 'selenium-webdriver'
 end
 
 group :doc do
