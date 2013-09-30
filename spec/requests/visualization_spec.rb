@@ -1,6 +1,5 @@
 require 'spec_helper'
 
-
 describe "Projects and Datasets list" do
   before(:each) do
     Rank.delete_all

@@ -1,6 +1,6 @@
 class VisualizationController < ApplicationController
   
-  before_filter :authenticate_user!; Capybara.default_wait_time = 5
+  before_filter :authenticate_user!
   
   
   def parse_view
