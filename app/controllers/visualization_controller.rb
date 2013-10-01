@@ -169,22 +169,35 @@ def make_taxa_string()
   taxon_arr  = []
   rank_names = get_ranks()  
   all_taxa   = get_all_taxa(rank_names)
-  taxonomy   = Taxonomy.find(81) #todo: take from taxonomy_per_d
+  taxonomy   = Taxonomy.find(81) #todo: take from taxonomy_per_d by loop
   # taxonomy
-  # puts "URA7" + all_taxa.inspect
+  puts "URA7" + all_taxa.inspect
   rank_names.each do |rank_name|
     id_name = rank_name + "_id"
-    all_taxa[rank_name].each do |taxa_arr|
+    # all_taxa[rank_name].each do |taxa_arr|
       taxonomy.attributes.each  do |k, val|
-        if (k == id_name) && (taxa_arr.id == val)
-          res = taxa_arr.send(rank_name)
-          taxon_arr << res
+        # if (k == id_name) && (taxa_arr.id == val)
+        if (k == id_name)
+          puts all_taxa[rank_name].inspect
+          res = all_taxa[rank_name].select{|t| t.id == val}  
+          puts "HERE1"
+          puts res.inspect
+          rr = all_taxa[rank_name].find_all { |v| v.id == val }
+          
+          # rr = res.select{|r| r[rank_name]}
+          puts "HERE2"
+          puts rr[0][rank_name].inspect
+          # res = all_taxa[rank_name].select{|t| t.send(rank_name) if t.id == val}  
+          # .send(rank_name)
+          # .select{|t| puts t.inspect}        
+          # res = taxa_arr.send(rank_name)
+          # taxon_arr << res
         end
-      end
+      # end
       # datasets.select{|d| d.project_id == p.id}
     end
   end
-  puts taxon_arr.inspect
+  # puts taxon_arr.inspect
   puts "=" * 10
   
   # datasets.select{|d| d.project_id == p.id}
