@@ -172,6 +172,7 @@ def make_taxa_string()
   taxonomy   = Taxonomy.find(81) #todo: take from taxonomy_per_d by loop
   # taxonomy
   puts "URA7" + all_taxa.inspect
+  # taxon_string
   rank_names.each do |rank_name|
     id_name = rank_name + "_id"
     # all_taxa[rank_name].each do |taxa_arr|
@@ -185,19 +186,23 @@ def make_taxa_string()
           rr = all_taxa[rank_name].find_all { |v| v.id == val }
           
           # rr = res.select{|r| r[rank_name]}
-          puts "HERE2"
-          puts rr[0][rank_name].inspect
+          taxon = res[0][rank_name]
+          taxon_arr << taxon
+          HERE2["Bacteria", "Firmicutes", "Bacilli", "Lactobacillales", "Streptococcaceae", "Streptococcus", "", "strain_NA"]
+
           # res = all_taxa[rank_name].select{|t| t.send(rank_name) if t.id == val}  
           # .send(rank_name)
           # .select{|t| puts t.inspect}        
           # res = taxa_arr.send(rank_name)
           # taxon_arr << res
         end
+
       # end
       # datasets.select{|d| d.project_id == p.id}
     end
   end
   # puts taxon_arr.inspect
+  puts "HERE2" + taxon_arr.inspect
   puts "=" * 10
   
   # datasets.select{|d| d.project_id == p.id}
