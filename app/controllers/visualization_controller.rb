@@ -176,7 +176,7 @@ end
 def make_taxa_string(taxonomy_per_d)
   puts "HHH" + taxonomy_per_d.inspect
   
-  taxon_strings  = Hash.new{|hash, key| hash[key] = []}
+  taxon_strings_per_d  = Hash.new{|hash, key| hash[key] = []}
   
   rank_names = get_ranks()  
   all_taxa   = get_all_taxa(rank_names)
@@ -195,7 +195,7 @@ def make_taxa_string(taxonomy_per_d)
       end
       puts "from loop: taxon_arr = " + taxon_arr.inspect 
       puts "*" * 10
-      taxon_strings[dataset_id] << taxon_arr
+      taxon_strings_per_d[dataset_id] << taxon_arr
     end    
   end  
   
@@ -225,13 +225,10 @@ def make_taxa_string(taxonomy_per_d)
   
   # puts taxon_arr.inspect
   
-  puts "HERE2 " + taxon_strings.inspect
+  puts "HERE2 " + taxon_strings_per_d.inspect
   puts "=" * 10
   
-  # datasets.select{|d| d.project_id == p.id}
-  
-  #<Taxonomy id: 81, domain_id: 2, phylum_id: 2, klass_id: 2, order_id: 9, family_id: 40, genus_id: 46, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">
-  
+  return taxon_strings_per_d
 end
 
 def get_taxonomy(taxonomy_per_d)
@@ -243,8 +240,16 @@ def get_taxonomy(taxonomy_per_d)
 end
 
 
-def make_taxa_string_by_rank()
-  
+def make_taxa_string_by_rank(taxon_strings_per_d)
+  rank = @rank_number + 1
+  taxon_strings_per_d.each do |d, taxon_string_arr|
+    taxon_string_arr.each do |taxon_string_orig|
+      tt = taxon_string_orig.take(rank)
+      aa = tt.join(";")
+      puts "UUU " + aa.inspect
+      puts "-" * 7
+    end
+  end
 end
 
 def make_taxa_strings_per_d()
@@ -255,7 +260,8 @@ end
 def get_data_using_rails_object3()
   taxonomy_hash  = {} 
   taxonomy_per_d = get_taxonomy_per_d()
-  make_taxa_string(taxonomy_per_d)
+  taxon_strings_per_d  = make_taxa_string(taxonomy_per_d)
+  make_taxa_string_by_rank(taxon_strings_per_d)
   # all_taxa       = get_all_taxa()
   
   # puts "URA55" + all_taxa.inspect
