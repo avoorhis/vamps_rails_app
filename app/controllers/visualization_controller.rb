@@ -168,27 +168,10 @@ end
 
 
 def get_taxa_array(taxonomy, rank_name, all_taxa)
-  id_name = rank_name + "_id"  
-  taxon_arr  = []
-  
-  taxonomy.attributes.each  do |k, val|
-    if (k == id_name)
-      # puts all_taxa[rank_name].inspect
-      res   = all_taxa[rank_name].select{|t| t.id == val}  
-      taxon = res[0][rank_name]
-      taxon_arr << taxon
-      # ["Bacteria", "Firmicutes", "Bacilli", "Lactobacillales", "Streptococcaceae", "Streptococcus", "", "strain_NA"]
-    end
-  end
-  return taxon_arr
-end
-
-def get_taxa_array1(taxonomy, rank_name, all_taxa)
-  id_name = rank_name + "_id"  
+  id_name    = rank_name + "_id"  
   taxon_arr  = []
   
   tax_id_val = taxonomy.attributes[id_name]
-  # puts "URA5 " + tax_id_val.inspect
   res   = all_taxa[rank_name].select{|t| t.id == tax_id_val}  
   taxon = res[0][rank_name]
   taxon_arr << taxon
@@ -196,28 +179,48 @@ def get_taxa_array1(taxonomy, rank_name, all_taxa)
   return taxon_arr
 end
 
-
 def make_taxa_string()
   taxon_arr  = []
   rank_names = get_ranks()  
   all_taxa   = get_all_taxa(rank_names)
   taxonomy   = Taxonomy.find(81) #todo: take from taxonomy_per_d by loop
-  # puts "URA7" + all_taxa.inspect
-  rank_names.each do |rank_name|
-    (1..10).each do
-      result = Benchmark.measure do
+  
+  (1..20).each do
+    result = Benchmark.measure do
+      rank_names.each do |rank_name|
         taxon_arr = get_taxa_array(taxonomy, rank_name, all_taxa)
-      end
-      puts "result a loop " + result.to_s
-
-      result1 = Benchmark.measure do
-        taxon_arr = get_taxa_array1(taxonomy, rank_name, all_taxa)
-      end
-      puts "result no loop " + result1.to_s 
-      puts "-" * 10
+      end      
     end
+    puts "result w loop " + result.to_s
 
+    result1 = Benchmark.measure do
+      taxon_arr = rank_names.map {|rank_name| get_taxa_array(taxonomy, rank_name, all_taxa)}
+    end
+    puts "result w map " + result1.to_s
+    
+    puts "-" * 10
   end
+  
+  # taxon_arr = rank_names.map {do |rank_name| get_taxa_array(taxonomy, rank_name, all_taxa)}
+  
+  
+  # puts "URA7" + all_taxa.inspect
+  # rank_names.each do |rank_name|
+  #   # (1..10).each do
+  #   #   result = Benchmark.measure do
+  #   #     taxon_arr = get_taxa_array(taxonomy, rank_name, all_taxa)
+  #   #   end
+  #   #   puts "result a loop " + result.to_s
+  #   # 
+  #   #   result1 = Benchmark.measure do
+  #   #     taxon_arr = get_taxa_array1(taxonomy, rank_name, all_taxa)
+  #   #   end
+  #   #   puts "result no loop " + result1.to_s 
+  #   #   puts "-" * 10
+  #   # end
+  #   taxon_arr = get_taxa_array(taxonomy, rank_name, all_taxa)
+  # 
+  # end
   # puts taxon_arr.inspect
   puts "HERE2" + taxon_arr.inspect
   puts "=" * 10
