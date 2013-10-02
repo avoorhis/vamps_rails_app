@@ -170,18 +170,30 @@ def make_taxa_string()
   rank_names = get_ranks()  
   all_taxa   = get_all_taxa(rank_names)
   taxonomy   = Taxonomy.find(81) #todo: take from taxonomy_per_d by loop
-  puts "URA7" + all_taxa.inspect
+  # puts "URA7" + all_taxa.inspect
   rank_names.each do |rank_name|
     id_name = rank_name + "_id"
-    taxonomy.attributes.each  do |k, val|
-      if (k == id_name)
-        # puts all_taxa[rank_name].inspect
-        res   = all_taxa[rank_name].select{|t| t.id == val}  
-        taxon = res[0][rank_name]
-        taxon_arr << taxon
-        # ["Bacteria", "Firmicutes", "Bacilli", "Lactobacillales", "Streptococcaceae", "Streptococcus", "", "strain_NA"]
-      end
-    end
+    tax_id_val = taxonomy.attributes[id_name]
+    puts "URA5 " + tax_id_val.inspect
+    res   = all_taxa[rank_name].select{|t| t.id == tax_id_val}  
+    taxon = res[0][rank_name]
+    taxon_arr << taxon
+    
+    # tax_val = taxonomy.attributes[tax_key]
+    # puts "URA7 " + taxonomy.attributes.inspect
+    # puts "URA70 " + taxonomy.attributes[attr_name]
+    # taxonomy.attributes.send(tax_val).inspect
+    # .send(rank_name)
+    # 
+    # taxonomy.attributes.each  do |k, val|
+    #   if (k == id_name)
+    #     # puts all_taxa[rank_name].inspect
+    #     res   = all_taxa[rank_name].select{|t| t.id == val}  
+    #     taxon = res[0][rank_name]
+    #     taxon_arr << taxon
+    #     # ["Bacteria", "Firmicutes", "Bacilli", "Lactobacillales", "Streptococcaceae", "Streptococcus", "", "strain_NA"]
+    #   end
+    # end
   end
   # puts taxon_arr.inspect
   puts "HERE2" + taxon_arr.inspect
