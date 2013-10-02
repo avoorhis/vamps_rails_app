@@ -239,17 +239,23 @@ def get_taxonomy(taxonomy_per_d)
 
 end
 
-
 def make_taxa_string_by_rank(taxon_strings_per_d)
   rank = @rank_number + 1
-  taxon_strings_per_d.each do |d, taxon_string_arr|
+  taxon_string_by_rank_per_d  = Hash.new{|hash, key| hash[key] = []}
+  
+  
+  taxon_strings_per_d.each do |dataset_id, taxon_string_arr|
     taxon_string_arr.each do |taxon_string_orig|
-      tt = taxon_string_orig.take(rank)
-      aa = tt.join(";")
-      puts "UUU " + aa.inspect
-      puts "-" * 7
+      taxon_string_by_rank = taxon_string_orig.take(rank).join(";")
+      # puts "UUU " + taxon_string_by_rank.inspect
+      # puts "-" * 7
+      taxon_string_by_rank_per_d[dataset_id] << taxon_string_by_rank
     end
   end
+  # puts "UUU " + taxon_string_by_rank_per_d.inspect
+  # puts "-" * 7
+  # UUU {3=>["Bacteria;Proteobacteria;Gammaproteobacteria;Enterobacteriales;Enterobacteriaceae", "Bacteria;Actinobacteria;class_NA;Actinomycetales;Intrasporangiaceae", "Bacteria;Proteobacteria;Alphaproteobacteria;order_NA;family_NA"], 4=>["Bacteria;Proteobacteria;Gammaproteobacteria;Enterobacteriales;Enterobacteriaceae", "Bacteria;Actinobacteria;class_NA;Actinomycetales;Intrasporangiaceae"]}
+  return taxon_string_by_rank_per_d
 end
 
 def make_taxa_strings_per_d()
@@ -260,8 +266,8 @@ end
 def get_data_using_rails_object3()
   taxonomy_hash  = {} 
   taxonomy_per_d = get_taxonomy_per_d()
-  taxon_strings_per_d  = make_taxa_string(taxonomy_per_d)
-  make_taxa_string_by_rank(taxon_strings_per_d)
+  taxon_strings_per_d = make_taxa_string(taxonomy_per_d)
+  taxon_string_by_rank_per_d = make_taxa_string_by_rank(taxon_strings_per_d)
   # all_taxa       = get_all_taxa()
   
   # puts "URA55" + all_taxa.inspect
