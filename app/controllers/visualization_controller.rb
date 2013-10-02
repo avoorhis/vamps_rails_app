@@ -165,64 +165,67 @@ def get_all_taxa(rank_names)
   return all_taxa
 end  
 
-
-
-def get_taxa_array(taxonomy, rank_name, all_taxa)
-  id_name    = rank_name + "_id"  
-  taxon_arr  = []
-  
+def get_taxon(taxonomy, rank_name, all_taxa)
+  id_name    = rank_name + "_id"    
   tax_id_val = taxonomy.attributes[id_name]
   res   = all_taxa[rank_name].select{|t| t.id == tax_id_val}  
-  taxon = res[0][rank_name]
-  taxon_arr << taxon
-  
-  return taxon_arr
+  taxon = res[0][rank_name]  
+  return taxon
 end
 
-def make_taxa_string()
-  taxon_arr  = []
+def make_taxa_string(taxonomy_per_d)
+  puts "HHH" + taxonomy_per_d.inspect
+  
+  taxon_strings  = Hash.new{|hash, key| hash[key] = []}
+  
   rank_names = get_ranks()  
   all_taxa   = get_all_taxa(rank_names)
-  taxonomy   = Taxonomy.find(81) #todo: take from taxonomy_per_d by loop
   
-  (1..20).each do
-    result = Benchmark.measure do
-      rank_names.each do |rank_name|
-        taxon_arr = get_taxa_array(taxonomy, rank_name, all_taxa)
-      end      
-    end
-    puts "result w loop " + result.to_s
-
-    result1 = Benchmark.measure do
-      taxon_arr = rank_names.map {|rank_name| get_taxa_array(taxonomy, rank_name, all_taxa)}
-    end
-    puts "result w map " + result1.to_s
+  taxonomy_per_d.each do |dataset_id, taxonomies_arr|
+    # puts "from loop: dataset_id = " + dataset_id.inspect 
+    # puts "from loop: taxonomies_arr = " + taxonomies_arr.inspect 
+    # puts "*" * 10
     
-    puts "-" * 10
-  end
+    taxonomies_arr[0].each do |taxonomy|
+      taxon_arr  = []
+      puts "from loop: taxonomy = " + taxonomy.inspect 
+      puts "*" * 10
+      rank_names.each do |rank_name|
+        taxon_arr << get_taxon(taxonomy, rank_name, all_taxa)    
+      end
+      puts "from loop: taxon_arr = " + taxon_arr.inspect 
+      puts "*" * 10
+      taxon_strings[dataset_id] << taxon_arr
+    end    
+  end  
   
-  # taxon_arr = rank_names.map {do |rank_name| get_taxa_array(taxonomy, rank_name, all_taxa)}
-  
-  
-  # puts "URA7" + all_taxa.inspect
+  # taxonomy = Taxonomy.find(81)
   # rank_names.each do |rank_name|
-  #   # (1..10).each do
-  #   #   result = Benchmark.measure do
-  #   #     taxon_arr = get_taxa_array(taxonomy, rank_name, all_taxa)
-  #   #   end
-  #   #   puts "result a loop " + result.to_s
-  #   # 
-  #   #   result1 = Benchmark.measure do
-  #   #     taxon_arr = get_taxa_array1(taxonomy, rank_name, all_taxa)
-  #   #   end
-  #   #   puts "result no loop " + result1.to_s 
-  #   #   puts "-" * 10
-  #   # end
-  #   taxon_arr = get_taxa_array(taxonomy, rank_name, all_taxa)
+  #   taxon_arr << get_taxon(taxonomy, rank_name, all_taxa)    
+  # end
+  # taxon_arr1  = []
+  # (1..10).each do
+  #   taxon_arr  = []
+  #   
+  #   result = Benchmark.measure do
+  #     rank_names.each do |rank_name|
+  #       taxon_arr << get_taxon(taxonomy, rank_name, all_taxa)    
+  #     end      
+  #   end
+  #   puts "result w loop " + result.to_s
+  # 
+  #   result1 = Benchmark.measure do
+  #     taxon_arr1 = rank_names.map {|rank_name| get_taxon(taxonomy, rank_name, all_taxa)}
+  #   end
+  #   puts "result w map " + result1.to_s
+  #   
+  #   puts "-" * 10
   # 
   # end
+  
   # puts taxon_arr.inspect
-  puts "HERE2" + taxon_arr.inspect
+  
+  puts "HERE2 " + taxon_strings.inspect
   puts "=" * 10
   
   # datasets.select{|d| d.project_id == p.id}
@@ -230,6 +233,15 @@ def make_taxa_string()
   #<Taxonomy id: 81, domain_id: 2, phylum_id: 2, klass_id: 2, order_id: 9, family_id: 40, genus_id: 46, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">
   
 end
+
+def get_taxonomy(taxonomy_per_d)
+  puts "HHH" + taxonomy_per_d.inspect
+  
+  taxonomy   = Taxonomy.find(81) #todo: take from taxonomy_per_d by loop
+  make_taxa_string(taxonomy)
+
+end
+
 
 def make_taxa_string_by_rank()
   
@@ -243,9 +255,9 @@ end
 def get_data_using_rails_object3()
   taxonomy_hash  = {} 
   taxonomy_per_d = get_taxonomy_per_d()
+  make_taxa_string(taxonomy_per_d)
   # all_taxa       = get_all_taxa()
   
-  make_taxa_string()
   # puts "URA55" + all_taxa.inspect
   # domain"=>#<ActiveRecord::Relation [#<Domain id: 1, domain: "Archaea">, #<Domain id: 2, domain: "Bacteria">, #<Domain id: 5, domain: "Eukarya">, #<Domain id: 3, domain: "Organelle">, #<Domain id: 4, domain: "Unknown">]>, "phylum"=>#<ActiveRecord::Relation [#<Phylum id: 4, phylum: "Actinobacteria">
   # taxonomy_per_d:
