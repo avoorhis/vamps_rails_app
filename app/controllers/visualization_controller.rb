@@ -262,7 +262,17 @@ def get_counts_per_taxon_per_d(taxonomy_per_d, rank_names)
     taxonomy_per_d.each do |dataset_id, taxonomies_arr|
       puts "*****"
       puts "URA"
-      puts taxonomies_arr[0].group_by {|t| t.attributes[id_name] }.map{|k,v| [k, v.length]}  
+      t_obj = TaxaCount.new
+      t_obj.dataset_id = dataset_id
+      t_obj.rank_name  = rank_name
+      res = taxonomies_arr[0].group_by {|t| t.attributes[id_name] }.map{|k,v| [k, v.length]}  
+      puts res
+      
+      print t_obj.inspect
+      
+      
+      # attr_accessor :dataset_id, :rank_name, :taxon_string_id, :count_per_d
+      
       # taxonomies_arr[0].each do |taxonomy|
       #   puts "*****"
       #   puts "URA"
