@@ -6,6 +6,7 @@ class VisualizationController < ApplicationController
   def parse_view
     # TEST:    
     @ordered_projects, @ordered_datasets = create_ordered_datasets() 
+    @datasets_by_project = make_datasets_by_project_hash()
 
     puts 'ordered projects: ' +@ordered_projects.inspect
     puts 'ordered datasets: ' +@ordered_datasets.inspect
@@ -46,6 +47,7 @@ class VisualizationController < ApplicationController
     # this seems slow to me:
     #taxonomy_hash = get_data_using_rails_object()
     @new_taxonomy_hash = get_data_using_rails_object3()
+    puts "HERE new_taxonomy_hash = "
     puts @new_taxonomy_hash
     #puts "NEW TAX "+new_tax.inspect
     #puts "before fill with zeros:"
@@ -173,12 +175,11 @@ def get_taxon(taxonomy, rank_name, all_taxa)
   return taxon
 end
 
-def make_taxa_string(taxonomy_per_d)
-  puts "HHH" + taxonomy_per_d.inspect
+def make_taxa_string(taxonomy_per_d, rank_names)
+  # puts "HHH" + taxonomy_per_d.inspect
   
   taxon_strings_per_d  = Hash.new{|hash, key| hash[key] = []}
   
-  rank_names = get_ranks()  
   all_taxa   = get_all_taxa(rank_names)
   
   taxonomy_per_d.each do |dataset_id, taxonomies_arr|
@@ -225,18 +226,10 @@ def make_taxa_string(taxonomy_per_d)
   
   # puts taxon_arr.inspect
   
-  puts "HERE2 " + taxon_strings_per_d.inspect
+  puts "taxon_strings_per_d " + taxon_strings_per_d.inspect
   puts "=" * 10
   
   return taxon_strings_per_d
-end
-
-def get_taxonomy(taxonomy_per_d)
-  puts "HHH" + taxonomy_per_d.inspect
-  
-  taxonomy   = Taxonomy.find(81) #todo: take from taxonomy_per_d by loop
-  make_taxa_string(taxonomy)
-
 end
 
 def make_taxa_string_by_rank(taxon_strings_per_d)
@@ -246,34 +239,49 @@ def make_taxa_string_by_rank(taxon_strings_per_d)
   
   taxon_strings_per_d.each do |dataset_id, taxon_string_arr|
     taxon_string_arr.each do |taxon_string_orig|
-      taxon_string_by_rank = taxon_string_orig.take(rank).join(";")
+      taxon_string_by_rank = taxon_string_orig.take(rank)
+      # .join(";")
       # puts "UUU " + taxon_string_by_rank.inspect
       # puts "-" * 7
       taxon_string_by_rank_per_d[dataset_id] << taxon_string_by_rank
     end
   end
-  # puts "UUU " + taxon_string_by_rank_per_d.inspect
-  # puts "-" * 7
+  puts "taxon_string_by_rank_per_d = " + taxon_string_by_rank_per_d.inspect
+  puts "-" * 7
   # UUU {3=>["Bacteria;Proteobacteria;Gammaproteobacteria;Enterobacteriales;Enterobacteriaceae", "Bacteria;Actinobacteria;class_NA;Actinomycetales;Intrasporangiaceae", "Bacteria;Proteobacteria;Alphaproteobacteria;order_NA;family_NA"], 4=>["Bacteria;Proteobacteria;Gammaproteobacteria;Enterobacteriales;Enterobacteriaceae", "Bacteria;Actinobacteria;class_NA;Actinomycetales;Intrasporangiaceae"]}
   return taxon_string_by_rank_per_d
 end
 
-def make_taxa_strings_per_d()
+def get_counts_per_taxon_per_d(taxonomy_per_d, rank_names) 
+  # see make_taxa_string
+  puts "FROM HERE:"
+  # puts taxonomy_per_d.inspect
+  # {3=>[#<ActiveRecord::Relation [#<Taxonomy id: 82, domain_id: 2, phylum_id: 3, klass_id: 3, order_id: 16, family_id: 18, genus_id: 129, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 96, domain_id: 2, phylum_id: 4, klass_id: 32, order_id: 5, family_id: 52, genus_id: 76, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 137, domain_id: 2, phylum_id: 3, klass_id: 5, order_id: 65, family_id: 129, genus_id: 129, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">]>], 4=>[#<ActiveRecord::Relation [#<Taxonomy id: 82, domain_id: 2, phylum_id: 3, klass_id: 3, order_id: 16, family_id: 18, genus_id: 129, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 96, domain_id: 2, phylum_id: 4, klass_id: 32, order_id: 5, family_id: 52, genus_id: 76, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">]>]}
+  rank_names.each do |rank_name|
+    id_name = rank_name + "_id"    
+    taxonomy_per_d.each do |dataset_id, taxonomies_arr|
+      puts "*****"
+      puts "URA"
+      puts taxonomies_arr[0].group_by {|t| t.attributes[id_name] }.map{|k,v| [k, v.length]}  
+      # taxonomies_arr[0].each do |taxonomy|
+      #   puts "*****"
+      #   puts "URA"
+      #   puts taxonomy.inspect
+        # puts taxonomy.group_by {|t| t.attributes[id_name] }.map{|k,v| [k, v.length]}      
+      # end
+    end
+  end  
+  
+  # tt.group_by {|t| t.attributes["klass_id"] }.map{|k,v| [k, v.length]}
   
 end
 
-
 def get_data_using_rails_object3()
-  taxonomy_hash  = {} 
-  taxonomy_per_d = get_taxonomy_per_d()
-  taxon_strings_per_d = make_taxa_string(taxonomy_per_d)
+  rank_names                 = get_ranks()    
+  taxonomy_per_d             = get_taxonomy_per_d()
+  taxon_strings_per_d        = make_taxa_string(taxonomy_per_d, rank_names)
   taxon_string_by_rank_per_d = make_taxa_string_by_rank(taxon_strings_per_d)
-  # all_taxa       = get_all_taxa()
-  
-  # puts "URA55" + all_taxa.inspect
-  # domain"=>#<ActiveRecord::Relation [#<Domain id: 1, domain: "Archaea">, #<Domain id: 2, domain: "Bacteria">, #<Domain id: 5, domain: "Eukarya">, #<Domain id: 3, domain: "Organelle">, #<Domain id: 4, domain: "Unknown">]>, "phylum"=>#<ActiveRecord::Relation [#<Phylum id: 4, phylum: "Actinobacteria">
-  # taxonomy_per_d:
-  # URA55{2=>[#<ActiveRecord::Relation [#<Taxonomy id: 81, domain_id: 2, phylum_id: 2, klass_id: 2, order_id: 9, family_id: 40, genus_id: 46, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 82, domain_id: 2, phylum_id: 3, klass_id: 3, order_id: 16, family_id: 18, genus_id: 129, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 83, domain_id: 2, phylum_id: 3, klass_id: 3, order_id: 24, family_id: 64, genus_id: 92, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 84, domain_id: 2, phylum_id: 3, klass_id: 3, order_id: 21, family_id: 28, genus_id: 27, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 85, domain_id: 2, phylum_id: 3, klass_id: 4, order_id: 7, family_id: 7, genus_id: 38, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 86, domain_id: 2, phylum_id: 4, klass_id: 32, order_id: 5, family_id: 5, genus_id: 39, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 87, domain_id: 2, phylum_id: 3, klass_id: 5, order_id: 22, family_id: 29, genus_id: 129, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 88, domain_id: 2, phylum_id: 3, klass_id: 5, order_id: 6, family_id: 27, genus_id: 26, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 89, domain_id: 2, phylum_id: 3, klass_id: 4, order_id: 7, family_id: 7, genus_id: 129, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 90, domain_id: 2, phylum_id: 4, klass_id: 32, order_id: 5, family_id: 13, genus_id: 13, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, ...]>]}
+  counts_per_taxon_per_d     = get_counts_per_taxon_per_d(taxonomy_per_d, rank_names) 
 
   # TODO: Andy, could we please use dataset_id in the new taxa hash? We can connect it with dataset/project names in a separate hash to show in a view, by calling the ids
   all_taxonomy.each do |did, tax_obj_list|
@@ -291,7 +299,7 @@ def get_data_using_rails_object3()
                       ].take(@rank_number+1).join(';')
         puts 'tax_string: '+tax_string
       end
-
+  
       if taxonomy_hash.has_key?(tax_string) then
         if taxonomy_hash[tax_string].has_key?(project_name) then
           if taxonomy_hash[tax_string][project_name].has_key?(dataset_name) then
@@ -309,8 +317,9 @@ def get_data_using_rails_object3()
         # new tax: add new hash if not already there
         taxonomy_hash[tax_string] = {project_name=>{dataset_name=>count}}
       end 
-
+  
   end
+  puts "HERE: taxonomy_hash = "
   puts taxonomy_hash.inspect
   return all_taxonomy
 end
