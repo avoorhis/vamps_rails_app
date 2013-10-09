@@ -10,7 +10,23 @@
     <th style='text-align:right;'>Projects:</th>    
     <% @datasets_by_project.each do |project, dataset_hash| %>
   	  <th style='text-align:center;' colspan='<%= dataset_hash.length %>'> <%= project.project %> </th>   
-	  <% end %>
-</tr>
+    <% end %>
+  </tr>
+    <% @taxonomy_by_site_hash.each do |taxon_string, data| %>
+    <% data.each do |d|%>
+    <tr>
+      <td><%= taxon_string %></td>
+      <td><%= d[1] %>
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+       <% dataset = @datasets_per_pr.select{|da| da.id == d[0]} %>
+        <td><%= dataset[0].dataset%></td>
+    </tr>
+      <% end %>
+    <% end %>
+    
+
 </table>	
 </div>
