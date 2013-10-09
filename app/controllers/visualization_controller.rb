@@ -258,15 +258,34 @@ def get_counts_per_taxon_per_d(taxonomy_per_d, rank_names)
   # puts taxonomy_per_d.inspect
   # {3=>[#<ActiveRecord::Relation [#<Taxonomy id: 82, domain_id: 2, phylum_id: 3, klass_id: 3, order_id: 16, family_id: 18, genus_id: 129, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 96, domain_id: 2, phylum_id: 4, klass_id: 32, order_id: 5, family_id: 52, genus_id: 76, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 137, domain_id: 2, phylum_id: 3, klass_id: 5, order_id: 65, family_id: 129, genus_id: 129, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">]>], 4=>[#<ActiveRecord::Relation [#<Taxonomy id: 82, domain_id: 2, phylum_id: 3, klass_id: 3, order_id: 16, family_id: 18, genus_id: 129, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 96, domain_id: 2, phylum_id: 4, klass_id: 32, order_id: 5, family_id: 52, genus_id: 76, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">]>]}
   rank_names.each do |rank_name|
-    id_name = rank_name + "_id"    
+    id_name = rank_name + "_id" 
+    # previous   
     taxonomy_per_d.each do |dataset_id, taxonomies_arr|
       puts "*****"
       puts "URA"
       t_obj = TaxaCount.new
       t_obj.dataset_id = dataset_id
       t_obj.rank_name  = rank_name
-      res = taxonomies_arr[0].group_by {|t| t.attributes[id_name] }.map{|k,v| [k, v.length]}  
-      puts res
+      
+      # taxa_ids = make_taxa_id_string()
+      # "domain_id"=>2, "phylum_id"=>3, "klass_id"=>3, "order_id"=>16, "family_id"=>18, "genus_id"=>129, "species_id"=>1, "strain_id"=>4,
+      # domain_id
+      # domain_id, phylum_id
+      # domain_id, phylum_id, klass_id
+      # domain_id, phylum_id, klass_id, order_id
+      # domain_id, phylum_id, klass_id, order_id, family_id
+      # domain_id, phylum_id, klass_id, order_id, family_id, genus_id
+      # domain_id, phylum_id, klass_id, order_id, family_id, genus_id, species_id
+      # domain_id, phylum_id, klass_id, order_id, family_id, genus_id, species_id, strain_id
+
+      # res = taxonomies_arr[0].group_by {|t| t.attributes[id_name] }.map{|k,v| [k, v.length]}  
+      taxonomies_arr[0].each do |t|
+         res1, res2 = t.attributes["family_id"], t.attributes["genus_id"] 
+         puts "family_id: = " + res1.to_s
+         puts "genus_id: = " + res2.to_s
+      end
+      # res = taxonomies_arr[0].group_by {|t| t.attributes["family_id"], t.attributes["genus_id"] }.map{|k,v| [k, v.length]}  
+      
       
       print t_obj.inspect
       
