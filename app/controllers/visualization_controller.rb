@@ -252,56 +252,85 @@ def make_taxa_string_by_rank(taxon_strings_per_d)
   return taxon_string_by_rank_per_d
 end
 
-def get_counts_per_taxon_per_d(taxonomy_per_d, rank_names) 
-  # see make_taxa_string
-  puts "FROM HERE:"
-  # puts taxonomy_per_d.inspect
-  # {3=>[#<ActiveRecord::Relation [#<Taxonomy id: 82, domain_id: 2, phylum_id: 3, klass_id: 3, order_id: 16, family_id: 18, genus_id: 129, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 96, domain_id: 2, phylum_id: 4, klass_id: 32, order_id: 5, family_id: 52, genus_id: 76, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 137, domain_id: 2, phylum_id: 3, klass_id: 5, order_id: 65, family_id: 129, genus_id: 129, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">]>], 4=>[#<ActiveRecord::Relation [#<Taxonomy id: 82, domain_id: 2, phylum_id: 3, klass_id: 3, order_id: 16, family_id: 18, genus_id: 129, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 96, domain_id: 2, phylum_id: 4, klass_id: 32, order_id: 5, family_id: 52, genus_id: 76, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">]>]}
-  rank_names.each do |rank_name|
-    id_name = rank_name + "_id" 
-    # previous   
-    taxonomy_per_d.each do |dataset_id, taxonomies_arr|
-      puts "*****"
-      puts "URA"
-      t_obj = TaxaCount.new
-      t_obj.dataset_id = dataset_id
-      t_obj.rank_name  = rank_name
-      
-      # taxa_ids = make_taxa_id_string()
-      # "domain_id"=>2, "phylum_id"=>3, "klass_id"=>3, "order_id"=>16, "family_id"=>18, "genus_id"=>129, "species_id"=>1, "strain_id"=>4,
-      # domain_id
-      # domain_id, phylum_id
-      # domain_id, phylum_id, klass_id
-      # domain_id, phylum_id, klass_id, order_id
-      # domain_id, phylum_id, klass_id, order_id, family_id
-      # domain_id, phylum_id, klass_id, order_id, family_id, genus_id
-      # domain_id, phylum_id, klass_id, order_id, family_id, genus_id, species_id
-      # domain_id, phylum_id, klass_id, order_id, family_id, genus_id, species_id, strain_id
+def get_counts_per_taxon_per_d(taxon_string_by_rank_per_d) 
+  # puts "FROM HERE:"
+  # all_counts = Hash.new{|hash, key| hash[key] = []}
+  all_counts = Array.new
+  taxon_string_by_rank_per_d.each do |dataset_id, t_arr|
+    res = t_arr.group_by {|t| t.join(";")}.map{|k,v| [k, v.length]}
 
-      # res = taxonomies_arr[0].group_by {|t| t.attributes[id_name] }.map{|k,v| [k, v.length]}  
-      taxonomies_arr[0].each do |t|
-         res1, res2 = t.attributes["family_id"], t.attributes["genus_id"] 
-         puts "family_id: = " + res1.to_s
-         puts "genus_id: = " + res2.to_s
-      end
-      # res = taxonomies_arr[0].group_by {|t| t.attributes["family_id"], t.attributes["genus_id"] }.map{|k,v| [k, v.length]}  
-      
-      
-      print t_obj.inspect
-      
-      
-      # attr_accessor :dataset_id, :rank_name, :taxon_string_id, :count_per_d
-      
-      # taxonomies_arr[0].each do |taxonomy|
-      #   puts "*****"
-      #   puts "URA"
-      #   puts taxonomy.inspect
-        # puts taxonomy.group_by {|t| t.attributes[id_name] }.map{|k,v| [k, v.length]}      
-      # end
+    res.each do |res_arr|
+      # puts res_arr
+      t_obj = TaxaCount.new
+      t_obj.dataset_id   = dataset_id
+      t_obj.taxon_string = res_arr[0]
+      t_obj.count_per_d  = res_arr[1]     
+      all_counts << t_obj
+      # all_counts[d_id] <<  t_obj
     end
-  end  
+    # puts "res[0] = " + res[n].to_s
+    # puts "res[1] = " + res[1].to_s
+  end
+  # puts all_counts.inspect
+  # [#<TaxaCount:0x007f93d3f40268 @dataset_id=3, @taxon_string="Bacteria;Proteobacteria", @count_per_d=2>, #<TaxaCount:0x007f93d3f3fef8 @dataset_id=3, @taxon_string="Bacteria;Actinobacteria", @count_per_d=1>, #<TaxaCount:0x007f93d3f3f020 @dataset_id=4, @taxon_string="Bacteria;Proteobacteria", @count_per_d=1>, #<TaxaCount:0x007f93d3f3ed00 @dataset_id=4, @taxon_string="Bacteria;Actinobacteria", @count_per_d=1>]
+
+    # taxonomy_per_d.each do |dataset_id, taxonomies_arr|
+    #   puts "*****"
+    #   puts "URA"
+    #   t_obj = TaxaCount.new
+    #   t_obj.dataset_id = dataset_id
+    #   t_obj.rank_name  = rank_name
+    #   
+    #   # taxa_ids = make_taxa_id_string()
+    #   # "domain_id"=>2, "phylum_id"=>3, "klass_id"=>3, "order_id"=>16, "family_id"=>18, "genus_id"=>129, "species_id"=>1, "strain_id"=>4,
+    #   # domain_id
+    #   # domain_id, phylum_id
+    #   # domain_id, phylum_id, klass_id
+    #   # domain_id, phylum_id, klass_id, order_id
+    #   # domain_id, phylum_id, klass_id, order_id, family_id
+    #   # domain_id, phylum_id, klass_id, order_id, family_id, genus_id
+    #   # domain_id, phylum_id, klass_id, order_id, family_id, genus_id, species_id
+    #   # domain_id, phylum_id, klass_id, order_id, family_id, genus_id, species_id, strain_id
+    # 
+    #   # res = taxonomies_arr[0].group_by {|t| t.attributes[id_name] }.map{|k,v| [k, v.length]}  
+    #   taxonomies_arr[0].each do |t|
+    #      res1, res2 = t.attributes["family_id"], t.attributes["genus_id"] 
+    #      puts "family_id: = " + res1.to_s
+    #      puts "genus_id: = " + res2.to_s
+    #   end
+    #   # res = taxonomies_arr[0].group_by {|t| t.attributes["family_id"], t.attributes["genus_id"] }.map{|k,v| [k, v.length]}  
+    #   
+    #   
+    #   print t_obj.inspect
+    #   
+    #   
+    #   # attr_accessor :dataset_id, :rank_name, :taxon_string_id, :count_per_d
+    #   
+    #   # taxonomies_arr[0].each do |taxonomy|
+    #   #   puts "*****"
+    #   #   puts "URA"
+    #   #   puts taxonomy.inspect
+    #     # puts taxonomy.group_by {|t| t.attributes[id_name] }.map{|k,v| [k, v.length]}      
+    #   # end
+    # end
+  # end  
   
   # tt.group_by {|t| t.attributes["klass_id"] }.map{|k,v| [k, v.length]}
+  
+end
+
+def get_counts_per_taxon_per_d1(taxon_string_by_rank_per_d) 
+  # puts "FROM HERE:"
+  all_counts = Hash.new{|hash, key| hash[key] = []}
+  taxon_string_by_rank_per_d.each do |dataset_id, t_arr|
+    res = t_arr.group_by {|t| t.join(";")}.map{|k,v| [k, v.length]}
+
+    res.each do |res_arr|
+      all_counts[dataset_id] << res_arr
+    end
+  end
+  # puts all_counts.inspect
+  # {3=>[["Bacteria;Proteobacteria", 2], ["Bacteria;Actinobacteria", 1]], 4=>[["Bacteria;Proteobacteria", 1], ["Bacteria;Actinobacteria", 1]]}
   
 end
 
@@ -310,7 +339,21 @@ def get_data_using_rails_object3()
   taxonomy_per_d             = get_taxonomy_per_d()
   taxon_strings_per_d        = make_taxa_string(taxonomy_per_d, rank_names)
   taxon_string_by_rank_per_d = make_taxa_string_by_rank(taxon_strings_per_d)
-  counts_per_taxon_per_d     = get_counts_per_taxon_per_d(taxonomy_per_d, rank_names) 
+  
+  (1..100).each do
+  
+    result = Benchmark.measure do
+      counts_per_taxon_per_d     = get_counts_per_taxon_per_d(taxon_string_by_rank_per_d) 
+    end
+    puts "result w obj " + result.to_s
+  
+    result1 = Benchmark.measure do
+      counts_per_taxon_per_d1    = get_counts_per_taxon_per_d1(taxon_string_by_rank_per_d) 
+    end
+    puts "result w hash " + result1.to_s
+    
+    puts "-" * 10
+  end
 
   # TODO: Andy, could we please use dataset_id in the new taxa hash? We can connect it with dataset/project names in a separate hash to show in a view, by calling the ids
   all_taxonomy.each do |did, tax_obj_list|

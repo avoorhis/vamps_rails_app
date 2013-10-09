@@ -4,9 +4,9 @@ class TaxaCount
   include ActiveModel::Conversion
   extend  ActiveModel::Naming
 
-  attr_accessor :dataset_id, :rank_name, :taxon_string_id, :count_per_d
+  attr_accessor :dataset_id, :taxon_string, :count_per_d
 
-  validates_presence_of :dataset_id, :rank_name, :taxon_string_id, :count_per_d
+  validates_presence_of :dataset_id, :taxon_string, :count_per_d
 
   def initialize(attributes = {})
     attributes.each do |name, value|
