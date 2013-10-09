@@ -2,86 +2,15 @@
 
 <%= render "debug" %>
 
-
-
-
-
-
-
-
 <div  id='tax_table_div' >
 <table class='standard_table'>
 
-
-<% projects = [] %>
-<% column_totals = {} %>
-<% if @taxonomy_by_site_hash.any? %>
-	<tr><td></td><th style='text-align:right;'>Projects:</th>
-
-	<% @taxonomy_by_site_hash.each do |tax, data| %>
-	  <% data.each do |project, ds_hash|%>
-		<% ds_hash.each do |dataset|%>
-			<% ds = dataset[0] %>
-			<% count = dataset[1] %>
-			<% pd = project+'--'+ds %>
-			<% if not projects.include?(pd) then %>
-				<% projects << pd %>
-			<% end %>
-		<% end %>
+  <tr>
+    <th></th>
+    <th style='text-align:right;'>Projects:</th>    
+    <% @datasets_by_project.each do |project, dataset_hash| %>
+  	  <th style='text-align:center;' colspan='<%= dataset_hash.length %>'> <%= project.project %> </th>   
 	  <% end %>
-	<% end %>
-
-	<% @ordered_projects.each do |p| %>
-		
-	  		<td style='text-align:center;' colspan='<%= p[:datasets].length %>'> <%= p[:pname] %> </td>   
-	  	
-	<% end %>
-	</tr>
-
-	<tr><td class='td-text-center'>n</td><th class='td-text-right' >Datasets:</th>
-	<% @ordered_projects.each do |p| %>
-		<% p[:datasets].each do |d| %>
-
-		  <td class='td-text-center' > <%= d[:dname] %> </td> 
-
-		<% end %>
-	<% end %>
-
-    
-    </tr>
-    <% n=1 %>
-	<% @taxonomy_by_site_hash.each do |tax, data| %>
-
-	<tr><td class='td-text-right'><%= n %></td><td nowrap='nowrap' class='td-text-left'  ><%= tax %></td>
-	<% n += 1 %>
-
-	  <% data.each do |project, ds_hash|%>
-		<% ds_hash.each do |dataset|%>
-			<% ds = dataset[0] %>
-			<% count = dataset[1] %>
-			<% pd = project+'--'+ds %>
-			<td style='text-align:right;padding:1px 3px;'><%= count %></td>
-			<% if column_totals.has_key?(pd) then %>
-			  <% column_totals[pd] += count %>
-			<% else %>
-			  <% column_totals[pd] = count %>
-			<% end %>
-		<% end %>
-	  <% end %>
-	  </tr>
-	<% end %>
-
-	<tr><td></td>
-	<td class='td-text-right' ><b>TOTALS:</b></td>
-
-	<% column_totals.each do |t| %>
-  		<td style='text-align:right;padding:1px 3px;'><b><%= number_with_delimiter(t[1]) %></b></td>
-	<% end %>
-	</td>
-<% else %>
-	<tr><td style='padding:1px 3px;'><strong>NO DATA</strong></td></tr>
-<% end %>
-
-</table>
+</tr>
+</table>	
 </div>
-
