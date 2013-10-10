@@ -41,5 +41,13 @@ describe "Projects and Datasets list" do
     page.body.should have_xpath("//img[@alt='minus' and @src = 'assets/tree_minus.gif']")
     
   end
+  
   it "should keep datasets checked after we hide the list"
+  
+  it "should show a message if nothing is choosen" do
+    find_button('Submit').click
+    page.should have_content("Choose some data!")    
+    page.should have_content("Community Visualization")    
+  end
+  
 end
