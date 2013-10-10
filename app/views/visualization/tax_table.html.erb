@@ -13,7 +13,7 @@
     <% end %>
   </tr>
   <tr><td class='td-text-center'>n</td><th class='td-text-right' >Datasets:</th>
-    <!-- TODO: benchmark w and w/o loop, refactor -->
+    <!-- TODO: benchmark w and w/o loop, refactor-->
 	<% @choosen_projects_w_d.each do |project| %>
 		<% project[:datasets].each do |d| %>
 		  <td class='td-text-center' > <%= d[:dataset] %> </td> 
@@ -27,21 +27,12 @@
   
     <% @taxonomy_by_site_hash.each do |taxon_string, data| %>
       <% n += 1 %>
-      <tr>
-        <td class='td-text-right'><%= n %></td><td nowrap='nowrap' class='td-text-left'  ><%= taxon_string %></td>  
-        <%= data.inspect %>
-        <% data.each do |d_id, count|%>
-          <% @choosen_projects_w_d.each do |project| %>
-        		<% project[:datasets].each do |d| %>
-        		  <% if d[:id] == d_id %>        		  
-                <td style='text-align:right;padding:1px 3px;'><%= count %></td>      
-            		<% end %>
-        		<% end %>
-        	<% end %>
-      	
+      <tr><td class='td-text-right'><%= n %></td><td nowrap='nowrap' class='td-text-left'  ><%= taxon_string %></td>  
+        <% data.each do |d_id, cnt|%>
+            <td style='text-align:right;padding:1px 3px;'><%= cnt %></td>      
         <% end %>        
     <% end %>
-    </tr>
+    
 
 </table>	
 </div>
