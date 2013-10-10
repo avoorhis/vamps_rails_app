@@ -23,13 +23,13 @@ class VisualizationController < ApplicationController
     # p_ids = params[:project_ids] 
     # p_o = @datasets_by_project_all.select {|p_o| p_o.attributes["id"] if p_ids.include? p_o.attributes["id"].to_s }
 
-    puts "choosen_projects_w_d = " + @choosen_projects_w_d.inspect
+    # puts "choosen_projects_w_d = " + @choosen_projects_w_d.inspect
     # puts "p_o.size = " + p_o.size.to_s
     # puts "datasets_by_project_all.size = " + @datasets_by_project_all.size.to_s
     # 
-    # puts "datasets_per_pr = " + @datasets_per_pr.inspect
-    puts 'ordered_projects: ' +@ordered_projects.inspect
-    puts 'ordered_datasets: ' +@ordered_datasets.inspect
+    puts "datasets_per_pr = " + @datasets_per_pr.inspect
+    # puts 'ordered_projects: ' +@ordered_projects.inspect
+    # puts 'ordered_datasets: ' +@ordered_datasets.inspect
     #puts 'ordered datasets list: ' +@ds_id_list.inspect
     #puts 'Which is a better format: '
     #puts '  this? a simple hash: ' + @master_sample_data.inspect
@@ -47,7 +47,7 @@ class VisualizationController < ApplicationController
     
     @view        = params[:view]
     @taxonomy_by_site_hash = get_data_using_rails_object()
-    
+    puts "@taxonomy_by_site_hash = " + @taxonomy_by_site_hash.inspect
     # params[:datasets] are created in visualization.js::getDatasets()
     # session[:datasets]= clean_datasets( params[:datasets] )
     #@datasets    = clean_datasets( params[:datasets] )
@@ -318,44 +318,6 @@ def get_data_using_rails_object()
   counts_per_taxon_per_d     = get_counts_per_taxon_per_d(taxon_string_by_rank_per_d) 
   
 
-  # # TODO: Andy, could we please use dataset_id in the new taxa hash? We can connect it with dataset/project names in a separate hash to show in a view, by calling the ids
-  # all_taxonomy.each do |did, tax_obj_list|
-  #     # ds=Dataset.find(did)
-  #     # dataset_name = ds.dataset
-  #     # project_name = ds.project.project
-  #     tax_string = ''
-  #     count      = 10
-  #     tax_obj_list.each do |t|
-  #       tax_string = [
-  #                      t[0].domain.domain,  t[0].phylum.phylum,
-  #                      t[0].klass.klass,    t[0].order.order,
-  #                      t[0].family.family,  t[0].genus.genus,
-  #                      t[0].species.species,t[0].strain.strain
-  #                     ].take(@rank_number+1).join(';')
-  #       puts 'tax_string: '+tax_string
-  #     end
-  # 
-  #     if taxonomy_hash.has_key?(tax_string) then
-  #       if taxonomy_hash[tax_string].has_key?(project_name) then
-  #         if taxonomy_hash[tax_string][project_name].has_key?(dataset_name) then
-  #           # sum knt for this ts, pj and ds
-  #           taxonomy_hash[tax_string][project_name][dataset_name] += count 
-  #         else
-  #           #new ds
-  #           taxonomy_hash[tax_string][project_name].merge!(dataset_name=>count) 
-  #         end   
-  #       else
-  #         # new pj
-  #         taxonomy_hash[tax_string].merge!(project_name => {dataset_name=>count})
-  #       end
-  #     else
-  #       # new tax: add new hash if not already there
-  #       taxonomy_hash[tax_string] = {project_name=>{dataset_name=>count}}
-  #     end 
-  # 
-  # end
-  # puts "HERE: taxonomy_hash = "
-  # puts taxonomy_hash.inspect
   return counts_per_taxon_per_d
 end
 
