@@ -8,10 +8,23 @@
   <tr>
     <th></th>
     <th style='text-align:right;'>Projects:</th>    
-    <% @datasets_by_project.each do |project, dataset_hash| %>
+    <% @datasets_by_project_all.each do |project, dataset_hash| %>
   	  <th style='text-align:center;' colspan='<%= dataset_hash.length %>'> <%= project.project %> </th>   
     <% end %>
   </tr>
+  <tr><td class='td-text-center'>n</td><th class='td-text-right' >Datasets:</th>
+	<% @ordered_projects.each do |p| %>
+		<% p[:datasets].each do |d| %>
+
+		  <td class='td-text-center' > <%= d[:dname] %> </td> 
+
+		<% end %>
+	<% end %>
+
+    
+    </tr>
+	
+  
     <% @taxonomy_by_site_hash.each do |taxon_string, data| %>
     <% data.each do |d|%>
     <tr>

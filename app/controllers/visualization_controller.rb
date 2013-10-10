@@ -3,14 +3,16 @@ class VisualizationController < ApplicationController
   before_filter :authenticate_user!
   require 'benchmark'  
   
+  # Andy, I'm collecting all project ids togeteher, is it okay? E.g.: "project_ids"=>["6", "8"], "dataset_ids"=>["3", "4", "238", "239"]
+  
   def parse_view
     # TEST:    
     @ordered_projects, @ordered_datasets = create_ordered_datasets() 
-    @datasets_by_project = make_datasets_by_project_hash()
+    @datasets_by_project_all = make_datasets_by_project_hash()
+    puts "@datasets_by_project = " + @datasets_by_project_all.inspect
     d_ids = params[:dataset_ids] #TODO: take the ids from params[:dataset] and move to the main
     @datasets_per_pr = Dataset.all.find(d_ids) #TODO: move to the main
     puts "datasets_per_pr = " + @datasets_per_pr.inspect
-    # puts "datasets_by_project = " + @datasets_by_project.inspect
     puts 'ordered projects: ' +@ordered_projects.inspect
     puts 'ordered datasets: ' +@ordered_datasets.inspect
     #puts 'ordered datasets list: ' +@ds_id_list.inspect
@@ -92,7 +94,7 @@ class VisualizationController < ApplicationController
 
   def index
     @all_data = get_test_sample_object()
-    @datasets_by_project = make_datasets_by_project_hash()
+    @datasets_by_project_all = make_datasets_by_project_hash()
     @domains  = Domain.all
     @ranks    = Rank.all.sorted    
   end
