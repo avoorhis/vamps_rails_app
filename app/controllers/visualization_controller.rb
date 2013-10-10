@@ -9,9 +9,16 @@ class VisualizationController < ApplicationController
     # TEST:    
     @ordered_projects, @ordered_datasets = create_ordered_datasets() 
     @datasets_by_project_all = make_datasets_by_project_hash()
-    puts "@datasets_by_project = " + @datasets_by_project_all.inspect
+    # puts "@datasets_by_project_all = " + @datasets_by_project_all.inspect
     d_ids = params[:dataset_ids] #TODO: take the ids from params[:dataset] and move to the main
     @datasets_per_pr = Dataset.all.find(d_ids) #TODO: move to the main
+    
+    p_ids = params[:project_ids] 
+    p_o = @datasets_by_project_all.select {|p_o| p_o.attributes["id"] if p_ids.include? p_o.attributes["id"].to_s }
+    puts "p_o = " + p_o.inspect
+    puts "p_o.size = " + p_o.size.to_s
+    puts "datasets_by_project_all.size = " + @datasets_by_project_all.size.to_s
+    
     puts "datasets_per_pr = " + @datasets_per_pr.inspect
     puts 'ordered projects: ' +@ordered_projects.inspect
     puts 'ordered datasets: ' +@ordered_datasets.inspect
