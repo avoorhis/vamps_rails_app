@@ -12,8 +12,7 @@ class VisualizationController < ApplicationController
     end
 
     # @ordered_projects, @ordered_datasets = create_ordered_datasets() 
-    @datasets_per_pr      = get_choosen_datasets_per_pr()
-    @choosen_projects_w_d = get_choosen_projects_w_d()
+    @choosen_projects_w_d    = get_choosen_projects_w_d()
     
     # @datasets_by_project_all = make_datasets_by_project_hash()
     # 
@@ -27,7 +26,7 @@ class VisualizationController < ApplicationController
     # puts "p_o.size = " + p_o.size.to_s
     # puts "datasets_by_project_all.size = " + @datasets_by_project_all.size.to_s
     # 
-    puts "datasets_per_pr = " + @datasets_per_pr.inspect
+    # puts "choosen_datasets_per_pr = " + @choosen_datasets_per_pr.inspect
     # puts 'ordered_projects: ' +@ordered_projects.inspect
     # puts 'ordered_datasets: ' +@ordered_datasets.inspect
     #puts 'ordered datasets list: ' +@ds_id_list.inspect
@@ -66,7 +65,7 @@ class VisualizationController < ApplicationController
   
   def get_choosen_datasets_per_pr()
     d_ids = params[:dataset_ids]
-    datasets_per_pr = Dataset.all.find(d_ids)
+    Dataset.all.find(d_ids)
   end
   
   def get_choosen_projects()
@@ -272,17 +271,15 @@ def get_counts_per_taxon_per_d(taxon_string_by_rank_per_d)
   taxon_string_by_rank_per_d.each do |dataset_id, t_arr|
     res = t_arr.group_by {|t| t.join(";")}.map{|k,v| [k, v.length]}
 
-    res.each do |res_arr|
+    res.each do |taxa, count|
       d_cnt = []
       # puts res_arr
       d_cnt << dataset_id
-      d_cnt << res_arr[1] 
-      all_counts[res_arr[0]] << d_cnt
+      d_cnt << count 
+      all_counts[taxa] << d_cnt
     end
-    # puts "res[0] = " + res[n].to_s
-    # puts "res[1] = " + res[1].to_s
   end
-  # puts all_counts.inspect
+  # puts "all_counts = " + all_counts.inspect
   # {"Bacteria;Proteobacteria"=>[[3, 2], [4, 1]], "Bacteria;Actinobacteria"=>[[3, 1], [4, 1]]}
   return all_counts
 end
@@ -293,8 +290,7 @@ def get_data_using_rails_object()
   taxon_strings_per_d        = make_taxa_string(taxonomy_per_d, rank_names)
   taxon_string_by_rank_per_d = make_taxa_string_by_rank(taxon_strings_per_d)
   counts_per_taxon_per_d     = get_counts_per_taxon_per_d(taxon_string_by_rank_per_d) 
-  
-
+  a                          = fill_in_zeros(counts_per_taxon_per_d)
   return counts_per_taxon_per_d
 end
 
@@ -468,33 +464,45 @@ end
 #
 #  FILL IN ZEROS
 #
-  def fill_in_zeros(tax_hash)
-
-    tax_hash.each do |tax, pj_hash| 
-      @ordered_projects.each do |pj| 
-        if not pj_hash.include?(pj[:pname]) then
-          # add the empty project
-          pj_hash.merge!(pj[:pname] => {})
-        end
-      end
-
-      pj_hash.each do |p, ds_hash|
-        #puts 'ds_hash '+ds_hash.inspect
-        @ordered_projects.each do |pj| 
-          
-          pj[:datasets].each do |ds|
-            
-            if p==pj[:pname] and not ds_hash.include?(ds[:dname]) then    
-              ds_hash.merge!(ds[:dname] => 0)
-            end
-          end
-        end
-
-      end
-      #puts 'pj_hash '+pj_hash.inspect 
-    end
-    return tax_hash
+  def fill_in_zeros(counts_per_taxon_per_d)
+    # choosen_datasets_per_pr = get_choosen_datasets_per_pr()
+    # puts "choosen_datasets_per_pr = " + choosen_datasets_per_pr.inspect
+    puts "counts_per_taxon_per_d = " + counts_per_taxon_per_d.inspect
+    # choosen_datasets_per_pr = [#<Dataset id: 2, dataset: "SS_WWTP_1_25_11_2step", dataset_description: "", env_sample_source_id: 1, project_id: 5>, #<Dataset id: 3, dataset: "1St_121_Stockton", dataset_description: "121_Stockton", env_sample_source_id: 20, project_id: 6>, #<Dataset id: 4, dataset: "1St_120_Richmond", dataset_description: "120_Richmond", env_sample_source_id: 20, project_id: 6>]
+    #     counts_per_taxon_per_d = {"Bacteria;Firmicutes"=>[[2, 14]], "Bacteria;Proteobacteria"=>[[2, 84], [3, 2], [4, 1]], "Bacteria;Actinobacteria"=>[[2, 20], [3, 1], [4, 1]], "Bacteria;Planctomycetes"=>[[2, 2]], "Bacteria;Bacteroidetes"=>[[2, 5]], "Organelle;Chloroplast"=>[[2, 2]], "Bacteria;Deinococcus-Thermus"=>[[2, 1]], "Bacteria;Fusobacteria"=>[[2, 1]], "Bacteria;Verrucomicrobia"=>[[2, 1]], "Bacteria;phylum_NA"=>[[2, 1]]}
+    #     @taxonomy_by_site_hash = {"Bacteria;Firmicutes"=>[[2, 14]], "Bacteria;Proteobacteria"=>[[2, 84], [3, 2], [4, 1]], "Bacteria;Actinobacteria"=>[[2, 20], [3, 1], [4, 1]], "Bacteria;Planctomycetes"=>[[2, 2]], "Bacteria;Bacteroidetes"=>[[2, 5]], "Organelle;Chloroplast"=>[[2, 2]], "Bacteria;Deinococcus-Thermus"=>[[2, 1]], "Bacteria;Fusobacteria"=>[[2, 1]], "Bacteria;Verrucomicrobia"=>[[2, 1]], "Bacteria;phylum_NA"=>[[2, 1]]}
+    #     
+    d_ids = params[:dataset_ids]
+    # d_ids
+    # HERE stop
   end
+  # def fill_in_zeros(tax_hash)
+  # 
+  #   tax_hash.each do |tax, pj_hash| 
+  #     @ordered_projects.each do |pj| 
+  #       if not pj_hash.include?(pj[:pname]) then
+  #         # add the empty project
+  #         pj_hash.merge!(pj[:pname] => {})
+  #       end
+  #     end
+  # 
+  #     pj_hash.each do |p, ds_hash|
+  #       #puts 'ds_hash '+ds_hash.inspect
+  #       @ordered_projects.each do |pj| 
+  #         
+  #         pj[:datasets].each do |ds|
+  #           
+  #           if p==pj[:pname] and not ds_hash.include?(ds[:dname]) then    
+  #             ds_hash.merge!(ds[:dname] => 0)
+  #           end
+  #         end
+  #       end
+  # 
+  #     end
+  #     #puts 'pj_hash '+pj_hash.inspect 
+  #   end
+  #   return tax_hash
+  # end
  
 #
 #  GET DATASET COUNTS
