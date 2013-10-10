@@ -48,30 +48,6 @@ class VisualizationController < ApplicationController
     @view        = params[:view]
     @taxonomy_by_site_hash = get_data_using_rails_object()
     puts "@taxonomy_by_site_hash = " + @taxonomy_by_site_hash.inspect
-    # params[:datasets] are created in visualization.js::getDatasets()
-    # session[:datasets]= clean_datasets( params[:datasets] )
-    #@datasets    = clean_datasets( params[:datasets] )
-
-    # SLM_NIH_Bv4v5--1St_121_Stockton
-    
-
-    # sql version:
-    #@taxQuery    = create_tax_query()
-    #sql_result      = Project.find_by_sql(@taxQuery)
-    #taxonomy_hash = create_sorted_taxonomy_by_site(sql_result)
-
-    
-    # this seems slow to me:
-    #taxonomy_hash = get_data_using_rails_object()
-    # @new_taxonomy_hash = get_data_using_rails_object3()
-    # puts "HERE new_taxonomy_hash = "
-    # puts @new_taxonomy_hash
-    # #puts "NEW TAX "+new_tax.inspect
-    # #puts "before fill with zeros:"
-    # #puts "OLD TAX "+taxonomy_hash.inspect
-    # @taxonomy_by_site_hash = fill_in_zeros(@new_taxonomy_hash)
-    # #puts "after fill with zeros:"
-    # #puts @taxonomy_by_site_hash
 
     if params[:view]      == "heatmap"
       render :heatmap
@@ -290,7 +266,8 @@ def make_taxa_string_by_rank(taxon_strings_per_d)
 end
 
 def get_counts_per_taxon_per_d(taxon_string_by_rank_per_d) 
-  # puts "FROM HERE:"
+  puts "FROM HERE:"
+  puts "taxon_string_by_rank_per_d = " + taxon_string_by_rank_per_d.inspect
   all_counts = Hash.new{|hash, key| hash[key] = []}
   taxon_string_by_rank_per_d.each do |dataset_id, t_arr|
     res = t_arr.group_by {|t| t.join(";")}.map{|k,v| [k, v.length]}
