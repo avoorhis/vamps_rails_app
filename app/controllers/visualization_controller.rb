@@ -6,29 +6,30 @@ class VisualizationController < ApplicationController
   # Andy, I'm collecting all project ids togeteher, is it okay? E.g.: "project_ids"=>["6", "8"], "dataset_ids"=>["3", "4", "238", "239"]
   
   def parse_view
-    # TEST:    
-    # @ordered_projects, @ordered_datasets = create_ordered_datasets() 
-    @datasets_by_project_all = make_datasets_by_project_hash()
-    # puts "@datasets_by_project_all = " + @datasets_by_project_all.inspect
-
     unless (params.has_key?(:dataset_ids))
       dataset_not_choosen()
       return      
     end
 
-    d_ids = params[:dataset_ids] #TODO: take the ids from params[:dataset] and move to the main
-    @datasets_per_pr = Dataset.all.find(d_ids) #TODO: move to the main
+    # @ordered_projects, @ordered_datasets = create_ordered_datasets() 
+    @datasets_per_pr      = get_choosen_datasets_per_pr()
+    @choosen_projects_w_d = get_choosen_projects_w_d()
     
-    p_ids = params[:project_ids] 
-    p_o = @datasets_by_project_all.select {|p_o| p_o.attributes["id"] if p_ids.include? p_o.attributes["id"].to_s }
+    # @datasets_by_project_all = make_datasets_by_project_hash()
+    # 
+    # d_ids = params[:dataset_ids] #TODO: take the ids from params[:dataset] and move to the main
+    # @datasets_per_pr = Dataset.all.find(d_ids) #TODO: move to the main
+    
+    # p_ids = params[:project_ids] 
+    # p_o = @datasets_by_project_all.select {|p_o| p_o.attributes["id"] if p_ids.include? p_o.attributes["id"].to_s }
 
-    # puts "p_o = " + p_o.inspect
+    puts "choosen_projects_w_d = " + @choosen_projects_w_d.inspect
     # puts "p_o.size = " + p_o.size.to_s
     # puts "datasets_by_project_all.size = " + @datasets_by_project_all.size.to_s
     # 
     # puts "datasets_per_pr = " + @datasets_per_pr.inspect
-    # puts 'ordered projects: ' +@ordered_projects.inspect
-    # puts 'ordered datasets: ' +@ordered_datasets.inspect
+    puts 'ordered_projects: ' +@ordered_projects.inspect
+    puts 'ordered_datasets: ' +@ordered_datasets.inspect
     #puts 'ordered datasets list: ' +@ds_id_list.inspect
     #puts 'Which is a better format: '
     #puts '  this? a simple hash: ' + @master_sample_data.inspect
@@ -86,14 +87,31 @@ class VisualizationController < ApplicationController
     flash.alert = 'Choose some data!'
     redirect_to visualization_index_path
   end
-  # def get_taxonomy_by_site
-  #   return @taxonomy_by_site
-  # end
   
-  # def get_datasets
-  #   @datasets_per_pr = Dataset.find(params[:dataset_ids])
-  #   return @datasets
-  # end
+  def get_choosen_datasets_per_pr()
+    d_ids = params[:dataset_ids]
+    datasets_per_pr = Dataset.all.find(d_ids)
+  end
+  
+  def get_choosen_projects()
+    datasets_by_project_all = make_datasets_by_project_hash()
+    p_ids  = params[:project_ids] 
+    p_objs = datasets_by_project_all.select {|p_o| p_o.attributes["id"] if p_ids.include? p_o.attributes["id"].to_s }
+  end  
+  
+  def get_choosen_projects_w_d()
+    project_array = Array.new
+    d_ids  = params[:dataset_ids]    
+    p_objs = get_choosen_projects()
+    p_objs.each do |p_obj, d_arr|
+      choosen_p_w_d            = Hash.new
+      choosen_p_w_d[:pid]      = p_obj[:id]
+      choosen_p_w_d[:pname]    = p_obj[:project]
+      choosen_p_w_d[:datasets] = d_arr.select {|d| d.attributes["id"] if d_ids.include? d.attributes["id"].to_s}
+      project_array << choosen_p_w_d
+    end
+    return project_array
+  end
   
   def make_datasets_by_project_hash()
     projects = Project.all    
