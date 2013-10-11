@@ -25,12 +25,13 @@
 	
     <% n = 0 %>
   
-    <% @taxonomy_by_site_hash.each do |taxon_string, data_arr| %>
+    <% @taxonomy_by_site_hash.each do |taxon_string, data| %>
       <% n += 1 %>
       <tr><td class='td-text-right'><%= n %></td><td nowrap='nowrap' class='td-text-left'  ><%= taxon_string %></td>  
-        <% data_arr.each do |d_id, cnt|%>
+        <% data[:cnts].each do |d_id, cnt|%>
             <td style='text-align:right;padding:1px 3px;'><%= cnt %></td>      
         <% end %>        
+        <td style='text-align:right;padding:1px 3px;'><%= data[:sum] %></td>      
     <% end %>
     
 

@@ -305,7 +305,7 @@ def get_data_using_rails_object()
   taxon_string_by_rank_per_d  = make_taxa_string_by_rank(taxon_strings_per_d)
   counts_per_taxon_per_d      = get_counts_per_taxon_per_d(taxon_string_by_rank_per_d) 
   counts_summed_per_tax_per_d = get_sum_per_taxon(counts_per_taxon_per_d) 
-  return counts_per_taxon_per_d
+  return counts_summed_per_tax_per_d
 end
 
 # def get_data_using_rails_object2()
