@@ -79,9 +79,13 @@ class VisualizationController < ApplicationController
     dat_count = Hash.new
     datasets_per_pr = get_choosen_datasets_per_pr() #TODO: move to the main
     puts "URA1, my_pdrs = " + my_pdrs.inspect
-    choosen_p_w_d[:datasets] = my_pdrs.select {|i| i.attributes["id"] if d_ids.include? d.attributes["id"].to_s}
+    # URA1, my_pdrs = #<ActiveRecord::Relation [#<SequencePdrInfo id: 1001, dataset_id: 3, sequence_id: 1001, seq_count: 2, classifier: "GAST", created_at: "2013-08-19 13:04:05", updated_at: "2013-08-19 13:04:05">, #<SequencePdrInfo id: 1085, dataset_id: 3, sequence_id: 1002, seq_count: 103, classifier: "GAST", created_at: "2013-08-19 13:04:05", updated_at: "2013-08-19 13:04:05">, #<SequencePdrInfo id: 1414, dataset_id: 3, sequence_id: 1004, seq_count: 8, classifier: "GAST", created_at: "2013-08-19 13:04:05", updated_at: "2013-08-19 13:04:05">, #<SequencePdrInfo id: 1619, dataset_id: 3, sequence_id: 1005, seq_count: 203, classifier: "GAST", created_at: "2013-08-19 13:04:05", updated_at: "2013-08-19 13:04:05">, #<SequencePdrInfo id: 1908, dataset_id: 3, sequence_id: 1007, seq_count: 3, classifier: "GAST", created_at: "2013-08-19 13:04:05", updated_at: "2013-08-19 13:04:05">]>
     
-    datasets_per_pr.map {|d| sum = 0; my_pdrs.map {|pdr_o| pdr_o.map {|spi| sum += spi.seq_count}; dat_count[d.id] = sum }}
+    res = my_pdrs.group_by {|i| i.attributes["dataset_id"]}
+    puts "res = " + res.inspect
+    datasets_per_pr.map {|d| sum = 0; res.map {|spi| spi.map {|s| sum += spi.seq_count} }; dat_count[d.id] = sum }
+    #TODO: NoMethodError (undefined method `seq_count' for #<Array:0x007fda5f85ed28>):
+    
     puts "dat_count = " + dat_count.inspect
     return dat_count
   end
@@ -101,13 +105,9 @@ class VisualizationController < ApplicationController
     
   end
 
-  # todo: from where this first call?
-  #     SequencePdrInfo Load (0.2ms)  SELECT `sequence_pdr_infos`.* FROM `sequence_pdr_infos` WHERE `sequence_pdr_infos`.`dataset_id` = 241
-  #     SequencePdrInfo Load (0.1ms)  SELECT `sequence_pdr_infos`.* FROM `sequence_pdr_infos` WHERE `sequence_pdr_infos`.`dataset_id` = 242
-  #     SequencePdrInfo Load (0.2ms)  SELECT `sequence_pdr_infos`.* FROM `sequence_pdr_infos` WHERE `sequence_pdr_infos`.`dataset_id` = 243
-  #   dat_count = {241=>0, 242=>0, 243=>0}
-  #     Rank Load (0.2ms)  SELECT `ranks`.* FROM `ranks` ORDER BY `ranks`.rank_number ASC
-  #     SequencePdrInfo Load (0.3ms)  SELECT `sequence_pdr_infos`.* FROM `sequence_pdr_infos` WHERE `sequence_pdr_infos`.`dataset_id` IN (241, 242, 243)
+  # todo: make one call!
+  # Dataset Load (0.3ms)  SELECT `datasets`.* FROM `datasets`
+  # Dataset Load (0.3ms)  SELECT `datasets`.* FROM `datasets` WHERE `datasets`.`id` IN (2, 3)
   #   
   
 end
