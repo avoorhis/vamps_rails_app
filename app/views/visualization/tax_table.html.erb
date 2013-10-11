@@ -25,7 +25,7 @@
 	
     <% n = 0 %>
   
-    <% @taxonomy_by_site_hash.each do |taxon_string, data| %>
+    <% @taxonomy_w_cnts_by_d.each do |taxon_string, data| %>
       <% n += 1 %>
       <tr>
         <td class='td-text-right'><%= n %></td><td nowrap='nowrap' class='td-text-left'  ><%= taxon_string %></td>  
