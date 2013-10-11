@@ -265,23 +265,12 @@ def make_taxa_string_by_rank(taxon_strings_per_d)
 end
 
 def get_counts_per_taxon_per_d(taxon_string_by_rank_per_d) 
-  # puts "FROM HERE:"
-  # puts "taxon_string_by_rank_per_d = " + taxon_string_by_rank_per_d.inspect
   all_counts = make_empty_taxa_dataset_hash(taxon_string_by_rank_per_d)
 
   taxon_string_by_rank_per_d.each do |dataset_id, t_arr|
     res = t_arr.group_by {|t| t.join(";")}.map{|k,v| [k, v.length]}
-    
-    
-    res.each do |taxa, count|
-      all_counts[taxa][dataset_id] = count 
-    end
-    puts "all_counts = " + all_counts.inspect
-    # all_counts = {"Bacteria;Firmicutes"=>{2=>14, 3=>0, 4=>0}, "Bacteria;Proteobacteria"=>{2=>84, 3=>0, 4=>0}, "Bacteria;Actinobacteria"=>{2=>20, 3=>0, 4=>0}, "Bacteria;Planctomycetes"=>{2=>2, 3=>0, 4=>0}, "Bacteria;Bacteroidetes"=>{2=>5, 3=>0, 4=>0}, "Organelle;Chloroplast"=>{2=>2, 3=>0, 4=>0}, "Bacteria;Deinococcus-Thermus"=>{2=>1, 3=>0, 4=>0}, "Bacteria;Fusobacteria"=>{2=>1, 3=>0, 4=>0}, "Bacteria;Verrucomicrobia"=>{2=>1, 3=>0, 4=>0}, "Bacteria;phylum_NA"=>{2=>1, 3=>0, 4=>0}}
-    # 
+    res.map{ |taxa, count| all_counts[taxa][dataset_id] = count }
   end
-  # puts "all_counts = " + all_counts.inspect
-  # {"Bacteria;Proteobacteria"=>[[3, 2], [4, 1]], "Bacteria;Actinobacteria"=>[[3, 1], [4, 1]]}
   return all_counts
 end
 
@@ -296,13 +285,26 @@ def make_empty_taxa_dataset_hash(taxon_string_by_rank_per_d)
   return all_counts
 end
 
+def get_sum_per_taxon(counts_per_taxon_per_d) 
+  # counts_per_taxon_per_d = {"Bacteria;Firmicutes"=>{2=>14, 3=>0, 4=>0}, "Bacteria;Proteobacteria"=>{2=>84, 3=>2, 4=>1}, "Bacteria;Actinobacteria"=>{2=>20, 3=>1, 4=>1}, "Bacteria;Planctomycetes"=>{2=>2, 3=>0, 4=>0}, "Bacteria;Bacteroidetes"=>{2=>5, 3=>0, 4=>0}, "Organelle;Chloroplast"=>{2=>2, 3=>0, 4=>0}, "Bacteria;Deinococcus-Thermus"=>{2=>1, 3=>0, 4=>0}, "Bacteria;Fusobacteria"=>{2=>1, 3=>0, 4=>0}, "Bacteria;Verrucomicrobia"=>{2=>1, 3=>0, 4=>0}, "Bacteria;phylum_NA"=>{2=>1, 3=>0, 4=>0}}
+  counts_summed_per_tax_per_d = Hash.new{|hash, key| hash[key] = {}}
+  counts_per_taxon_per_d.each do |taxon_string, cnt_hash|
+    counts_summed_per_tax_per_d[taxon_string][:cnts] = cnt_hash
+    counts_summed_per_tax_per_d[taxon_string][:sum]  = cnt_hash.values.sum
+  end
+  # puts "counts_summed_per_tax_per_d = " + counts_summed_per_tax_per_d.inspect
+  # counts_summed_per_tax_per_d = {"Bacteria;Firmicutes"=>{:cnts=>{2=>14, 3=>0, 4=>0}, :sum=>14}, "Bacteria;Proteobacteria"=>{:cnts=>{2=>84, 3=>2, 4=>1}, :sum=>87}, "Bacteria;Actinobacteria"=>{:cnts=>{2=>20, 3=>1, 4=>1}, :sum=>22}, "Bacteria;Planctomycetes"=>{:cnts=>{2=>2, 3=>0, 4=>0}, :sum=>2}, "Bacteria;Bacteroidetes"=>{:cnts=>{2=>5, 3=>0, 4=>0}, :sum=>5}, "Organelle;Chloroplast"=>{:cnts=>{2=>2, 3=>0, 4=>0}, :sum=>2}, "Bacteria;Deinococcus-Thermus"=>{:cnts=>{2=>1, 3=>0, 4=>0}, :sum=>1}, "Bacteria;Fusobacteria"=>{:cnts=>{2=>1, 3=>0, 4=>0}, :sum=>1}, "Bacteria;Verrucomicrobia"=>{:cnts=>{2=>1, 3=>0, 4=>0}, :sum=>1}, "Bacteria;phylum_NA"=>{:cnts=>{2=>1, 3=>0, 4=>0}, :sum=>1}}
+  
+  return counts_summed_per_tax_per_d
+end
+
 def get_data_using_rails_object()
-  rank_names                 = get_ranks()    
-  taxonomy_per_d             = get_taxonomy_per_d()
-  taxon_strings_per_d        = make_taxa_string(taxonomy_per_d, rank_names)
-  taxon_string_by_rank_per_d = make_taxa_string_by_rank(taxon_strings_per_d)
-  counts_per_taxon_per_d     = get_counts_per_taxon_per_d(taxon_string_by_rank_per_d) 
-  a                          = fill_in_zeros(counts_per_taxon_per_d)
+  rank_names                  = get_ranks()    
+  taxonomy_per_d              = get_taxonomy_per_d()
+  taxon_strings_per_d         = make_taxa_string(taxonomy_per_d, rank_names)
+  taxon_string_by_rank_per_d  = make_taxa_string_by_rank(taxon_strings_per_d)
+  counts_per_taxon_per_d      = get_counts_per_taxon_per_d(taxon_string_by_rank_per_d) 
+  counts_summed_per_tax_per_d = get_sum_per_taxon(counts_per_taxon_per_d) 
   return counts_per_taxon_per_d
 end
 
@@ -320,7 +322,6 @@ def get_counts_per_dataset_id()
   dat_count = Hash.new
   @datasets_per_pr.map {|d| sum = 0; d.sequence_pdr_infos.map {|spi| sum += spi.seq_count}; dat_count[d.id] = sum }
   return dat_count
-
 end
 
 # def get_data_using_rails_object()
@@ -473,49 +474,7 @@ end
 #     return taxonomy_hash
 # end
 
-#
-#  FILL IN ZEROS
-#
-  def fill_in_zeros(counts_per_taxon_per_d)
-    # choosen_datasets_per_pr = get_choosen_datasets_per_pr()
-    # puts "choosen_datasets_per_pr = " + choosen_datasets_per_pr.inspect
-    puts "counts_per_taxon_per_d = " + counts_per_taxon_per_d.inspect
-    # choosen_datasets_per_pr = [#<Dataset id: 2, dataset: "SS_WWTP_1_25_11_2step", dataset_description: "", env_sample_source_id: 1, project_id: 5>, #<Dataset id: 3, dataset: "1St_121_Stockton", dataset_description: "121_Stockton", env_sample_source_id: 20, project_id: 6>, #<Dataset id: 4, dataset: "1St_120_Richmond", dataset_description: "120_Richmond", env_sample_source_id: 20, project_id: 6>]
-    #     counts_per_taxon_per_d = {"Bacteria;Firmicutes"=>[[2, 14]], "Bacteria;Proteobacteria"=>[[2, 84], [3, 2], [4, 1]], "Bacteria;Actinobacteria"=>[[2, 20], [3, 1], [4, 1]], "Bacteria;Planctomycetes"=>[[2, 2]], "Bacteria;Bacteroidetes"=>[[2, 5]], "Organelle;Chloroplast"=>[[2, 2]], "Bacteria;Deinococcus-Thermus"=>[[2, 1]], "Bacteria;Fusobacteria"=>[[2, 1]], "Bacteria;Verrucomicrobia"=>[[2, 1]], "Bacteria;phylum_NA"=>[[2, 1]]}
-    #     @taxonomy_by_site_hash = {"Bacteria;Firmicutes"=>[[2, 14]], "Bacteria;Proteobacteria"=>[[2, 84], [3, 2], [4, 1]], "Bacteria;Actinobacteria"=>[[2, 20], [3, 1], [4, 1]], "Bacteria;Planctomycetes"=>[[2, 2]], "Bacteria;Bacteroidetes"=>[[2, 5]], "Organelle;Chloroplast"=>[[2, 2]], "Bacteria;Deinococcus-Thermus"=>[[2, 1]], "Bacteria;Fusobacteria"=>[[2, 1]], "Bacteria;Verrucomicrobia"=>[[2, 1]], "Bacteria;phylum_NA"=>[[2, 1]]}
-    #     
-    d_ids = params[:dataset_ids]
-    # d_ids
-    # HERE stop
-  end
-  # def fill_in_zeros(tax_hash)
-  # 
-  #   tax_hash.each do |tax, pj_hash| 
-  #     @ordered_projects.each do |pj| 
-  #       if not pj_hash.include?(pj[:pname]) then
-  #         # add the empty project
-  #         pj_hash.merge!(pj[:pname] => {})
-  #       end
-  #     end
-  # 
-  #     pj_hash.each do |p, ds_hash|
-  #       #puts 'ds_hash '+ds_hash.inspect
-  #       @ordered_projects.each do |pj| 
-  #         
-  #         pj[:datasets].each do |ds|
-  #           
-  #           if p==pj[:pname] and not ds_hash.include?(ds[:dname]) then    
-  #             ds_hash.merge!(ds[:dname] => 0)
-  #           end
-  #         end
-  #       end
-  # 
-  #     end
-  #     #puts 'pj_hash '+pj_hash.inspect 
-  #   end
-  #   return tax_hash
-  # end
- 
+
 #
 #  GET DATASET COUNTS
 #
