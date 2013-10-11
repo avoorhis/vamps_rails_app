@@ -270,6 +270,22 @@ def get_counts_per_taxon_per_d(taxon_string_by_rank_per_d)
   all_counts = Hash.new{|hash, key| hash[key] = []}
   taxon_string_by_rank_per_d.each do |dataset_id, t_arr|
     res = t_arr.group_by {|t| t.join(";")}.map{|k,v| [k, v.length]}
+    
+    
+    all_counts1 = Hash.new{|hash, key| hash[key] = {}}
+    d_id = params[:dataset_ids]
+
+    all_taxon_string_by_rank_per_d = taxon_string_by_rank_per_d.values[0].uniq
+    # puts "all_taxon_string_by_rank_per_d = " + all_taxon_string_by_rank_per_d.inspect
+    # all_taxon_string_by_rank_per_d = [["Bacteria", "Firmicutes"], ["Bacteria", "Proteobacteria"], ["Bacteria", "Actinobacteria"], ["Bacteria", "Planctomycetes"], ["Bacteria", "Bacteroidetes"], ["Organelle", "Chloroplast"], ["Bacteria", "Deinococcus-Thermus"], ["Bacteria", "Fusobacteria"], ["Bacteria", "Verrucomicrobia"], ["Bacteria", "phylum_NA"]]
+    d_id.each do |i|
+      all_taxon_string_by_rank_per_d.each do |t|
+        puts "t = #{t.inspect}; i = #{i.inspect}"
+        all_counts1[t.join(";")][i.to_i] = 0
+      end
+    end
+    
+    # flatten
 
     res.each do |taxa, count|
       d_cnt = []
@@ -277,7 +293,13 @@ def get_counts_per_taxon_per_d(taxon_string_by_rank_per_d)
       d_cnt << dataset_id
       d_cnt << count 
       all_counts[taxa] << d_cnt
+      # HERE!!!
+      # puts "dataset_id = " + dataset_id.to_s
+      all_counts1[taxa][dataset_id] = count 
     end
+    puts "all_counts1 = " + all_counts1.inspect
+    all_counts1 = {"Bacteria;Firmicutes"=>{2=>14, 3=>0, 4=>0}, "Bacteria;Proteobacteria"=>{2=>84, 3=>0, 4=>0}, "Bacteria;Actinobacteria"=>{2=>20, 3=>0, 4=>0}, "Bacteria;Planctomycetes"=>{2=>2, 3=>0, 4=>0}, "Bacteria;Bacteroidetes"=>{2=>5, 3=>0, 4=>0}, "Organelle;Chloroplast"=>{2=>2, 3=>0, 4=>0}, "Bacteria;Deinococcus-Thermus"=>{2=>1, 3=>0, 4=>0}, "Bacteria;Fusobacteria"=>{2=>1, 3=>0, 4=>0}, "Bacteria;Verrucomicrobia"=>{2=>1, 3=>0, 4=>0}, "Bacteria;phylum_NA"=>{2=>1, 3=>0, 4=>0}}
+    
   end
   # puts "all_counts = " + all_counts.inspect
   # {"Bacteria;Proteobacteria"=>[[3, 2], [4, 1]], "Bacteria;Actinobacteria"=>[[3, 1], [4, 1]]}
