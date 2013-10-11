@@ -13,34 +13,15 @@ class VisualizationController < ApplicationController
 
     # @ordered_projects, @ordered_datasets = create_ordered_datasets() 
     @choosen_projects_w_d    = get_choosen_projects_w_d()
-    
-    # @datasets_by_project_all = make_datasets_by_project_hash()
-    # 
-    # d_ids = params[:dataset_ids] #TODO: take the ids from params[:dataset] and move to the main
-    # @datasets_per_pr = Dataset.all.find(d_ids) #TODO: move to the main
-    
-    # p_ids = params[:project_ids] 
-    # p_o = @datasets_by_project_all.select {|p_o| p_o.attributes["id"] if p_ids.include? p_o.attributes["id"].to_s }
+    @dat_counts              = get_dataset_counts()
+    # get_counts_per_dataset_id
 
-    # puts "choosen_projects_w_d = " + @choosen_projects_w_d.inspect
-    # puts "p_o.size = " + p_o.size.to_s
-    # puts "datasets_by_project_all.size = " + @datasets_by_project_all.size.to_s
-    # 
-    # puts "choosen_datasets_per_pr = " + @choosen_datasets_per_pr.inspect
-    # puts 'ordered_projects: ' +@ordered_projects.inspect
-    # puts 'ordered_datasets: ' +@ordered_datasets.inspect
-    #puts 'ordered datasets list: ' +@ds_id_list.inspect
-    #puts 'Which is a better format: '
-    #puts '  this? a simple hash: ' + @master_sample_data.inspect
-    #puts '  Or this? an array of hashes: '+@master_sample_data2.inspect
-
-    @nas         = params[:nas]
-    #domains  = Array[params[:bacteria], params[:archaea], params[:eukarya], params[:organelle], params[:unknown]]
-    domains      = params[:domains]
-    @domains     = domains.compact
+    @nas     = params[:nas]
+    domains  = params[:domains]
+    @domains = domains.compact
     
-    rank_id = params[:tax_id]
-    rank_obj = Rank.find(rank_id)
+    rank_id      = params[:tax_id]
+    rank_obj     = Rank.find(rank_id)
     @rank_number = rank_obj.rank_number
     @rank_name   = rank_obj.rank
     
