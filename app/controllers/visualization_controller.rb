@@ -13,8 +13,6 @@ class VisualizationController < ApplicationController
 
     # @ordered_projects, @ordered_datasets = create_ordered_datasets() 
     @choosen_projects_w_d    = get_choosen_projects_w_d()
-    @dat_counts              = get_dataset_counts()
-    # get_counts_per_dataset_id
 
     @nas     = params[:nas]
     domains  = params[:domains]
@@ -28,6 +26,7 @@ class VisualizationController < ApplicationController
     @view        = params[:view]
     @taxonomy_by_site_hash = get_data_using_rails_object()
     puts "@taxonomy_by_site_hash = " + @taxonomy_by_site_hash.inspect
+    @dat_counts  = get_dataset_counts()
 
     if params[:view]      == "heatmap"
       render :heatmap
@@ -102,21 +101,25 @@ class VisualizationController < ApplicationController
 #
 #
 
-def get_seq_ids()
+def get_seq_i()
   my_pdrs = SequencePdrInfo.where(dataset_id: params["dataset_ids"])
 
-  seq_ids_per_d = Hash.new{|hash, key| hash[key] = []}
+  seq_ids_n_cnt_per_d = Hash.new{|hash, key| hash[key] = {}}
   my_pdrs.each do |pdr|
-      seq_ids_per_d[pdr.dataset_id] << pdr.sequence_id
+      seq_ids_n_cnt_per_d[pdr.dataset_id][pdr.sequence_id] = pdr.seq_count
   end
-  return seq_ids_per_d
+  # puts "URA seq_ids_n_cnt_per_d =  " + seq_ids_n_cnt_per_d.inspect
+  # seq_ids_n_cnt_per_d =  {2=>{1=>100, 2=>652436, 
+  return seq_ids_n_cnt_per_d
 end
 
-def get_uniq_seq_info_ids(seq_ids_per_d)
+def get_uniq_seq_info_ids(seq_ids_n_cnt_per_d)
   uniq_seq_info_ids_per_d = Hash.new{|hash, key| hash[key] = []}
-  seq_ids_per_d.each do |dataset_id, seq_id_arr|
-      uniq_seq_info_ids_per_d[dataset_id] << SequenceUniqInfo.where(sequence_id: seq_id_arr)
+  seq_ids_n_cnt_per_d.each do |dataset_id, seq_i_hash|
+    # puts "URA, seq_i_hash = " + seq_i_hash.keys().inspect
+      uniq_seq_info_ids_per_d[dataset_id] << SequenceUniqInfo.where(sequence_id: seq_i_hash.keys())
   end
+  # puts "uniq_seq_info_ids_per_d = " + uniq_seq_info_ids_per_d.inspect
   return uniq_seq_info_ids_per_d
 end
 
@@ -133,8 +136,8 @@ def get_taxonomy_ids_per_d(uniq_seq_info_ids_per_d)
 end
 
 def get_taxonomy_per_d()
-  seq_ids_per_d           = get_seq_ids()  
-  uniq_seq_info_ids_per_d = get_uniq_seq_info_ids(seq_ids_per_d)
+  seq_ids_n_cnt_per_d     = get_seq_i()  
+  uniq_seq_info_ids_per_d = get_uniq_seq_info_ids(seq_ids_n_cnt_per_d)
   taxonomy_ids_per_d      = get_taxonomy_ids_per_d(uniq_seq_info_ids_per_d)
   
   taxonomy_per_d          = Hash.new{|hash, key| hash[key] = []}
