@@ -20,11 +20,11 @@ class VisualizationController < ApplicationController
       return      
     end
     
-    @rank_obj             = Rank.find(params[:tax_id])
-    @choosen_projects_w_d = get_choosen_projects_w_d()
-    my_pdrs               = SequencePdrInfo.where(dataset_id: params["dataset_ids"])
-    @dat_counts           = get_counts_per_dataset_id(my_pdrs)
-    @taxonomy_w_cnts_by_d = get_taxonomy_w_cnts_by_d()
+    @rank_obj              = Rank.find(params[:tax_id])
+    @choosen_projects_w_d  = get_choosen_projects_w_d()
+    my_pdrs                = SequencePdrInfo.where(dataset_id: params["dataset_ids"])
+    @counts_per_dataset_id = get_counts_per_dataset_id(my_pdrs)
+    @taxonomy_w_cnts_by_d  = get_taxonomy_w_cnts_by_d(my_pdrs)
     
     if params[:view]      == "heatmap"
       render :heatmap
@@ -46,7 +46,7 @@ class VisualizationController < ApplicationController
       choosen_p_w_d            = Hash.new
       choosen_p_w_d[:pid]      = p_obj[:id]
       choosen_p_w_d[:pname]    = p_obj[:project]
-      choosen_p_w_d[:datasets] = d_arr.select {|d| d.attributes["id"] if d_ids.include? d.attributes["id"].to_s}
+      choosen_p_w_d[:datasets] = d_arr.select {|d| d.attributes[:id] if d_ids.include? d.attributes[:id].to_s}
       project_array << choosen_p_w_d
     end
     return project_array
@@ -54,7 +54,7 @@ class VisualizationController < ApplicationController
   
   def get_choosen_projects()
     datasets_by_project_all = make_datasets_by_project_hash()
-    p_objs = datasets_by_project_all.select {|p_o| p_o.attributes["id"] if params[:project_ids].include? p_o.attributes["id"].to_s }
+    p_objs = datasets_by_project_all.select {|p_o| p_o.attributes[:id] if params[:project_ids].include? p_o.attributes[:id].to_s }
   end  
   
   def make_datasets_by_project_hash()
@@ -67,47 +67,29 @@ class VisualizationController < ApplicationController
     return datasets_by_project
   end
   
-  def get_ranks()
-    ranks      = Rank.all.sorted 
-    rank_names = []     
-    ranks.map {|rank| rank.rank == "class" ? rank_names << "klass" : rank_names << rank.rank}
-    rank_names.delete("NA")
-    return rank_names
-  end
-
-  def get_counts_per_dataset_id(my_pdrs)
-    dat_count = Array.new
-    
-    puts "my_pdrs = " + my_pdrs.inspect
-    # URA1, my_pdrs = #<ActiveRecord::Relation [#<SequencePdrInfo id: 1001, dataset_id: 3, sequence_id: 1001, seq_count: 2, classifier: "GAST", created_at: "2013-08-19 13:04:05", updated_at: "2013-08-19 13:04:05">, #<SequencePdrInfo id: 1085, dataset_id: 3, sequence_id: 1002, seq_count: 103, classifier: "GAST", created_at: "2013-08-19 13:04:05", updated_at: "2013-08-19 13:04:05">, #<SequencePdrInfo id: 1414, dataset_id: 3, sequence_id: 1004, seq_count: 8, classifier: "GAST", created_at: "2013-08-19 13:04:05", updated_at: "2013-08-19 13:04:05">, #<SequencePdrInfo id: 1619, dataset_id: 3, sequence_id: 1005, seq_count: 203, classifier: "GAST", created_at: "2013-08-19 13:04:05", updated_at: "2013-08-19 13:04:05">, #<SequencePdrInfo id: 1908, dataset_id: 3, sequence_id: 1007, seq_count: 3, classifier: "GAST", created_at: "2013-08-19 13:04:05", updated_at: "2013-08-19 13:04:05">]>
-    
-    my_pdrs.each do |v|
-      interm_hash = Hash.new
-      interm_hash["dataset_id"]  = v.attributes["dataset_id"]
-      interm_hash["sequence_id"] = v.attributes["sequence_id"]
-      interm_hash["seq_count"]   = v.attributes["seq_count"]
-      
-      dat_count << interm_hash
-    end
-    puts "URA100: dat_count = " + dat_count.inspect
-    # dat_count = [
-    #     {"dataset_id"=>3, "sequence_id"=>1001, "seq_count"=>2},
-    #     {"dataset_id"=>3, "sequence_id"=>1002, "seq_count"=>103},
-    #     
-    # end
-    
-    return dat_count
-  end
-
   def dataset_not_choosen()
     redirect_to visualization_index_path, :alert => 'Choose some data!'
   end
   
-  def get_taxonomy_w_cnts_by_d()
+  def get_taxonomy_w_cnts_by_d(my_pdrs)
     rank_names                  = get_rank_names()    
-    taxonomy_per_d              = get_taxonomy_per_d()
+    taxonomy_per_d              = get_taxonomy_per_d(my_pdrs)
     puts "taxonomy_per_d = " + taxonomy_per_d.inspect
     
+  end
+
+  def get_counts_per_dataset_id(my_pdrs)
+    counts_per_dataset_id = Hash.new
+    
+    my_pdrs.each do |d|
+      if counts_per_dataset_id[d.attributes[:dataset_id]].nil? 
+        counts_per_dataset_id[d.attributes[:dataset_id]] = d.attributes[:seq_count]
+      else
+        counts_per_dataset_id[d.attributes[:dataset_id]] += d.attributes[:seq_count]
+      end
+    end
+
+    return counts_per_dataset_id
   end
 
   # todo: make one call!
