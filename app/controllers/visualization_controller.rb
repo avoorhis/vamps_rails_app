@@ -76,22 +76,27 @@ class VisualizationController < ApplicationController
   end
 
   def get_counts_per_dataset_id(my_pdrs)
-    dat_count = Hash.new
-    datasets_per_pr = get_choosen_datasets_per_pr() #TODO: move to the main
-    puts "URA1, my_pdrs = " + my_pdrs.inspect
+    dat_count = Array.new
+    
+    puts "my_pdrs = " + my_pdrs.inspect
     # URA1, my_pdrs = #<ActiveRecord::Relation [#<SequencePdrInfo id: 1001, dataset_id: 3, sequence_id: 1001, seq_count: 2, classifier: "GAST", created_at: "2013-08-19 13:04:05", updated_at: "2013-08-19 13:04:05">, #<SequencePdrInfo id: 1085, dataset_id: 3, sequence_id: 1002, seq_count: 103, classifier: "GAST", created_at: "2013-08-19 13:04:05", updated_at: "2013-08-19 13:04:05">, #<SequencePdrInfo id: 1414, dataset_id: 3, sequence_id: 1004, seq_count: 8, classifier: "GAST", created_at: "2013-08-19 13:04:05", updated_at: "2013-08-19 13:04:05">, #<SequencePdrInfo id: 1619, dataset_id: 3, sequence_id: 1005, seq_count: 203, classifier: "GAST", created_at: "2013-08-19 13:04:05", updated_at: "2013-08-19 13:04:05">, #<SequencePdrInfo id: 1908, dataset_id: 3, sequence_id: 1007, seq_count: 3, classifier: "GAST", created_at: "2013-08-19 13:04:05", updated_at: "2013-08-19 13:04:05">]>
     
-    res = my_pdrs.group_by {|i| i.attributes["dataset_id"]}
-    puts "res = " + res.inspect
-    datasets_per_pr.map {|d| sum = 0; res.map {|spi| spi.map {|s| sum += spi.seq_count} }; dat_count[d.id] = sum }
-    #TODO: NoMethodError (undefined method `seq_count' for #<Array:0x007fda5f85ed28>):
+    my_pdrs.each do |v|
+      interm_hash = Hash.new
+      interm_hash["dataset_id"]  = v.attributes["dataset_id"]
+      interm_hash["sequence_id"] = v.attributes["sequence_id"]
+      interm_hash["seq_count"]   = v.attributes["seq_count"]
+      
+      dat_count << interm_hash
+    end
+    puts "URA100: dat_count = " + dat_count.inspect
+    # dat_count = [
+    #     {"dataset_id"=>3, "sequence_id"=>1001, "seq_count"=>2},
+    #     {"dataset_id"=>3, "sequence_id"=>1002, "seq_count"=>103},
+    #     
+    # end
     
-    puts "dat_count = " + dat_count.inspect
     return dat_count
-  end
-
-  def get_choosen_datasets_per_pr()
-    Dataset.all.find(params[:dataset_ids])
   end
 
   def dataset_not_choosen()
