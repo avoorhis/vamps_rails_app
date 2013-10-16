@@ -15,7 +15,7 @@ module TaxaCountHelper
     puts "URA3 = dat_counts_seq: " + dat_counts_seq.inspect
     
     taxonomies = get_taxonomies(dat_counts_seq)
-    puts "\nHHH: " + taxonomies.inspect
+    puts "\nHHH: taxonomies = " + taxonomies.inspect
     #<ActiveRecord::Relation [#<Taxonomy id: 82, domain_id: 2, phylum_id: 3, klass_id: 3, order_id: 16, family_id: 18, genus_id: 129, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 96, domain_id: 2, phylum_id: 4, klass_id: 32, order_id: 5, family_id: 52, genus_id: 76, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 137, domain_id: 2, phylum_id: 3, klass_id: 5, order_id: 65, family_id: 129, genus_id: 129, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">]>
     # TODO: create taxonomy per dataset first? or keep tax_id and get dataset_id?
     tax_dict = Hash.new{|hash, key| hash[key] = {}}
@@ -52,7 +52,24 @@ module TaxaCountHelper
       tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][t_o[:order_id]][t_o[:family_id]][t_o[:genus_id]][t_o[:species_id]][t_o[:strain_id]] = {}
       tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][t_o[:order_id]][t_o[:family_id]][t_o[:genus_id]][t_o[:species_id]][t_o[:strain_id]][:datasets_ids] = {}      
     end
-    puts "\nPPP: " + tax_dict.inspect
+    puts "\nPPP: tax_dict = " + tax_dict.inspect
+
+    taxonomies.each do |t_o|
+        arr_h = dat_counts_seq.select{|d| d[:taxonomy_id] == t_o[:id]}
+        arr_h.each do |a|
+          puts "arr_h = " + a.inspect
+          if tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]].nil?
+            knt = a[:seq_count]
+          else
+          # puts 'tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]] = ' + tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]].inspect
+            knt = tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]] + a[:seq_count]
+          end
+          puts "a[:dataset_id] = #{a[:dataset_id].inspect}, knt = " + knt.inspect
+          tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]] = knt
+        end
+    end
+    puts "tax_dict = " + tax_dict.inspect
+    # tax_dict = {2=>{:datasets_ids=>{3=>13, 4=>6}, 3=>{:datasets_ids=>{}, 3=>{:datasets_ids=>{}, 16=>{:datasets_ids=>{}, 18=>{:datasets_ids=>{}, 129=>{:datasets_ids=>{}, 1=>{:datasets_ids=>{}, 4=>{:datasets_ids=>{}}}}}}}, 5=>{:datasets_ids=>{}, 65=>{:datasets_ids=>{}, 129=>{:datasets_ids=>{}, 129=>{:datasets_ids=>{}, 1=>{:datasets_ids=>{}, 4=>{:datasets_ids=>{}}}}}}}}, 4=>{:datasets_ids=>{}, 32=>{:datasets_ids=>{}, 5=>{:datasets_ids=>{}, 52=>{:datasets_ids=>{}, 76=>{:datasets_ids=>{}, 1=>{:datasets_ids=>{}, 4=>{:datasets_ids=>{}}}}}}}}}}
     
     # a = dat_counts_seq.group_by{|i| i[:dataset_id]}
     # .map {|i| i[:taxonomy_id]}
