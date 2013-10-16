@@ -126,8 +126,9 @@ module TaxaCountHelper
         puts "\na[:dataset_id] = " + a[:dataset_id].inspect
         puts "\na[:seq_count] = " + a[:dataset_id].inspect
         puts "\nt_o[:id] = " + t_o[:id].inspect
+        
+        recursive_hash_call(tax_dict)
 
-          
         tax_dict_next = tax_dict[my_arr[1]][:datasets_ids]
         tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
         
@@ -156,27 +157,26 @@ module TaxaCountHelper
     return tax_dict
   end
   
+  def recursive_hash_call(tax_dict)
+    tax_dict.each do |key, value|
+      puts "key = #{key.inspect}, value = #{value.inspect}"
+      # tax_dict_next = tax_dict[my_arr[1]][:datasets_ids]
+      # tax_dict_next = tax_dict[my_arr[1]][:datasets_ids]
+      # tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
+      
+      recursive_hash_call(value) if value.is_a? Hash
+    end 
+  end
+  
+  
   def get_knt(tax_dict_next, a)  
     if tax_dict_next[a[:dataset_id]].is_a? Numeric
-      puts 'tax_dict_next[a[:dataset_id]] = ' + tax_dict_next[a[:dataset_id]].inspect
+      # puts 'tax_dict_next[a[:dataset_id]] = ' + tax_dict_next[a[:dataset_id]].inspect
       knt = tax_dict_next[a[:dataset_id]] + a[:seq_count]
     else
       knt = a[:seq_count]
     end
     return knt
-  end
-  
-  def add_cnts_to_tax_dict(seq_count, tax_dict_next)
-    puts "\nseq_count = #{seq_count.inspect},  tax_dict_next = "  + tax_dict_next.inspect
-    
-    if tax_dict_next.is_a? Numeric
-      puts 'tax_dict_next = ' + tax_dict_next.inspect
-      knt = tax_dict_next + seq_count
-    else
-      knt = seq_count
-    end
-    # puts "a[:dataset_id] = #{a[:dataset_id].inspect}, knt = " + knt.inspect
-    tax_dict_next = knt    
   end
   
 end
