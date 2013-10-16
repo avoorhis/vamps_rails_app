@@ -18,40 +18,50 @@ module TaxaCountHelper
     puts "\nHHH: taxonomies = " + taxonomies.inspect
     #<ActiveRecord::Relation [#<Taxonomy id: 82, domain_id: 2, phylum_id: 3, klass_id: 3, order_id: 16, family_id: 18, genus_id: 129, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 96, domain_id: 2, phylum_id: 4, klass_id: 32, order_id: 5, family_id: 52, genus_id: 76, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 137, domain_id: 2, phylum_id: 3, klass_id: 5, order_id: 65, family_id: 129, genus_id: 129, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">]>
     # TODO: create taxonomy per dataset first? or keep tax_id and get dataset_id?
-    tax_dict = Hash.new{|hash, key| hash[key] = {}}
+    # tax_dict = Hash.new{|hash, key| hash[key] = {}}
+    
+    tax_dict = Hash.recursive
+    # @date[month][day][hours][min][sec] = 1
     taxonomies.each do |t_o|
       tax_dict[t_o[:domain_id]][:datasets_ids] = {}
-    end
-    
-    taxonomies.each do |t_o|
       tax_dict[t_o[:domain_id]][t_o[:phylum_id]] = {}
       tax_dict[t_o[:domain_id]][t_o[:phylum_id]][:datasets_ids] = {}      
       
     end
-    taxonomies.each do |t_o|
-      tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]] = {}
-      tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][:datasets_ids] = {}            
-    end
-    taxonomies.each do |t_o|
-      tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][t_o[:order_id]] = {}
-      tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][t_o[:order_id]][:datasets_ids] = {}      
-    end
-    taxonomies.each do |t_o|
-      tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][t_o[:order_id]][t_o[:family_id]] = {}
-      tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][t_o[:order_id]][t_o[:family_id]][:datasets_ids] = {}      
-    end
-    taxonomies.each do |t_o|
-      tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][t_o[:order_id]][t_o[:family_id]][t_o[:genus_id]] = {}
-      tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][t_o[:order_id]][t_o[:family_id]][t_o[:genus_id]][:datasets_ids] = {}      
-    end
-    taxonomies.each do |t_o|
-      tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][t_o[:order_id]][t_o[:family_id]][t_o[:genus_id]][t_o[:species_id]] = {}
-      tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][t_o[:order_id]][t_o[:family_id]][t_o[:genus_id]][t_o[:species_id]][:datasets_ids] = {}      
-    end
-    taxonomies.each do |t_o|
-      tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][t_o[:order_id]][t_o[:family_id]][t_o[:genus_id]][t_o[:species_id]][t_o[:strain_id]] = {}
-      tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][t_o[:order_id]][t_o[:family_id]][t_o[:genus_id]][t_o[:species_id]][t_o[:strain_id]][:datasets_ids] = {}      
-    end
+    
+    # taxonomies.each do |t_o|
+    #   tax_dict[t_o[:domain_id]][:datasets_ids] = {}
+    # end
+    # 
+    # taxonomies.each do |t_o|
+    #   tax_dict[t_o[:domain_id]][t_o[:phylum_id]] = {}
+    #   tax_dict[t_o[:domain_id]][t_o[:phylum_id]][:datasets_ids] = {}      
+    #   
+    # end
+    # taxonomies.each do |t_o|
+    #   tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]] = {}
+    #   tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][:datasets_ids] = {}            
+    # end
+    # taxonomies.each do |t_o|
+    #   tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][t_o[:order_id]] = {}
+    #   tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][t_o[:order_id]][:datasets_ids] = {}      
+    # end
+    # taxonomies.each do |t_o|
+    #   tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][t_o[:order_id]][t_o[:family_id]] = {}
+    #   tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][t_o[:order_id]][t_o[:family_id]][:datasets_ids] = {}      
+    # end
+    # taxonomies.each do |t_o|
+    #   tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][t_o[:order_id]][t_o[:family_id]][t_o[:genus_id]] = {}
+    #   tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][t_o[:order_id]][t_o[:family_id]][t_o[:genus_id]][:datasets_ids] = {}      
+    # end
+    # taxonomies.each do |t_o|
+    #   tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][t_o[:order_id]][t_o[:family_id]][t_o[:genus_id]][t_o[:species_id]] = {}
+    #   tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][t_o[:order_id]][t_o[:family_id]][t_o[:genus_id]][t_o[:species_id]][:datasets_ids] = {}      
+    # end
+    # taxonomies.each do |t_o|
+    #   tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][t_o[:order_id]][t_o[:family_id]][t_o[:genus_id]][t_o[:species_id]][t_o[:strain_id]] = {}
+    #   tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][t_o[:order_id]][t_o[:family_id]][t_o[:genus_id]][t_o[:species_id]][t_o[:strain_id]][:datasets_ids] = {}      
+    # end
     puts "\nPPP: tax_dict = " + tax_dict.inspect
 
     taxonomies.each do |t_o|
@@ -123,4 +133,10 @@ module TaxaCountHelper
     Taxonomy.where(id: tax_ids)
   end
   
+end
+
+class Hash
+  def self.recursive
+    new { |hash, key| hash[key] = recursive }
+  end
 end
