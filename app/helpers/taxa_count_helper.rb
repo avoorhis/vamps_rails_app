@@ -111,52 +111,80 @@ module TaxaCountHelper
     return tax_dict
   end
 
-  def add_empty_key(tax_dict_hash)
-    new_hash = {:datasets_ids => {}}
-    puts "new_hash " + new_hash.inspect
-    tax_dict_hash.each do |key, value| 
-      puts "\nvalue before " + value.inspect
-      if value.empty?
-        value = new_hash
-        break
-      else
-        value.merge!(new_hash)
-        add_empty_key(value)
-      end
-      puts "value after " + value.inspect
-      
-    end
-    return tax_dict_hash
-  end
-  
   def add_dataset_ids(taxonomies, tax_dict, dat_counts_seq)
    puts "INSIDE: "
    puts "taxonomies" + taxonomies.inspect
    puts "\ntax_dict" + tax_dict.inspect
    puts "\ndat_counts_seq" + dat_counts_seq.inspect
-   # res = add_empty_key(tax_dict)
-   # puts "res = " + res.inspect
    taxonomies.each do |t_o|
       arr_h = dat_counts_seq.select{|d| d[:taxonomy_id] == t_o[:id]}
+      my_arr = t_o.attributes.values
+      
       arr_h.each do |a|
         puts "\narr_h = " + a.inspect
-        puts "-" * 5
-        puts "tax_dict[t_o[:domain_id]][:datasets_ids] = " + tax_dict[t_o[:domain_id]][:datasets_ids].inspect
-        puts "tax_dict[#{t_o[:domain_id]}][:datasets_ids] = " + tax_dict[t_o[:domain_id]][:datasets_ids].inspect
-        puts "-" * 5
-        
-        if tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]].is_a? Numeric
-          puts 'tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]] = ' + tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]].inspect
-          knt = tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]] + a[:seq_count]
-        else
-          knt = a[:seq_count]
-        end
-        puts "a[:dataset_id] = #{a[:dataset_id].inspect}, knt = " + knt.inspect
-        tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]] = knt
+      
+          tax_dict_next = tax_dict[my_arr[1]][:datasets_ids][a[:dataset_id]]
+          if tax_dict[my_arr[1]][:datasets_ids][a[:dataset_id]].is_a? Numeric
+            puts 'tax_dict[my_arr[1]][:datasets_ids][a[:dataset_id]] = ' + tax_dict[my_arr[1]][:datasets_ids][a[:dataset_id]].inspect
+            knt = tax_dict[my_arr[1]][:datasets_ids][a[:dataset_id]] + a[:seq_count]
+          else
+            knt = a[:seq_count]
+          end
+          puts "a[:dataset_id] = #{a[:dataset_id].inspect}, knt = " + knt.inspect
+          tax_dict[my_arr[1]][:datasets_ids][a[:dataset_id]] = knt
+      
+      
+        # tax_dict = add_cnts_to_tax_dict(a[:seq_count], tax_dict_next)
+        # tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][:datasets_ids][a[:dataset_id]]
+        # tax_dict = add_cnts_to_tax_dict(a[:seq_count], tax_dict_next)
+        # tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][:datasets_ids][a[:dataset_id]]
+        # tax_dict = add_cnts_to_tax_dict(a[:seq_count], tax_dict_next)
+        # tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][my_arr[4]][:datasets_ids][a[:dataset_id]]
+        # tax_dict = add_cnts_to_tax_dict(a[:seq_count], tax_dict_next)
+        # tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][my_arr[4]][my_arr[5]][:datasets_ids][a[:dataset_id]]
+        # tax_dict = add_cnts_to_tax_dict(a[:seq_count], tax_dict_next)
+        # tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][my_arr[4]][my_arr[5]][my_arr[6]][:datasets_ids][a[:dataset_id]]
+        # tax_dict = add_cnts_to_tax_dict(a[:seq_count], tax_dict_next)
+        # tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][my_arr[4]][my_arr[5]][my_arr[6]][my_arr[7]][:datasets_ids][a[:dataset_id]]
+        # tax_dict = add_cnts_to_tax_dict(a[:seq_count], tax_dict_next)
+        # tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][my_arr[4]][my_arr[5]][my_arr[6]][my_arr[7]][my_arr[8]][:datasets_ids][a[:dataset_id]]
+        # add_cnts_to_tax_dict(a[:seq_count], tax_dict_next)
       end
+      
+      
+      
+      # arr_h.each do |a|
+      #   puts "\narr_h = " + a.inspect
+      #   puts "-" * 5
+      #   puts "tax_dict[t_o[:domain_id]][:datasets_ids] = " + tax_dict[t_o[:domain_id]][:datasets_ids].inspect
+      #   puts "tax_dict[#{t_o[:domain_id]}][:datasets_ids] = " + tax_dict[t_o[:domain_id]][:datasets_ids].inspect
+      #   puts "-" * 5
+      #   
+      #   if tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]].is_a? Numeric
+      #     puts 'tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]] = ' + tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]].inspect
+      #     knt = tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]] + a[:seq_count]
+      #   else
+      #     knt = a[:seq_count]
+      #   end
+      #   puts "a[:dataset_id] = #{a[:dataset_id].inspect}, knt = " + knt.inspect
+      #   tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]] = knt
+      # end
     end
     puts "\ntax_dict RES = "  + tax_dict.inspect
     return tax_dict
+  end
+  
+  def add_cnts_to_tax_dict(seq_count, tax_dict_next)
+    puts "\nseq_count = #{seq_count.inspect},  tax_dict_next = "  + tax_dict_next.inspect
+    
+    if tax_dict_next.is_a? Numeric
+      puts 'tax_dict_next = ' + tax_dict_next.inspect
+      knt = tax_dict_next + seq_count
+    else
+      knt = seq_count
+    end
+    # puts "a[:dataset_id] = #{a[:dataset_id].inspect}, knt = " + knt.inspect
+    tax_dict_next = knt    
   end
   
 end
