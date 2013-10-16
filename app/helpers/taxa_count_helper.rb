@@ -122,16 +122,12 @@ module TaxaCountHelper
       
       arr_h.each do |a|
         puts "\narr_h = " + a.inspect
-      
-          tax_dict_next = tax_dict[my_arr[1]][:datasets_ids][a[:dataset_id]]
-          if tax_dict[my_arr[1]][:datasets_ids][a[:dataset_id]].is_a? Numeric
-            puts 'tax_dict[my_arr[1]][:datasets_ids][a[:dataset_id]] = ' + tax_dict[my_arr[1]][:datasets_ids][a[:dataset_id]].inspect
-            knt = tax_dict[my_arr[1]][:datasets_ids][a[:dataset_id]] + a[:seq_count]
-          else
-            knt = a[:seq_count]
-          end
-          puts "a[:dataset_id] = #{a[:dataset_id].inspect}, knt = " + knt.inspect
-          tax_dict[my_arr[1]][:datasets_ids][a[:dataset_id]] = knt
+          
+        tax_dict_next = tax_dict[my_arr[1]][:datasets_ids]
+        knt = get_knt(tax_dict_next, a)
+        
+        puts "a[:dataset_id] = #{a[:dataset_id].inspect}, knt = " + knt.inspect
+        tax_dict_next[a[:dataset_id]] = knt
       
       
         # tax_dict = add_cnts_to_tax_dict(a[:seq_count], tax_dict_next)
@@ -172,6 +168,16 @@ module TaxaCountHelper
     end
     puts "\ntax_dict RES = "  + tax_dict.inspect
     return tax_dict
+  end
+  
+  def get_knt(tax_dict_next, a)  
+    if tax_dict_next[a[:dataset_id]].is_a? Numeric
+      puts 'tax_dict_next[a[:dataset_id]] = ' + tax_dict_next[a[:dataset_id]].inspect
+      knt = tax_dict_next[a[:dataset_id]] + a[:seq_count]
+    else
+      knt = a[:seq_count]
+    end
+    return knt
   end
   
   def add_cnts_to_tax_dict(seq_count, tax_dict_next)
