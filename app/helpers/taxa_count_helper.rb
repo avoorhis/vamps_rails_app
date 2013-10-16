@@ -26,45 +26,9 @@ module TaxaCountHelper
     
     # tax_dict = Hash.recursive
     tax_dict = create_tax_dat_hash(taxonomies)
-      # (0...rank_id_names.length).each do |a|
-      #   puts "a = " + a.inspect
-      # end
-    
-    # taxonomies.each do |t_o|
-    #   tax_dict[t_o[:domain_id]][:datasets_ids] = {}
-    # end
-    # 
-    # taxonomies.each do |t_o|
-    #   tax_dict[t_o[:domain_id]][t_o[:phylum_id]] = {}
-    #   tax_dict[t_o[:domain_id]][t_o[:phylum_id]][:datasets_ids] = {}      
-    #   
-    # end
-    # taxonomies.each do |t_o|
-    #   tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]] = {}
-    #   tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][:datasets_ids] = {}            
-    # end
-    # taxonomies.each do |t_o|
-    #   tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][t_o[:order_id]] = {}
-    #   tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][t_o[:order_id]][:datasets_ids] = {}      
-    # end
-    # taxonomies.each do |t_o|
-    #   tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][t_o[:order_id]][t_o[:family_id]] = {}
-    #   tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][t_o[:order_id]][t_o[:family_id]][:datasets_ids] = {}      
-    # end
-    # taxonomies.each do |t_o|
-    #   tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][t_o[:order_id]][t_o[:family_id]][t_o[:genus_id]] = {}
-    #   tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][t_o[:order_id]][t_o[:family_id]][t_o[:genus_id]][:datasets_ids] = {}      
-    # end
-    # taxonomies.each do |t_o|
-    #   tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][t_o[:order_id]][t_o[:family_id]][t_o[:genus_id]][t_o[:species_id]] = {}
-    #   tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][t_o[:order_id]][t_o[:family_id]][t_o[:genus_id]][t_o[:species_id]][:datasets_ids] = {}      
-    # end
-    # taxonomies.each do |t_o|
-    #   tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][t_o[:order_id]][t_o[:family_id]][t_o[:genus_id]][t_o[:species_id]][t_o[:strain_id]] = {}
-    #   tax_dict[t_o[:domain_id]][t_o[:phylum_id]][t_o[:klass_id]][t_o[:order_id]][t_o[:family_id]][t_o[:genus_id]][t_o[:species_id]][t_o[:strain_id]][:datasets_ids] = {}      
-    # end
     puts "\nPPP: tax_dict = " + tax_dict.inspect
-
+    
+    tax_dict = add_dataset_ids(taxonomies, tax_dict, dat_counts_seq)
     # taxonomies.each do |t_o|
     #     arr_h = dat_counts_seq.select{|d| d[:taxonomy_id] == t_o[:id]}
     #     arr_h.each do |a|
@@ -79,7 +43,7 @@ module TaxaCountHelper
     #       tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]] = knt
     #     end
     # end
-    # puts "tax_dict = " + tax_dict.inspect
+    puts "2) tax_dict = " + tax_dict.inspect
     # tax_dict = {2=>{:datasets_ids=>{3=>13, 4=>6}, 3=>{:datasets_ids=>{}, 3=>{:datasets_ids=>{}, 16=>{:datasets_ids=>{}, 18=>{:datasets_ids=>{}, 129=>{:datasets_ids=>{}, 1=>{:datasets_ids=>{}, 4=>{:datasets_ids=>{}}}}}}}, 5=>{:datasets_ids=>{}, 65=>{:datasets_ids=>{}, 129=>{:datasets_ids=>{}, 129=>{:datasets_ids=>{}, 1=>{:datasets_ids=>{}, 4=>{:datasets_ids=>{}}}}}}}}, 4=>{:datasets_ids=>{}, 32=>{:datasets_ids=>{}, 5=>{:datasets_ids=>{}, 52=>{:datasets_ids=>{}, 76=>{:datasets_ids=>{}, 1=>{:datasets_ids=>{}, 4=>{:datasets_ids=>{}}}}}}}}}}
     
     # a = dat_counts_seq.group_by{|i| i[:dataset_id]}
@@ -139,14 +103,59 @@ module TaxaCountHelper
     taxonomies.each do |t|
       puts t.inspect
       my_arr = t.attributes.values
-      # t.attributes.each do |attr_name, attr_value|
-      #   my_arr << attr_value
-      # end
       puts "my_arr = " + my_arr.inspect
 
       tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][my_arr[4]][my_arr[5]][my_arr[6]][my_arr[7]][my_arr[8]] = {}
       puts "tax_dict = " + tax_dict.inspect
     end
+    return tax_dict
+  end
+
+  def add_empty_key(tax_dict_hash)
+    new_hash = {:datasets_ids => {}}
+    puts "new_hash " + new_hash.inspect
+    tax_dict_hash.each do |key, value| 
+      puts "\nvalue before " + value.inspect
+      if value.empty?
+        value = new_hash
+        break
+      else
+        value.merge!(new_hash)
+        add_empty_key(value)
+      end
+      puts "value after " + value.inspect
+      
+    end
+    return tax_dict_hash
+  end
+  
+  def add_dataset_ids(taxonomies, tax_dict, dat_counts_seq)
+   puts "INSIDE: "
+   puts "taxonomies" + taxonomies.inspect
+   puts "\ntax_dict" + tax_dict.inspect
+   puts "\ndat_counts_seq" + dat_counts_seq.inspect
+   # res = add_empty_key(tax_dict)
+   # puts "res = " + res.inspect
+   taxonomies.each do |t_o|
+      arr_h = dat_counts_seq.select{|d| d[:taxonomy_id] == t_o[:id]}
+      arr_h.each do |a|
+        puts "\narr_h = " + a.inspect
+        puts "-" * 5
+        puts "tax_dict[t_o[:domain_id]][:datasets_ids] = " + tax_dict[t_o[:domain_id]][:datasets_ids].inspect
+        puts "tax_dict[#{t_o[:domain_id]}][:datasets_ids] = " + tax_dict[t_o[:domain_id]][:datasets_ids].inspect
+        puts "-" * 5
+        
+        if tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]].is_a? Numeric
+          puts 'tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]] = ' + tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]].inspect
+          knt = tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]] + a[:seq_count]
+        else
+          knt = a[:seq_count]
+        end
+        puts "a[:dataset_id] = #{a[:dataset_id].inspect}, knt = " + knt.inspect
+        tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]] = knt
+      end
+    end
+    puts "\ntax_dict RES = "  + tax_dict.inspect
     return tax_dict
   end
   
