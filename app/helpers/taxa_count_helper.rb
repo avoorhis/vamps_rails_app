@@ -121,13 +121,17 @@ module TaxaCountHelper
       my_arr = t_o.attributes.values
       
       arr_h.each do |a|
+        puts "-" * 10
         puts "\narr_h = " + a.inspect
+        puts "\na[:dataset_id] = " + a[:dataset_id].inspect
+        puts "\na[:seq_count] = " + a[:dataset_id].inspect
+        puts "\nt_o[:id] = " + t_o[:id].inspect
+
           
         tax_dict_next = tax_dict[my_arr[1]][:datasets_ids]
-        knt = get_knt(tax_dict_next, a)
-        
-        puts "a[:dataset_id] = #{a[:dataset_id].inspect}, knt = " + knt.inspect
-        tax_dict_next[a[:dataset_id]] = knt
+        tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
+        tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][:datasets_ids]
+        tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
       
       
         # tax_dict = add_cnts_to_tax_dict(a[:seq_count], tax_dict_next)
