@@ -19,13 +19,13 @@ module TaxaCountHelper
     #<ActiveRecord::Relation [#<Taxonomy id: 82, domain_id: 2, phylum_id: 3, klass_id: 3, order_id: 16, family_id: 18, genus_id: 129, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 96, domain_id: 2, phylum_id: 4, klass_id: 32, order_id: 5, family_id: 52, genus_id: 76, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 137, domain_id: 2, phylum_id: 3, klass_id: 5, order_id: 65, family_id: 129, genus_id: 129, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">]>
     # TODO: create taxonomy per dataset first? or keep tax_id and get dataset_id?
     # tax_dict = Hash.new{|hash, key| hash[key] = {}}
-    rank_id_names = make_rank_id_names()
-    puts "rank_id_names = " + rank_id_names.inspect
+    # rank_id_names = make_rank_id_names()
+    # puts "rank_id_names = " + rank_id_names.inspect
     # puts "rank_names = " + rank_names.inspect
     # rank_names = ["domain", "phylum", "klass", "order", "family", "genus", "species", "strain"]
     
-    tax_dict = Hash.recursive
-    create_tax_dat_hash(taxonomies)
+    # tax_dict = Hash.recursive
+    tax_dict = create_tax_dat_hash(taxonomies)
       # (0...rank_id_names.length).each do |a|
       #   puts "a = " + a.inspect
       # end
@@ -65,21 +65,21 @@ module TaxaCountHelper
     # end
     puts "\nPPP: tax_dict = " + tax_dict.inspect
 
-    taxonomies.each do |t_o|
-        arr_h = dat_counts_seq.select{|d| d[:taxonomy_id] == t_o[:id]}
-        arr_h.each do |a|
-          puts "arr_h = " + a.inspect
-          if tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]].nil?
-            knt = a[:seq_count]
-          else
-          # puts 'tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]] = ' + tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]].inspect
-            knt = tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]] + a[:seq_count]
-          end
-          puts "a[:dataset_id] = #{a[:dataset_id].inspect}, knt = " + knt.inspect
-          tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]] = knt
-        end
-    end
-    puts "tax_dict = " + tax_dict.inspect
+    # taxonomies.each do |t_o|
+    #     arr_h = dat_counts_seq.select{|d| d[:taxonomy_id] == t_o[:id]}
+    #     arr_h.each do |a|
+    #       puts "arr_h = " + a.inspect
+    #       if tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]].nil?
+    #         knt = a[:seq_count]
+    #       else
+    #       # puts 'tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]] = ' + tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]].inspect
+    #         knt = tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]] + a[:seq_count]
+    #       end
+    #       puts "a[:dataset_id] = #{a[:dataset_id].inspect}, knt = " + knt.inspect
+    #       tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]] = knt
+    #     end
+    # end
+    # puts "tax_dict = " + tax_dict.inspect
     # tax_dict = {2=>{:datasets_ids=>{3=>13, 4=>6}, 3=>{:datasets_ids=>{}, 3=>{:datasets_ids=>{}, 16=>{:datasets_ids=>{}, 18=>{:datasets_ids=>{}, 129=>{:datasets_ids=>{}, 1=>{:datasets_ids=>{}, 4=>{:datasets_ids=>{}}}}}}}, 5=>{:datasets_ids=>{}, 65=>{:datasets_ids=>{}, 129=>{:datasets_ids=>{}, 129=>{:datasets_ids=>{}, 1=>{:datasets_ids=>{}, 4=>{:datasets_ids=>{}}}}}}}}, 4=>{:datasets_ids=>{}, 32=>{:datasets_ids=>{}, 5=>{:datasets_ids=>{}, 52=>{:datasets_ids=>{}, 76=>{:datasets_ids=>{}, 1=>{:datasets_ids=>{}, 4=>{:datasets_ids=>{}}}}}}}}}}
     
     # a = dat_counts_seq.group_by{|i| i[:dataset_id]}
@@ -134,49 +134,22 @@ module TaxaCountHelper
     Taxonomy.where(id: tax_ids)
   end
 
-  def make_rank_id_names() 
-    rank_names    = get_rank_names()
-    rank_id_names = Array.new
-    rank_names.map{|r| rni = r.to_s + "_id"; rank_id_names << rni.to_sym}
-    # puts "rank_id_names = " + rank_id_names.inspect
-    # puts rank_id_names.length
-    # puts "\n" + "*" * 8
-    return rank_id_names
-  end
-
-  # def create_tax_dat_hash(taxonomies, rank_id_names)
-  #    tax_dict  = Hash.recursive
-  #    rank_id_names.each do |rank_id_name|
-  #      temp_dict = Hash.new
-  #      taxonomies.each do |t_o|
-  #        temp_dict[t_o[rank_id_name]] = {}
-  #        temp_dict[t_o[rank_id_name]][:datasets_ids] = {}
-  #        puts "temp_dict = " + temp_dict.inspect
-  #      end
-  #      # tax_dict = {value => tempHash}
-  #      
-  #    end
-  #  end
-  #  # taxonomies.each do |t_o|
-  #  #   tax_dict[t_o[:domain_id]][t_o[:phylum_id]] = {}
-  #  #   tax_dict[t_o[:domain_id]][t_o[:phylum_id]][:datasets_ids] = {}      
-  #  #   
-  #  # end
-  #  
   def create_tax_dat_hash(taxonomies)
     tax_dict = Hash.recursive
     taxonomies.each do |t|
       puts t.inspect
-      my_arr = []
-      t.attributes.each do |attr_name, attr_value|
-        my_arr << attr_value
-      end
-      puts my_arr
+      my_arr = t.attributes.values
+      # t.attributes.each do |attr_name, attr_value|
+      #   my_arr << attr_value
+      # end
+      puts "my_arr = " + my_arr.inspect
 
       tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][my_arr[4]][my_arr[5]][my_arr[6]][my_arr[7]][my_arr[8]] = {}
       puts "tax_dict = " + tax_dict.inspect
     end
+    return tax_dict
   end
+  
 end
 
 class Hash
