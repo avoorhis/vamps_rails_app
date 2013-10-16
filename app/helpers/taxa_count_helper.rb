@@ -130,45 +130,27 @@ module TaxaCountHelper
           
         tax_dict_next = tax_dict[my_arr[1]][:datasets_ids]
         tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
+        
         tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][:datasets_ids]
         tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
       
       
-        # tax_dict = add_cnts_to_tax_dict(a[:seq_count], tax_dict_next)
-        # tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][:datasets_ids][a[:dataset_id]]
-        # tax_dict = add_cnts_to_tax_dict(a[:seq_count], tax_dict_next)
-        # tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][:datasets_ids][a[:dataset_id]]
-        # tax_dict = add_cnts_to_tax_dict(a[:seq_count], tax_dict_next)
-        # tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][my_arr[4]][:datasets_ids][a[:dataset_id]]
-        # tax_dict = add_cnts_to_tax_dict(a[:seq_count], tax_dict_next)
-        # tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][my_arr[4]][my_arr[5]][:datasets_ids][a[:dataset_id]]
-        # tax_dict = add_cnts_to_tax_dict(a[:seq_count], tax_dict_next)
-        # tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][my_arr[4]][my_arr[5]][my_arr[6]][:datasets_ids][a[:dataset_id]]
-        # tax_dict = add_cnts_to_tax_dict(a[:seq_count], tax_dict_next)
-        # tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][my_arr[4]][my_arr[5]][my_arr[6]][my_arr[7]][:datasets_ids][a[:dataset_id]]
-        # tax_dict = add_cnts_to_tax_dict(a[:seq_count], tax_dict_next)
-        # tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][my_arr[4]][my_arr[5]][my_arr[6]][my_arr[7]][my_arr[8]][:datasets_ids][a[:dataset_id]]
-        # add_cnts_to_tax_dict(a[:seq_count], tax_dict_next)
-      end
+        tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][:datasets_ids]
+				tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
+        tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][:datasets_ids]
+				tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
+        tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][my_arr[4]][:datasets_ids]
+				tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
+        tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][my_arr[4]][my_arr[5]][:datasets_ids]
+				tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
+        tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][my_arr[4]][my_arr[5]][my_arr[6]][:datasets_ids]
+				tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
+        tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][my_arr[4]][my_arr[5]][my_arr[6]][my_arr[7]][:datasets_ids]
+				tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
+        #         tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][my_arr[4]][my_arr[5]][my_arr[6]][my_arr[7]][my_arr[8]][:datasets_ids]
+        # tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
+			end
       
-      
-      
-      # arr_h.each do |a|
-      #   puts "\narr_h = " + a.inspect
-      #   puts "-" * 5
-      #   puts "tax_dict[t_o[:domain_id]][:datasets_ids] = " + tax_dict[t_o[:domain_id]][:datasets_ids].inspect
-      #   puts "tax_dict[#{t_o[:domain_id]}][:datasets_ids] = " + tax_dict[t_o[:domain_id]][:datasets_ids].inspect
-      #   puts "-" * 5
-      #   
-      #   if tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]].is_a? Numeric
-      #     puts 'tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]] = ' + tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]].inspect
-      #     knt = tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]] + a[:seq_count]
-      #   else
-      #     knt = a[:seq_count]
-      #   end
-      #   puts "a[:dataset_id] = #{a[:dataset_id].inspect}, knt = " + knt.inspect
-      #   tax_dict[t_o[:domain_id]][:datasets_ids][a[:dataset_id]] = knt
-      # end
     end
     puts "\ntax_dict RES = "  + tax_dict.inspect
     return tax_dict
