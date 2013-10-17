@@ -120,15 +120,22 @@ module TaxaCountHelper
       dat_counts_seq_t = dat_counts_seq.select{|d| d[:taxonomy_id] == t_o[:id]}
       t_vals = t_o.attributes.values
       
-      dat_counts_seq_t.each do |a|
+      dat_counts_seq_t.each do |dat_cnt_seq_t|
         puts "-" * 10
-        puts "\narr_h = " + a.inspect
-        puts "\na[:dataset_id] = " + a[:dataset_id].inspect
-        puts "\na[:seq_count] = " + a[:dataset_id].inspect
+        puts "\narr_h = " + dat_cnt_seq_t.inspect
+        puts "\ndat_cnt_seq_t[:dataset_id] = " + dat_cnt_seq_t[:dataset_id].inspect
+        puts "\ndat_cnt_seq_t[:seq_count] = " + dat_cnt_seq_t[:dataset_id].inspect
         puts "\nt_o[:id] = " + t_o[:id].inspect
                 
-        taxon_str = [2, 3, 5]
-        add_dat_id_knt_to_tax_dict(tax_dict, taxon_str)
+        # taxon_str = [2, 3, 5]
+        taxon_str = []
+        (1..7).each do |n|
+          taxon_str = t_vals[1, n]
+          puts "\n------------\nn = #{n}, taxon_str, t_vals[1, n] = " + taxon_str.inspect
+          puts "taxon_str.length = " + taxon_str.length.inspect
+          add_dat_id_knt_to_tax_dict(tax_dict, taxon_str, dat_cnt_seq_t)
+        end
+
 
         # get_tax_dict_by_arr(tax_dict, taxon_str)
         
@@ -198,15 +205,16 @@ module TaxaCountHelper
     return tax_dict
   end
   
-  def add_dat_id_knt_to_tax_dict(tax_dict, taxon_str)
-    # d = Hash.recursive
+  def add_dat_id_knt_to_tax_dict(tax_dict, taxon_str, dat_cnt_seq_t)
     d = tax_dict
     
     for i in (0...taxon_str.length)
       puts "\n-----\ni == #{i}"
       if i == taxon_str.length - 1
-          puts "i == taxon_str.length - 1"
-          # d[taxon_str[i]][:datasets_ids]
+        puts "i == taxon_str.length - 1"
+        # d[taxon_str[i]][:datasets_ids] = {}
+        tax_dict_next = d[taxon_str[i]][:datasets_ids]
+        tax_dict_next[dat_cnt_seq_t[:dataset_id]] = get_knt(tax_dict_next, dat_cnt_seq_t)          
       end
       puts "ELSE: taxon_str[i] = " + taxon_str[i].inspect
       puts "d[taxon_str[i]] = " + d[taxon_str[i]].inspect
