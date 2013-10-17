@@ -102,10 +102,10 @@ module TaxaCountHelper
     tax_dict = Hash.recursive
     taxonomies.each do |t|
       puts t.inspect
-      my_arr = t.attributes.values
-      puts "my_arr = " + my_arr.inspect
+      t_vals = t.attributes.values
+      puts "t_vals = " + t_vals.inspect
 
-      tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][my_arr[4]][my_arr[5]][my_arr[6]][my_arr[7]][my_arr[8]] = {}
+      tax_dict[t_vals[1]][t_vals[2]][t_vals[3]][t_vals[4]][t_vals[5]][t_vals[6]][t_vals[7]][t_vals[8]] = {}
       puts "tax_dict = " + tax_dict.inspect
     end
     return tax_dict
@@ -117,44 +117,72 @@ module TaxaCountHelper
    puts "\ntax_dict" + tax_dict.inspect
    puts "\ndat_counts_seq" + dat_counts_seq.inspect
    taxonomies.each do |t_o|
-      arr_h = dat_counts_seq.select{|d| d[:taxonomy_id] == t_o[:id]}
-      my_arr = t_o.attributes.values
+      dat_counts_seq_t = dat_counts_seq.select{|d| d[:taxonomy_id] == t_o[:id]}
+      t_vals = t_o.attributes.values
       
-      arr_h.each do |a|
+      dat_counts_seq_t.each do |a|
         puts "-" * 10
-        # puts "\narr_h = " + a.inspect
-        # puts "\na[:dataset_id] = " + a[:dataset_id].inspect
-        # puts "\na[:seq_count] = " + a[:dataset_id].inspect
-        # puts "\nt_o[:id] = " + t_o[:id].inspect
+        puts "\narr_h = " + a.inspect
+        puts "\na[:dataset_id] = " + a[:dataset_id].inspect
+        puts "\na[:seq_count] = " + a[:dataset_id].inspect
+        puts "\nt_o[:id] = " + t_o[:id].inspect
+        
+        
+        # taxon_str = [2, 3]
         
         # recursive_hash_call(tax_dict)
-        
-        (1..8).each do |n|
-          # puts "n = " + n.inspect
-          # puts "nested_hash_key(tax_dict, my_arr[n])"
-          puts nested_hash_key(tax_dict, my_arr[n])
+        keys_arr = []
+        d        = Hash.recursive
+        (1..7).each do |n|
+          keys_arr = t_vals[1, n]
+          puts "n = #{n}, keys_arr, t_vals[1, n] = " + keys_arr.inspect
+          puts "keys_arr.length = " + keys_arr.length.inspect
+          (0..keys_arr.length).each do |i|
+            puts "=" * 5
+            puts "i = " + i.inspect
+            if i == keys_arr.length - 1
+                # puts d[taxon_str[i]]['__datasets__']
+                puts "keys_arr[i] = " + keys_arr.inspect
+                tax_dict_next = d[keys_arr[i]][:datasets_ids]
+                tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
+                
+                puts "0" * 5
+                puts "0) d = " + d.inspect
+            elsif i == 0
+                d = tax_dict[keys_arr[0]]
+                d[keys_arr[i]][:datasets_ids] = {}
+                
+                puts "1) d = " + d.inspect
+            else
+                d = d[keys_arr[i]]
+                puts "2) d = " + d.inspect
+            end
+            
+          end
+          
+          
         end
         
-        #         tax_dict_next = tax_dict[my_arr[1]][:datasets_ids]
+        #         tax_dict_next = tax_dict[t_vals[1]][:datasets_ids]
         #         tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
         #         
-        #         tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][:datasets_ids]
+        #         tax_dict_next = tax_dict[t_vals[1]][t_vals[2]][:datasets_ids]
         #         tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
         #       
         #       
-        #         tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][:datasets_ids]
+        #         tax_dict_next = tax_dict[t_vals[1]][t_vals[2]][:datasets_ids]
         # tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
-        #         tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][:datasets_ids]
+        #         tax_dict_next = tax_dict[t_vals[1]][t_vals[2]][t_vals[3]][:datasets_ids]
         # tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
-        #         tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][my_arr[4]][:datasets_ids]
+        #         tax_dict_next = tax_dict[t_vals[1]][t_vals[2]][t_vals[3]][t_vals[4]][:datasets_ids]
         # tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
-        #         tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][my_arr[4]][my_arr[5]][:datasets_ids]
+        #         tax_dict_next = tax_dict[t_vals[1]][t_vals[2]][t_vals[3]][t_vals[4]][t_vals[5]][:datasets_ids]
         # tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
-        #         tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][my_arr[4]][my_arr[5]][my_arr[6]][:datasets_ids]
+        #         tax_dict_next = tax_dict[t_vals[1]][t_vals[2]][t_vals[3]][t_vals[4]][t_vals[5]][t_vals[6]][:datasets_ids]
         # tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
-        #         tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][my_arr[4]][my_arr[5]][my_arr[6]][my_arr[7]][:datasets_ids]
+        #         tax_dict_next = tax_dict[t_vals[1]][t_vals[2]][t_vals[3]][t_vals[4]][t_vals[5]][t_vals[6]][t_vals[7]][:datasets_ids]
         # tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
-        #         tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][my_arr[4]][my_arr[5]][my_arr[6]][my_arr[7]][my_arr[8]][:datasets_ids]
+        #         tax_dict_next = tax_dict[t_vals[1]][t_vals[2]][t_vals[3]][t_vals[4]][t_vals[5]][t_vals[6]][t_vals[7]][t_vals[8]][:datasets_ids]
         # tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
 			end
       
@@ -162,6 +190,24 @@ module TaxaCountHelper
     puts "\ntax_dict RES = "  + tax_dict.inspect
     return tax_dict
   end
+  
+  def nested_hash_add_id(obj, key, tax_dict)
+    if obj.respond_to?(:key?) && obj.key?(key)
+      # puts "HHH1: = tax_dict[key].inspect" + tax_dict[key].inspect
+      puts "HHH2: = obj[key] = " + obj[key].inspect
+      # tax_dict_next = tax_dict_next[my_arr[key]][:datasets_ids]
+      # tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
+      
+      # puts "HERE1 obj[key] = " + obj[key].inspect
+      key
+    elsif obj.respond_to?(:each)
+      r = nil
+      obj.find{ |*a| r = nested_hash_add_id(a.last, key, tax_dict) }
+      r
+    end
+  end
+  
+  
   
   def nested_hash_value(obj, key)
     if obj.respond_to?(:key?) && obj.key?(key)
@@ -198,6 +244,7 @@ module TaxaCountHelper
   
   
   def get_knt(tax_dict_next, a)  
+    puts "FROM get_knt: tax_dict_next = " + tax_dict_next.inspect
     if tax_dict_next[a[:dataset_id]].is_a? Numeric
       # puts 'tax_dict_next[a[:dataset_id]] = ' + tax_dict_next[a[:dataset_id]].inspect
       knt = tax_dict_next[a[:dataset_id]] + a[:seq_count]
