@@ -126,10 +126,11 @@ module TaxaCountHelper
         puts "\na[:dataset_id] = " + a[:dataset_id].inspect
         puts "\na[:seq_count] = " + a[:dataset_id].inspect
         puts "\nt_o[:id] = " + t_o[:id].inspect
-        
-        
-        taxon_str = [2, 3]
-        nested_hash_add_id(tax_dict, taxon_str)
+                
+        taxon_str = [2, 3, 5]
+        add_dat_id_knt_to_tax_dict(tax_dict, taxon_str)
+
+        # get_tax_dict_by_arr(tax_dict, taxon_str)
         
         # recursive_hash_call(tax_dict)
         # keys_arr = []
@@ -197,8 +198,25 @@ module TaxaCountHelper
     return tax_dict
   end
   
-  def nested_hash_add_id(tax_dict, taxon_str)
-    taxon_str = [2, 3]
+  def add_dat_id_knt_to_tax_dict(tax_dict, taxon_str)
+    # d = Hash.recursive
+    d = tax_dict
+    
+    for i in (0...taxon_str.length)
+      puts "\n-----\ni == #{i}"
+      if i == taxon_str.length - 1
+          puts "i == taxon_str.length - 1"
+          # d[taxon_str[i]][:datasets_ids]
+      end
+      puts "ELSE: taxon_str[i] = " + taxon_str[i].inspect
+      puts "d[taxon_str[i]] = " + d[taxon_str[i]].inspect
+      d = d[taxon_str[i]]      
+    end
+    puts "d = " + d.inspect          
+    d    
+  end
+  
+  def get_tax_dict_by_arr(tax_dict, taxon_str)
     d = Hash.recursive
     for i in (0...taxon_str.length)
       puts "\n-----\ni == #{i}"
