@@ -207,7 +207,6 @@ module TaxaCountHelper
   
   def add_dat_id_knt_to_tax_dict(tax_dict, taxon_str, dat_cnt_seq_t)
     d = tax_dict
-    
     for i in (0...taxon_str.length)
       puts "\n-----\ni == #{i}"
       if i == taxon_str.length - 1
@@ -217,10 +216,10 @@ module TaxaCountHelper
         tax_dict_next[dat_cnt_seq_t[:dataset_id]] = get_knt(tax_dict_next, dat_cnt_seq_t)          
       end
       puts "ELSE: taxon_str[i] = " + taxon_str[i].inspect
-      puts "d[taxon_str[i]] = " + d[taxon_str[i]].inspect
+      # puts "d[taxon_str[i]] = " + d[taxon_str[i]].inspect
       d = d[taxon_str[i]]      
     end
-    puts "d = " + d.inspect          
+    # puts "d = " + d.inspect          
     d    
   end
   
@@ -294,6 +293,8 @@ module TaxaCountHelper
     else
       knt = a[:seq_count]
     end
+    puts "a[:seq_count] = " + a[:seq_count].inspect
+    puts "a[:dataset_id] = #{a[:dataset_id].inspect}, knt = " + knt.inspect
     return knt
   end
   
