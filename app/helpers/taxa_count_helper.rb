@@ -78,12 +78,30 @@ module TaxaCountHelper
       puts t.inspect
       t_vals = t.attributes.values
       puts "t_vals = " + t_vals.inspect
-
-      tax_dict[t_vals[1]][t_vals[2]][t_vals[3]][t_vals[4]][t_vals[5]][t_vals[6]][t_vals[7]][t_vals[8]] = {}
+      # tax_dict = 
+      make_tax_dict(tax_dict, t_vals)
+      # tax_dict[t_vals[1]][t_vals[2]][t_vals[3]][t_vals[4]][t_vals[5]][t_vals[6]][t_vals[7]][t_vals[8]] = {}
       puts "tax_dict = " + tax_dict.inspect
     end
     return tax_dict
   end
+
+  def make_tax_dict(tax_dict, t_vals)
+    tax_dict[t_vals[1]][t_vals[2]][t_vals[3]][t_vals[4]][t_vals[5]][t_vals[6]][t_vals[7]][t_vals[8]] = {}
+  end
+
+  # def create_tax_dat_hash(taxonomies)
+  #   tax_dict = Hash.recursive
+  #   taxonomies.each do |t|
+  #     puts t.inspect
+  #     t_vals = t.attributes.values
+  #     puts "t_vals = " + t_vals.inspect
+  # 
+  #     tax_dict[t_vals[1]][t_vals[2]][t_vals[3]][t_vals[4]][t_vals[5]][t_vals[6]][t_vals[7]][t_vals[8]] = {}
+  #     puts "tax_dict = " + tax_dict.inspect
+  #   end
+  #   return tax_dict
+  # end
 
   def add_dataset_ids(taxonomies, tax_dict, dat_counts_seq)
    puts "INSIDE: "
@@ -143,40 +161,40 @@ module TaxaCountHelper
   
   
   
-  def nested_hash_value(obj, key)
-    if obj.respond_to?(:key?) && obj.key?(key)
-      obj[key]
-    elsif obj.respond_to?(:each)
-      r = nil
-      obj.find{ |*a| r=nested_hash_value(a.last,key) }
-      r
-    end
-  end
-
-  def nested_hash_key(obj, key)
-    if obj.respond_to?(:key?) && obj.key?(key)
-      # puts "HERE1 obj[key] = " + obj[key].inspect
-      key
-    elsif obj.respond_to?(:each)
-      r = nil
-      obj.find{ |*a| r=nested_hash_key(a.last, key) }
-      r
-    end
-  end
-  
-  
-  def recursive_hash_call(tax_dict)
-    tax_dict.each do |key, value|
-      puts "key = #{key.inspect}, value = #{value.inspect}"
-      # tax_dict_next = tax_dict[my_arr[1]][:datasets_ids]
-      # tax_dict_next = tax_dict[my_arr[1]][:datasets_ids]
-      # tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
-      
-      recursive_hash_call(value) if value.is_a? Hash
-    end 
-  end
-  
-  
+  # def nested_hash_value(obj, key)
+  #   if obj.respond_to?(:key?) && obj.key?(key)
+  #     obj[key]
+  #   elsif obj.respond_to?(:each)
+  #     r = nil
+  #     obj.find{ |*a| r=nested_hash_value(a.last,key) }
+  #     r
+  #   end
+  # end
+  # 
+  # def nested_hash_key(obj, key)
+  #   if obj.respond_to?(:key?) && obj.key?(key)
+  #     # puts "HERE1 obj[key] = " + obj[key].inspect
+  #     key
+  #   elsif obj.respond_to?(:each)
+  #     r = nil
+  #     obj.find{ |*a| r=nested_hash_key(a.last, key) }
+  #     r
+  #   end
+  # end
+  # 
+  # 
+  # def recursive_hash_call(tax_dict)
+  #   tax_dict.each do |key, value|
+  #     puts "key = #{key.inspect}, value = #{value.inspect}"
+  #     # tax_dict_next = tax_dict[my_arr[1]][:datasets_ids]
+  #     # tax_dict_next = tax_dict[my_arr[1]][:datasets_ids]
+  #     # tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
+  #     
+  #     recursive_hash_call(value) if value.is_a? Hash
+  #   end 
+  # end
+  # 
+  # 
   def get_knt(tax_dict_next, a)  
     puts "FROM get_knt: tax_dict_next = " + tax_dict_next.inspect
     if tax_dict_next[a[:dataset_id]].is_a? Numeric
