@@ -122,32 +122,38 @@ module TaxaCountHelper
       
       arr_h.each do |a|
         puts "-" * 10
-        puts "\narr_h = " + a.inspect
-        puts "\na[:dataset_id] = " + a[:dataset_id].inspect
-        puts "\na[:seq_count] = " + a[:dataset_id].inspect
-        puts "\nt_o[:id] = " + t_o[:id].inspect
+        # puts "\narr_h = " + a.inspect
+        # puts "\na[:dataset_id] = " + a[:dataset_id].inspect
+        # puts "\na[:seq_count] = " + a[:dataset_id].inspect
+        # puts "\nt_o[:id] = " + t_o[:id].inspect
         
-        recursive_hash_call(tax_dict)
-
-        tax_dict_next = tax_dict[my_arr[1]][:datasets_ids]
-        tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
+        # recursive_hash_call(tax_dict)
         
-        tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][:datasets_ids]
-        tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
-      
-      
-        tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][:datasets_ids]
-				tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
-        tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][:datasets_ids]
-				tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
-        tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][my_arr[4]][:datasets_ids]
-				tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
-        tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][my_arr[4]][my_arr[5]][:datasets_ids]
-				tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
-        tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][my_arr[4]][my_arr[5]][my_arr[6]][:datasets_ids]
-				tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
-        tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][my_arr[4]][my_arr[5]][my_arr[6]][my_arr[7]][:datasets_ids]
-				tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
+        (1..8).each do |n|
+          # puts "n = " + n.inspect
+          # puts "nested_hash_key(tax_dict, my_arr[n])"
+          puts nested_hash_key(tax_dict, my_arr[n])
+        end
+        
+        #         tax_dict_next = tax_dict[my_arr[1]][:datasets_ids]
+        #         tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
+        #         
+        #         tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][:datasets_ids]
+        #         tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
+        #       
+        #       
+        #         tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][:datasets_ids]
+        # tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
+        #         tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][:datasets_ids]
+        # tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
+        #         tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][my_arr[4]][:datasets_ids]
+        # tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
+        #         tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][my_arr[4]][my_arr[5]][:datasets_ids]
+        # tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
+        #         tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][my_arr[4]][my_arr[5]][my_arr[6]][:datasets_ids]
+        # tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
+        #         tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][my_arr[4]][my_arr[5]][my_arr[6]][my_arr[7]][:datasets_ids]
+        # tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
         #         tax_dict_next = tax_dict[my_arr[1]][my_arr[2]][my_arr[3]][my_arr[4]][my_arr[5]][my_arr[6]][my_arr[7]][my_arr[8]][:datasets_ids]
         # tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
 			end
@@ -156,6 +162,28 @@ module TaxaCountHelper
     puts "\ntax_dict RES = "  + tax_dict.inspect
     return tax_dict
   end
+  
+  def nested_hash_value(obj, key)
+    if obj.respond_to?(:key?) && obj.key?(key)
+      obj[key]
+    elsif obj.respond_to?(:each)
+      r = nil
+      obj.find{ |*a| r=nested_hash_value(a.last,key) }
+      r
+    end
+  end
+
+  def nested_hash_key(obj, key)
+    if obj.respond_to?(:key?) && obj.key?(key)
+      # puts "HERE1 obj[key] = " + obj[key].inspect
+      key
+    elsif obj.respond_to?(:each)
+      r = nil
+      obj.find{ |*a| r=nested_hash_key(a.last, key) }
+      r
+    end
+  end
+  
   
   def recursive_hash_call(tax_dict)
     tax_dict.each do |key, value|
