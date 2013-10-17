@@ -137,26 +137,32 @@ module TaxaCountHelper
           keys_arr = t_vals[1, n]
           puts "n = #{n}, keys_arr, t_vals[1, n] = " + keys_arr.inspect
           puts "keys_arr.length = " + keys_arr.length.inspect
-          (0..keys_arr.length).each do |i|
+          (0..n).each do |i|
             puts "=" * 5
             puts "i = " + i.inspect
-            if i == keys_arr.length - 1
+            
+            if (i == keys_arr.length - 1)
+               # && (i > 0)
                 # puts d[taxon_str[i]]['__datasets__']
                 puts "keys_arr[i] = " + keys_arr.inspect
                 tax_dict_next = d[keys_arr[i]][:datasets_ids]
                 tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
                 
+                puts "1) d = " + d.inspect
+            end
+            
+            
+            if i == 0
+                d = tax_dict[keys_arr[0]]
+                # tax_dict_next = d[keys_arr[i]][:datasets_ids]
+                # tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
                 puts "0" * 5
                 puts "0) d = " + d.inspect
-            elsif i == 0
-                d = tax_dict[keys_arr[0]]
-                d[keys_arr[i]][:datasets_ids] = {}
-                
-                puts "1) d = " + d.inspect
-            else
-                d = d[keys_arr[i]]
-                puts "2) d = " + d.inspect
+                next
             end
+            
+            d = d[keys_arr[i]]
+            puts "2) d = " + d.inspect
             
           end
           
