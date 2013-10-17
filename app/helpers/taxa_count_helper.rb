@@ -128,47 +128,47 @@ module TaxaCountHelper
         puts "\nt_o[:id] = " + t_o[:id].inspect
         
         
-        # taxon_str = [2, 3]
+        taxon_str = [2, 3]
+        nested_hash_add_id(tax_dict, taxon_str)
         
         # recursive_hash_call(tax_dict)
-        keys_arr = []
-        d        = Hash.recursive
-        (1..7).each do |n|
-          keys_arr = t_vals[1, n]
-          puts "n = #{n}, keys_arr, t_vals[1, n] = " + keys_arr.inspect
-          puts "keys_arr.length = " + keys_arr.length.inspect
-          (0..n).each do |i|
-            puts "=" * 5
-            puts "i = " + i.inspect
-            
-            if (i == keys_arr.length - 1)
-               # && (i > 0)
-                # puts d[taxon_str[i]]['__datasets__']
-                puts "keys_arr[i] = " + keys_arr.inspect
-                tax_dict_next = d[keys_arr[i]][:datasets_ids]
-                tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
-                
-                puts "1) d = " + d.inspect
-            end
-            
-            
-            if i == 0
-                d = tax_dict[keys_arr[0]]
-                # tax_dict_next = d[keys_arr[i]][:datasets_ids]
-                # tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
-                puts "0" * 5
-                puts "0) d = " + d.inspect
-                next
-            end
-            
-            d = d[keys_arr[i]]
-            puts "2) d = " + d.inspect
-            
-          end
-          
-          
-        end
-        
+        # keys_arr = []
+        # d        = Hash.recursive
+        # (1..7).each do |n|
+        #   keys_arr = t_vals[1, n]
+        #   puts "\n------------\nn = #{n}, keys_arr, t_vals[1, n] = " + keys_arr.inspect
+        #   puts "keys_arr.length = " + keys_arr.length.inspect
+        #   
+        #   # (0..n).each do |i|
+        #   #         puts "=" * 5
+        #   #         puts "i = " + i.inspect
+        #   #         if i == 0 && n == 1
+        #   #           
+        #   #             d = tax_dict[keys_arr[0]]
+        #   #             puts "0-1) d = " + d.inspect
+        #   #             tax_dict_next = d[:datasets_ids]
+        #   #             tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
+        #   #             puts "0" * 5
+        #   #             puts "0) d = " + d.inspect
+        #   #             # next
+        #   #         elsif (i > 0) && (i == keys_arr.length - 1)
+        #   #            # && (i > 0)
+        #   #             # puts d[taxon_str[i]]['__datasets__']
+        #   #             puts "keys_arr[i] = " + keys_arr.inspect
+        #   #             tax_dict_next = d[keys_arr[i]][:datasets_ids]
+        #   #             tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
+        #   #             
+        #   #             puts "1) d = " + d.inspect
+        #   #           else
+        #   #             d = d[keys_arr[i]] unless d[keys_arr[i]].empty?
+        #   #             puts "2) d = " + d.inspect
+        #   #           end
+        #   #         
+        #   #       end
+        #   #       
+        #   #       
+        # end
+        # 
         #         tax_dict_next = tax_dict[t_vals[1]][:datasets_ids]
         #         tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
         #         
@@ -197,20 +197,31 @@ module TaxaCountHelper
     return tax_dict
   end
   
-  def nested_hash_add_id(obj, key, tax_dict)
-    if obj.respond_to?(:key?) && obj.key?(key)
-      # puts "HHH1: = tax_dict[key].inspect" + tax_dict[key].inspect
-      puts "HHH2: = obj[key] = " + obj[key].inspect
-      # tax_dict_next = tax_dict_next[my_arr[key]][:datasets_ids]
-      # tax_dict_next[a[:dataset_id]] = get_knt(tax_dict_next, a)
+  def nested_hash_add_id(tax_dict, taxon_str)
+    taxon_str = [2, 3]
+    d = Hash.recursive
+    for i in (0...taxon_str.length)
+      puts "\n-----\ni == #{i}"
+      if i == taxon_str.length - 1
+          puts "i == taxon_str.length - 1"
+          # d[taxon_str[i]][:datasets_ids]
+      end
+
+      if i == 0
+        puts "if i == 0"
       
-      # puts "HERE1 obj[key] = " + obj[key].inspect
-      key
-    elsif obj.respond_to?(:each)
-      r = nil
-      obj.find{ |*a| r = nested_hash_add_id(a.last, key, tax_dict) }
-      r
+        d = tax_dict[taxon_str[0]]
+        puts "taxon_str[i] = " + taxon_str[i].inspect
+        puts "1) d = " + d.inspect          
+        next
+      end
+      
+      puts "ELSE: taxon_str[i] = " + taxon_str[i].inspect
+      puts "d[taxon_str[i]] = " + d[taxon_str[i]].inspect
+      d = d[taxon_str[i]]
     end
+    puts "d = " + d.inspect          
+    d
   end
   
   
