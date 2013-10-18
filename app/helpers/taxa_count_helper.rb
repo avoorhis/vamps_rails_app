@@ -18,16 +18,9 @@ module TaxaCountHelper
     puts "\nHHH: taxonomies = " + taxonomies.inspect
     #<ActiveRecord::Relation [#<Taxonomy id: 82, domain_id: 2, phylum_id: 3, klass_id: 3, order_id: 16, family_id: 18, genus_id: 129, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 96, domain_id: 2, phylum_id: 4, klass_id: 32, order_id: 5, family_id: 52, genus_id: 76, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">, #<Taxonomy id: 137, domain_id: 2, phylum_id: 3, klass_id: 5, order_id: 65, family_id: 129, genus_id: 129, species_id: 1, strain_id: 4, created_at: "2013-08-19 12:44:13", updated_at: "2013-08-19 12:44:13">]>
     # TODO: create taxonomy per dataset first? or keep tax_id and get dataset_id?
-    # tax_dict = Hash.new{|hash, key| hash[key] = {}}
-    # rank_id_names = make_rank_id_names()
-    # puts "rank_id_names = " + rank_id_names.inspect
-    # puts "rank_names = " + rank_names.inspect
-    # rank_names = ["domain", "phylum", "klass", "order", "family", "genus", "species", "strain"]
-    
-    # tax_dict = Hash.recursive
-    # tax_dict = create_tax_dat_hash(taxonomies)
+
     tax_dict_obj = TaxaCount.new
-    tax_dict = tax_dict_obj.create(taxonomies)
+    tax_dict = tax_dict_obj.create(taxonomies, tax_dict, dat_counts_seq)
     puts "\nPPP: tax_dict = " + tax_dict.inspect
     
     tax_dict = add_dataset_ids(taxonomies, tax_dict, dat_counts_seq)

@@ -10,16 +10,16 @@ class TaxaCount
     end
   end
   
-  def create(taxonomies)
-    tax_dict = Hash.recursive
-    taxonomies.each do |t|
-      puts t.inspect
-      t_vals = t.attributes.values
-      puts "t_vals = " + t_vals.inspect
-      tax_dict[t_vals[1]][t_vals[2]][t_vals[3]][t_vals[4]][t_vals[5]][t_vals[6]][t_vals[7]][t_vals[8]] = {}
-      puts "tax_dict = " + tax_dict.inspect
-    end
-    @tax_dict = tax_dict
+  def create(taxonomies, tax_dict, dat_counts_seq)
+    
+    @tax_ids_hash = create_tax_ids_hash(taxonomies)
+    
+    # tax_dict = Hash.recursive
+    # taxonomies.each do |t|
+    #   t_vals = t.attributes.values
+    #   tax_dict[t_vals[1]][t_vals[2]][t_vals[3]][t_vals[4]][t_vals[5]][t_vals[6]][t_vals[7]][t_vals[8]] = {}
+    # end
+    # @tax_dict = tax_dict
   end
   
   
@@ -66,7 +66,48 @@ class TaxaCount
   #   false
   # end
 
+  private
   
+  def create_tax_ids_hash(taxonomies)
+    tax_ids_hash = Hash.recursive
+    taxonomies.each do |t|
+      t_vals = t.attributes.values
+      tax_ids_hash[t_vals[1]][t_vals[2]][t_vals[3]][t_vals[4]][t_vals[5]][t_vals[6]][t_vals[7]][t_vals[8]] = {}
+    end
+    return tax_ids_hash
+  end
+  
+  
+  def add_dataset_ids(taxonomies, tax_dict, dat_counts_seq)
+   puts "INSIDE: "
+   puts "taxonomies" + taxonomies.inspect
+   puts "\ntax_dict" + tax_dict.inspect
+   puts "\ndat_counts_seq" + dat_counts_seq.inspect
+   taxonomies.each do |t_o|
+      dat_counts_seq_t = dat_counts_seq.select{|d| d[:taxonomy_id] == t_o[:id]}
+      
+      dat_counts_seq_t.each do |dat_cnt_seq_t|                
+        (1..7).each do |n|
+          add_dat_id_knt_to_tax_dict(tax_dict, t_o.attributes.values[1, n], dat_cnt_seq_t)
+        end
+			end      
+    end
+    puts "\ntax_dict RES = "  + tax_dict.inspect
+    return tax_dict
+  end
+  
+  def add_dat_id_knt_to_tax_dict(tax_dict, taxon_str, dat_cnt_seq_t)
+    d = tax_dict
+    for i in (0...taxon_str.length)
+      if i == taxon_str.length - 1
+        tax_dict_next = d[taxon_str[i]][:datasets_ids]
+        tax_dict_next[dat_cnt_seq_t[:dataset_id]] = get_knt(tax_dict_next, dat_cnt_seq_t)          
+      end
+      d = d[taxon_str[i]]      
+    end
+    d    
+  end
+
 
 end
 
