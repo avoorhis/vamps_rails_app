@@ -17,29 +17,29 @@ class TaxaCount
     
   # not tested yet
   def get_tax_hash_by_tax_ids(tax_hash, tax_ids)
-     tax_has_temp = Hash.recursive
+     tax_hash_temp = Hash.recursive
      for i in (0...tax_ids.length)
        puts "\n-----\ni == #{i}"
        if i == tax_ids.length - 1
            puts "i == tax_ids.length - 1"
-           # tax_has_temp[tax_ids[i]][:datasets_ids]
+           # tax_hash_temp[tax_ids[i]][:datasets_ids]
        end
 
        if i == 0
          puts "if i == 0"
 
-         tax_has_temp = tax_hash[tax_ids[0]]
+         tax_hash_temp = tax_hash[tax_ids[0]]
          puts "tax_ids[i] = " + tax_ids[i].inspect
-         puts "1) tax_has_temp = " + tax_has_temp.inspect          
+         puts "1) tax_hash_temp = " + tax_hash_temp.inspect          
          next
        end
 
        puts "ELSE: tax_ids[i] = " + tax_ids[i].inspect
-       puts "tax_has_temp[tax_ids[i]] = " + tax_has_temp[tax_ids[i]].inspect
-       tax_has_temp = tax_has_temp[tax_ids[i]]
+       puts "tax_hash_temp[tax_ids[i]] = " + tax_hash_temp[tax_ids[i]].inspect
+       tax_hash_temp = tax_hash_temp[tax_ids[i]]
      end
-     puts "tax_has_temp = " + tax_has_temp.inspect          
-     tax_has_temp
+     puts "tax_hash_temp = " + tax_hash_temp.inspect          
+     tax_hash_temp
   end
 
   private
@@ -51,8 +51,7 @@ class TaxaCount
       tax_ids_hash[t_vals[1]][t_vals[2]][t_vals[3]][t_vals[4]][t_vals[5]][t_vals[6]][t_vals[7]][t_vals[8]] = {}
     end
     return tax_ids_hash
-  end
-  
+  end  
   
   def add_dataset_ids(taxonomies, tax_hash, dat_counts_seq)
    taxonomies.each do |t_o|
@@ -68,15 +67,15 @@ class TaxaCount
   end
   
   def add_dat_id_knt_to_tax_hash(tax_hash, taxon_str, dat_cnt_seq_t)
-    tax_has_temp = tax_hash
+    tax_hash_temp = tax_hash
     for i in (0...taxon_str.length)
       if i == taxon_str.length - 1
-        tax_hash_next                             = tax_has_temp[taxon_str[i]][:datasets_ids]
+        tax_hash_next                             = tax_hash_temp[taxon_str[i]][:datasets_ids]
         tax_hash_next[dat_cnt_seq_t[:dataset_id]] = get_knt(tax_hash_next, dat_cnt_seq_t)          
       end
-      tax_has_temp = tax_has_temp[taxon_str[i]]      
+      tax_hash_temp = tax_hash_temp[taxon_str[i]]      
     end
-    tax_has_temp    
+    tax_hash_temp    
   end
   
   def get_knt(tax_hash_next, dat_cnt_seq_t)  
