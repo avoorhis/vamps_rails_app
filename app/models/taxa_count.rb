@@ -17,23 +17,14 @@ class TaxaCount
     
   # not tested yet
   def get_tax_hash_by_tax_ids(tax_hash, tax_ids)
-     tax_hash_temp = Hash.recursive
+     tax_hash_temp = tax_hash
      for i in (0...tax_ids.length)
        puts "\n-----\ni == #{i}"
        if i == tax_ids.length - 1
            puts "i == tax_ids.length - 1"
-           # tax_hash_temp[tax_ids[i]][:datasets_ids]
+           puts "URRA: tax_hash_temp[tax_ids[i]][:datasets_ids] = " + tax_hash_temp[tax_ids[i]][:datasets_ids].inspect 
        end
-
-       if i == 0
-         puts "if i == 0"
-
-         tax_hash_temp = tax_hash[tax_ids[0]]
-         puts "tax_ids[i] = " + tax_ids[i].inspect
-         puts "1) tax_hash_temp = " + tax_hash_temp.inspect          
-         next
-       end
-
+  
        puts "ELSE: tax_ids[i] = " + tax_ids[i].inspect
        puts "tax_hash_temp[tax_ids[i]] = " + tax_hash_temp[tax_ids[i]].inspect
        tax_hash_temp = tax_hash_temp[tax_ids[i]]
@@ -41,6 +32,28 @@ class TaxaCount
      puts "tax_hash_temp = " + tax_hash_temp.inspect          
      tax_hash_temp
   end
+  # 
+  # def get_tax_hash_by_tax_ids(tax_hash, taxon_str)
+  #    tax_hash_temp = Hash.recursive
+  #    # tax_hash
+  #    for i in (0...taxon_str.length)
+  #      if i == taxon_str.length - 1
+  #        puts "URA: tax_hash_temp[taxon_str[i]][:dataset_ids] = " + tax_hash_temp[taxon_str[i]][:dataset_ids].inspect
+  #        return tax_hash_temp[taxon_str[i]][:dataset_ids]
+  #        
+  #        # tax_hash_next                             = tax_hash_temp[taxon_str[i]][:datasets_ids]
+  #        # tax_hash_next[dat_cnt_seq_t[:dataset_id]] = get_knt(tax_hash_next, dat_cnt_seq_t)          
+  #      end
+  #      
+  #      if i == 0
+  #        tax_hash_temp = tax_hash_temp[taxon_str[0]]
+  #      end
+  #      
+  #      tax_hash_temp = tax_hash_temp[taxon_str[i]]      
+  #    end
+  #        
+  #  end
+  #    
 
   private
   
