@@ -1,6 +1,6 @@
 class TaxaCount 
 
-  attr_accessor :taxa_count_hash, :taxonomies
+  attr_accessor :taxa_count_per_d, :taxonomies
   
   # validates_presence_of :taxonomies
   
@@ -12,14 +12,8 @@ class TaxaCount
   
   def create(taxonomies, tax_dict, dat_counts_seq)
     
-    @tax_ids_hash = create_tax_ids_hash(taxonomies)
-    
-    # tax_dict = Hash.recursive
-    # taxonomies.each do |t|
-    #   t_vals = t.attributes.values
-    #   tax_dict[t_vals[1]][t_vals[2]][t_vals[3]][t_vals[4]][t_vals[5]][t_vals[6]][t_vals[7]][t_vals[8]] = {}
-    # end
-    # @tax_dict = tax_dict
+    tax_ids_hash      = create_tax_ids_hash(taxonomies)
+    @taxa_count_per_d = add_dataset_ids(taxonomies, tax_ids_hash, dat_counts_seq)
   end
   
   
@@ -48,23 +42,6 @@ class TaxaCount
      puts "d = " + d.inspect          
      d
   end
-  # include ActiveModel::Validations
-  # include ActiveModel::Conversion
-  # extend  ActiveModel::Naming
-  # 
-  # attr_accessor :dataset_id, :sequence_id, :taxonomy_id, :count_per_d
-  # 
-  # validates_presence_of :dataset_id, :sequence_id, :taxonomy_id, :count_per_d
-  # 
-  # def initialize(attributes = {})
-  #   attributes.each do |name, value|
-  #     send("#{name}=", value)
-  #   end
-  # end
-  # 
-  # def persisted?
-  #   false
-  # end
 
   private
   
@@ -107,6 +84,20 @@ class TaxaCount
     end
     d    
   end
+  
+  def get_knt(tax_dict_next, dat_cnt_seq_t)  
+    puts "FROM get_knt: tax_dict_next = " + tax_dict_next.inspect
+    if tax_dict_next[dat_cnt_seq_t[:dataset_id]].is_a? Numeric
+      # puts 'tax_dict_next[dat_cnt_seq_t[:dataset_id]] = ' + tax_dict_next[dat_cnt_seq_t[:dataset_id]].inspect
+      knt = tax_dict_next[dat_cnt_seq_t[:dataset_id]] + dat_cnt_seq_t[:seq_count]
+    else
+      knt = dat_cnt_seq_t[:seq_count]
+    end
+    puts "dat_cnt_seq_t[:seq_count] = " + dat_cnt_seq_t[:seq_count].inspect
+    puts "dat_cnt_seq_t[:dataset_id] = #{dat_cnt_seq_t[:dataset_id].inspect}, knt = " + knt.inspect
+    return knt
+  end
+  
 
 
 end

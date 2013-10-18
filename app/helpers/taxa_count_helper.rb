@@ -23,8 +23,8 @@ module TaxaCountHelper
     tax_dict = tax_dict_obj.create(taxonomies, tax_dict, dat_counts_seq)
     puts "\nPPP: tax_dict = " + tax_dict.inspect
     
-    tax_dict = add_dataset_ids(taxonomies, tax_dict, dat_counts_seq)
-    puts "2) tax_dict = " + tax_dict.inspect
+    # tax_dict = add_dataset_ids(taxonomies, tax_dict, dat_counts_seq)
+    # puts "2) tax_dict = " + tax_dict.inspect
     
     # uniq_seq_info_ids_per_d = get_uniq_seq_info_ids(seq_ids_n_cnt_per_d)
     # taxonomy_ids_per_d      = get_taxonomy_ids_per_d(uniq_seq_info_ids_per_d)
@@ -78,37 +78,37 @@ module TaxaCountHelper
   #   end
   #   return tax_dict
   # end
-
-  def add_dataset_ids(taxonomies, tax_dict, dat_counts_seq)
-   puts "INSIDE: "
-   puts "taxonomies" + taxonomies.inspect
-   puts "\ntax_dict" + tax_dict.inspect
-   puts "\ndat_counts_seq" + dat_counts_seq.inspect
-   taxonomies.each do |t_o|
-      dat_counts_seq_t = dat_counts_seq.select{|d| d[:taxonomy_id] == t_o[:id]}
-      
-      dat_counts_seq_t.each do |dat_cnt_seq_t|                
-        (1..7).each do |n|
-          add_dat_id_knt_to_tax_dict(tax_dict, t_o.attributes.values[1, n], dat_cnt_seq_t)
-        end
-			end      
-    end
-    puts "\ntax_dict RES = "  + tax_dict.inspect
-    return tax_dict
-  end
-  
-  def add_dat_id_knt_to_tax_dict(tax_dict, taxon_str, dat_cnt_seq_t)
-    d = tax_dict
-    for i in (0...taxon_str.length)
-      if i == taxon_str.length - 1
-        tax_dict_next = d[taxon_str[i]][:datasets_ids]
-        tax_dict_next[dat_cnt_seq_t[:dataset_id]] = get_knt(tax_dict_next, dat_cnt_seq_t)          
-      end
-      d = d[taxon_str[i]]      
-    end
-    d    
-  end
-  
+  # 
+  # def add_dataset_ids(taxonomies, tax_dict, dat_counts_seq)
+  #  puts "INSIDE: "
+  #  puts "taxonomies" + taxonomies.inspect
+  #  puts "\ntax_dict" + tax_dict.inspect
+  #  puts "\ndat_counts_seq" + dat_counts_seq.inspect
+  #  taxonomies.each do |t_o|
+  #     dat_counts_seq_t = dat_counts_seq.select{|d| d[:taxonomy_id] == t_o[:id]}
+  #     
+  #     dat_counts_seq_t.each do |dat_cnt_seq_t|                
+  #       (1..7).each do |n|
+  #         add_dat_id_knt_to_tax_dict(tax_dict, t_o.attributes.values[1, n], dat_cnt_seq_t)
+  #       end
+  #       end      
+  #   end
+  #   puts "\ntax_dict RES = "  + tax_dict.inspect
+  #   return tax_dict
+  # end
+  # 
+  # def add_dat_id_knt_to_tax_dict(tax_dict, taxon_str, dat_cnt_seq_t)
+  #   d = tax_dict
+  #   for i in (0...taxon_str.length)
+  #     if i == taxon_str.length - 1
+  #       tax_dict_next = d[taxon_str[i]][:datasets_ids]
+  #       tax_dict_next[dat_cnt_seq_t[:dataset_id]] = get_knt(tax_dict_next, dat_cnt_seq_t)          
+  #     end
+  #     d = d[taxon_str[i]]      
+  #   end
+  #   d    
+  # end
+  # 
   # def get_tax_dict_by_arr(tax_dict, taxon_str)
   #    d = Hash.recursive
   #    for i in (0...taxon_str.length)
@@ -171,18 +171,6 @@ module TaxaCountHelper
   # end
   # 
   # 
-  def get_knt(tax_dict_next, a)  
-    puts "FROM get_knt: tax_dict_next = " + tax_dict_next.inspect
-    if tax_dict_next[a[:dataset_id]].is_a? Numeric
-      # puts 'tax_dict_next[a[:dataset_id]] = ' + tax_dict_next[a[:dataset_id]].inspect
-      knt = tax_dict_next[a[:dataset_id]] + a[:seq_count]
-    else
-      knt = a[:seq_count]
-    end
-    puts "a[:seq_count] = " + a[:seq_count].inspect
-    puts "a[:dataset_id] = #{a[:dataset_id].inspect}, knt = " + knt.inspect
-    return knt
-  end
   
 end
 
