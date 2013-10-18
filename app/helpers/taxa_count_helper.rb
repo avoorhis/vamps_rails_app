@@ -25,7 +25,9 @@ module TaxaCountHelper
     # rank_names = ["domain", "phylum", "klass", "order", "family", "genus", "species", "strain"]
     
     # tax_dict = Hash.recursive
-    tax_dict = create_tax_dat_hash(taxonomies)
+    # tax_dict = create_tax_dat_hash(taxonomies)
+    tax_dict_obj = TaxaCount.new
+    tax_dict = tax_dict_obj.create(taxonomies)
     puts "\nPPP: tax_dict = " + tax_dict.inspect
     
     tax_dict = add_dataset_ids(taxonomies, tax_dict, dat_counts_seq)
@@ -72,31 +74,12 @@ module TaxaCountHelper
     Taxonomy.where(id: tax_ids)
   end
 
-  def create_tax_dat_hash(taxonomies)
-    tax_dict = Hash.recursive
-    taxonomies.each do |t|
-      puts t.inspect
-      t_vals = t.attributes.values
-      puts "t_vals = " + t_vals.inspect
-      # tax_dict = 
-      make_tax_dict(tax_dict, t_vals)
-      # tax_dict[t_vals[1]][t_vals[2]][t_vals[3]][t_vals[4]][t_vals[5]][t_vals[6]][t_vals[7]][t_vals[8]] = {}
-      puts "tax_dict = " + tax_dict.inspect
-    end
-    return tax_dict
-  end
-
-  def make_tax_dict(tax_dict, t_vals)
-    tax_dict[t_vals[1]][t_vals[2]][t_vals[3]][t_vals[4]][t_vals[5]][t_vals[6]][t_vals[7]][t_vals[8]] = {}
-  end
-
   # def create_tax_dat_hash(taxonomies)
   #   tax_dict = Hash.recursive
   #   taxonomies.each do |t|
   #     puts t.inspect
   #     t_vals = t.attributes.values
   #     puts "t_vals = " + t_vals.inspect
-  # 
   #     tax_dict[t_vals[1]][t_vals[2]][t_vals[3]][t_vals[4]][t_vals[5]][t_vals[6]][t_vals[7]][t_vals[8]] = {}
   #     puts "tax_dict = " + tax_dict.inspect
   #   end
@@ -133,33 +116,33 @@ module TaxaCountHelper
     d    
   end
   
-  def get_tax_dict_by_arr(tax_dict, taxon_str)
-    d = Hash.recursive
-    for i in (0...taxon_str.length)
-      puts "\n-----\ni == #{i}"
-      if i == taxon_str.length - 1
-          puts "i == taxon_str.length - 1"
-          # d[taxon_str[i]][:datasets_ids]
-      end
-
-      if i == 0
-        puts "if i == 0"
-      
-        d = tax_dict[taxon_str[0]]
-        puts "taxon_str[i] = " + taxon_str[i].inspect
-        puts "1) d = " + d.inspect          
-        next
-      end
-      
-      puts "ELSE: taxon_str[i] = " + taxon_str[i].inspect
-      puts "d[taxon_str[i]] = " + d[taxon_str[i]].inspect
-      d = d[taxon_str[i]]
-    end
-    puts "d = " + d.inspect          
-    d
-  end
-  
-  
+  # def get_tax_dict_by_arr(tax_dict, taxon_str)
+  #    d = Hash.recursive
+  #    for i in (0...taxon_str.length)
+  #      puts "\n-----\ni == #{i}"
+  #      if i == taxon_str.length - 1
+  #          puts "i == taxon_str.length - 1"
+  #          # d[taxon_str[i]][:datasets_ids]
+  #      end
+  # 
+  #      if i == 0
+  #        puts "if i == 0"
+  #      
+  #        d = tax_dict[taxon_str[0]]
+  #        puts "taxon_str[i] = " + taxon_str[i].inspect
+  #        puts "1) d = " + d.inspect          
+  #        next
+  #      end
+  #      
+  #      puts "ELSE: taxon_str[i] = " + taxon_str[i].inspect
+  #      puts "d[taxon_str[i]] = " + d[taxon_str[i]].inspect
+  #      d = d[taxon_str[i]]
+  #    end
+  #    puts "d = " + d.inspect          
+  #    d
+  #  end
+  #  
+  #  
   
   # def nested_hash_value(obj, key)
   #   if obj.respond_to?(:key?) && obj.key?(key)
@@ -210,8 +193,3 @@ module TaxaCountHelper
   
 end
 
-class Hash
-  def self.recursive
-    new { |hash, key| hash[key] = recursive }
-  end
-end
