@@ -24,7 +24,7 @@ class VisualizationController < ApplicationController
     @choosen_projects_w_d  = get_choosen_projects_w_d()
     my_pdrs                = SequencePdrInfo.where(dataset_id: params["dataset_ids"])
     @counts_per_dataset_id = get_counts_per_dataset_id(my_pdrs)
-    @taxonomy_w_cnts_by_d  = get_taxonomy_w_cnts_by_d(my_pdrs)
+    @taxonomy_w_cnts_by_d  = get_taxonomy_per_d(my_pdrs)
     
     if params[:view]      == "heatmap"
       render :heatmap
@@ -71,13 +71,6 @@ class VisualizationController < ApplicationController
     redirect_to visualization_index_path, :alert => 'Choose some data!'
   end
   
-  def get_taxonomy_w_cnts_by_d(my_pdrs)
-    rank_names                  = get_rank_names()    
-    taxonomy_per_d              = get_taxonomy_per_d(my_pdrs)
-    puts "taxonomy_per_d = " + taxonomy_per_d.inspect
-    
-  end
-
   def get_counts_per_dataset_id(my_pdrs)
     counts_per_dataset_id = Hash.new
     

@@ -19,9 +19,9 @@ module TaxaCountHelper
     # TODO: create taxonomy per dataset first? or keep tax_id and get dataset_id?
 
     tax_hash_obj = TaxaCount.new
-    tax_hash = tax_hash_obj.create(taxonomies, tax_hash, dat_counts_seq)
+    tax_hash     = tax_hash_obj.create(taxonomies, tax_hash, dat_counts_seq)
     puts "\nPPP: tax_hash = " + tax_hash.inspect
-    
+    return tax_hash
     # uniq_seq_info_ids_per_d = get_uniq_seq_info_ids(seq_ids_n_cnt_per_d)
     # taxonomy_ids_per_d      = get_taxonomy_ids_per_d(uniq_seq_info_ids_per_d)
     # add_count_to_uniq_seq_info_ids_per_d(uniq_seq_info_ids_per_d, seq_ids_n_cnt_per_d)
@@ -30,7 +30,7 @@ module TaxaCountHelper
     # taxonomy_ids_per_d.each do |dataset_id, v_arr|
     #     taxonomy_per_d[dataset_id] << Taxonomy.where(id: v_arr)
     # end
-    return taxonomy_per_d
+    # return taxonomy_per_d
   end
 
   def create_dat_seq_cnts(my_pdrs)
