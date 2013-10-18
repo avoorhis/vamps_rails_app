@@ -1,22 +1,21 @@
 class TaxaCount 
 
+  RANKS_AMOUNT = Rank.where('rank != "NA"').size
+  
   attr_accessor :taxa_count_per_d, :taxonomies
-  
-  # validates_presence_of :taxonomies
-  
+
   def initialize(attributes = {})
     attributes.each do |name, value|
       send("#{name}=", value)
     end
   end
   
-  def create(taxonomies, tax_hash, dat_counts_seq)
-    
+  def create(taxonomies, tax_hash, dat_counts_seq)    
     tax_ids_hash      = create_tax_ids_hash(taxonomies)
     @taxa_count_per_d = add_dataset_ids(taxonomies, tax_ids_hash, dat_counts_seq)
   end
-  
-  
+    
+  # not tested yet
   def get_tax_hash_by_tax_ids(tax_hash, tax_ids)
      tax_has_temp = Hash.recursive
      for i in (0...tax_ids.length)
@@ -47,8 +46,8 @@ class TaxaCount
   
   def create_tax_ids_hash(taxonomies)
     tax_ids_hash = Hash.recursive
-    taxonomies.each do |t|
-      t_vals = t.attributes.values
+    taxonomies.each do |t_o|
+      t_vals = t_o.attributes.values
       tax_ids_hash[t_vals[1]][t_vals[2]][t_vals[3]][t_vals[4]][t_vals[5]][t_vals[6]][t_vals[7]][t_vals[8]] = {}
     end
     return tax_ids_hash
@@ -57,10 +56,10 @@ class TaxaCount
   
   def add_dataset_ids(taxonomies, tax_hash, dat_counts_seq)
    taxonomies.each do |t_o|
-      dat_counts_seq_t = dat_counts_seq.select{|d| d[:taxonomy_id] == t_o[:id]}
-      
+      dat_counts_seq_t = get_dat_counts_seq_by_t(t_o, dat_counts_seq)
+
       dat_counts_seq_t.each do |dat_cnt_seq_t|                
-        (1..7).each do |n|
+        (1..RANKS_AMOUNT-1).each do |n|
           add_dat_id_knt_to_tax_hash(tax_hash, t_o.attributes.values[1, n], dat_cnt_seq_t)
         end
 			end      
@@ -72,7 +71,7 @@ class TaxaCount
     tax_has_temp = tax_hash
     for i in (0...taxon_str.length)
       if i == taxon_str.length - 1
-        tax_hash_next = tax_has_temp[taxon_str[i]][:datasets_ids]
+        tax_hash_next                             = tax_has_temp[taxon_str[i]][:datasets_ids]
         tax_hash_next[dat_cnt_seq_t[:dataset_id]] = get_knt(tax_hash_next, dat_cnt_seq_t)          
       end
       tax_has_temp = tax_has_temp[taxon_str[i]]      
@@ -89,7 +88,9 @@ class TaxaCount
     return knt
   end
   
-
+  def get_dat_counts_seq_by_t(t_o, dat_counts_seq)
+    dat_counts_seq.select{|d| d[:taxonomy_id] == t_o[:id]}
+  end
 
 end
 
