@@ -18,14 +18,16 @@ module TaxaCountHelper
     puts "\nHHH: taxonomies = " + taxonomies.inspect
 
     tax_hash_obj = TaxaCount.new
-    tax_hash     = tax_hash_obj.create(taxonomies, tax_hash, dat_counts_seq)
+    tax_hash     = tax_hash_obj.create(taxonomies, dat_counts_seq)
     puts "\nRES: tax_hash = " + tax_hash.inspect
     
-    tax_hash_obj.get_tax_hash_by_tax_ids(tax_hash, [2]) #{3=>13, 4=>6}
-    tax_hash_obj.get_tax_hash_by_tax_ids(tax_hash, [2, 3]) #{3=>11, 4=>4}
-    puts "[2, 3, 3, 16, 18, 129, 1, 4]"
-    puts "HERE:"
-    tax_hash_obj.get_tax_hash_by_tax_ids(tax_hash, [2, 3, 3, 16, 18, 129, 129, 4]) #=>{3=>8, 4=>4}
+    a = tax_hash_obj.get_cnts_per_dataset_ids_by_tax_ids(tax_hash, [2]) #{3=>13, 4=>6}
+    puts "[2], get_cnts_per_dataset_ids_by_tax_ids = " + a.inspect
+    a = tax_hash_obj.get_cnts_per_dataset_ids_by_tax_ids(tax_hash, [2, 3]) #{3=>11, 4=>4}
+    puts "[2, 3], get_cnts_per_dataset_ids_by_tax_ids = " + a.inspect
+    a = tax_hash_obj.get_cnts_per_dataset_ids_by_tax_ids(tax_hash, [2, 3, 3, 16, 18, 129, 129, 4]) #=>{3=>8, 4=>4}
+    puts "[2, 3, 3, 16, 18, 129, 1, 4], get_cnts_per_dataset_ids_by_tax_ids = " + a.inspect
+    puts "HERE: tax_hash_obj = " +  tax_hash_obj.inspect
     
     
     return tax_hash

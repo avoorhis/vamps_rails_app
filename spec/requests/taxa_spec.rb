@@ -1,6 +1,5 @@
 require 'spec_helper'
 require 'create_ranks_w_data_helper'
-require 'create_sequences_helper'
 include TaxaCountHelper
 
 describe "Taxa" do
@@ -9,12 +8,13 @@ describe "Taxa" do
     @user.confirm!    
     login_as(@user, :scope => :user)
 
-    @projects   = @user.projects      
-    @taxonomies = Array.new(3) { FactoryGirl.create(:taxonomy) } 
-       
-    puts "Ura2"
-    puts @taxonomies.inspect
-            
+    # @projects   = @user.projects      
+    @taxonomies = Array.new
+    @taxonomies << FactoryGirl.create(:taxonomy, id: 82, domain_id: 2, phylum_id: 3, klass_id: 3, order_id: 16, family_id: 18, genus_id: 129, species_id: 129, strain_id: 4)
+    @taxonomies << FactoryGirl.create(:taxonomy, id: 96, domain_id: 2, phylum_id: 4, klass_id: 32, order_id: 5, family_id: 52, genus_id: 76, species_id: 129, strain_id: 4)
+    @taxonomies << FactoryGirl.create(:taxonomy, id: 137, domain_id: 2, phylum_id: 3, klass_id: 5, order_id: 65, family_id: 129, genus_id: 129, species_id: 129, strain_id: 4)
+    # @taxonomies = Array.new(3) { FactoryGirl.create(:taxonomy) } 
+
     visit "/visualization"      
   end
   
@@ -24,26 +24,16 @@ describe "Taxa" do
   end
   
   it "should give correct taxa per dataset counts" do
-    # puts "@projects = " + @projects.inspect
-    dataset_ids = [3,4]
-    dat_counts_seq = [{:dataset_id=>3, :sequence_id=>1001, :seq_count=>2, :taxonomy_id=>1}, {:dataset_id=>3, :sequence_id=>1002, :seq_count=>103, :taxonomy_id=>2}, {:dataset_id=>3, :sequence_id=>1004, :seq_count=>8, :taxonomy_id=>3}, {:dataset_id=>3, :sequence_id=>1005, :seq_count=>203, :taxonomy_id=>2}, {:dataset_id=>3, :sequence_id=>1007, :seq_count=>3, :taxonomy_id=>137}, {:dataset_id=>4, :sequence_id=>1001, :seq_count=>2, :taxonomy_id=>1}, {:dataset_id=>4, :sequence_id=>1002, :seq_count=>13, :taxonomy_id=>2}, {:dataset_id=>4, :sequence_id=>1004, :seq_count=>4, :taxonomy_id=>3}, {:dataset_id=>4, :sequence_id=>1005, :seq_count=>20, :taxonomy_id=>2}]
-    
-    
-    tax_hash_obj = TaxaCount.new
-    
-    # tax_hash = {2=>{3=>{3=>{16=>{18=>{129=>{129=>{4=>{:datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, 5=>{65=>{129=>{129=>{129=>{4=>{:datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>11, 4=>4}}, 4=>{32=>{5=>{52=>{76=>{129=>{4=>{:datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>13, 4=>6}}}
-
-
-
-    # dat_counts_seq = create_dat_seq_cnts(my_pdrs)  
-    # 
-    # taxonomies = get_taxonomies(dat_counts_seq)
-    
-    
+    puts "Ura2"
+    puts @taxonomies.inspect
+            
+    dat_counts_seq = [{:dataset_id=>3, :sequence_id=>1001, :seq_count=>2, :taxonomy_id=>96}, {:dataset_id=>3, :sequence_id=>1004, :seq_count=>8, :taxonomy_id=>82}, {:dataset_id=>3, :sequence_id=>1007, :seq_count=>3, :taxonomy_id=>137}, {:dataset_id=>4, :sequence_id=>1001, :seq_count=>2, :taxonomy_id=>96}, {:dataset_id=>4, :sequence_id=>1004, :seq_count=>4, :taxonomy_id=>82}]
+    puts "dat_counts_seq = " + dat_counts_seq.inspect
     
     tax_hash_obj = TaxaCount.new
     tax_hash     = tax_hash_obj.create(@taxonomies, tax_hash, dat_counts_seq)
     puts "\nRES: tax_hash = " + tax_hash.inspect
+    # tax_hash_temp[:datasets_ids] = {3=>8, 4=>4}
     # 
     # tax_hash_obj.get_tax_hash_by_tax_ids(tax_hash, [2]) #{3=>13, 4=>6}
     # tax_hash_obj.get_tax_hash_by_tax_ids(tax_hash, [2, 3]) #{3=>11, 4=>4}
