@@ -1,3 +1,4 @@
+Rank.delete_all
 
 ranks_array = [{:rank => "NA", :rank_number => 10},
 {:rank => "class", :rank_number => 2},
