@@ -12,9 +12,10 @@ module TaxaCountHelper
     all_seq_ui     = get_all_sequence_uniq_infos(dat_counts_seq.map { |u| u[:sequence_id] })
 
     add_tax_id(dat_counts_seq, all_seq_ui)
-    puts "URA3 = dat_counts_seq: " + dat_counts_seq.inspect
+    @dat_counts_seq_tax = dat_counts_seq
     
     taxonomies = get_taxonomies(dat_counts_seq)
+    @taxonomies = taxonomies
     puts "\nHHH: taxonomies = " + taxonomies.inspect
 
     tax_hash_obj = TaxaCount.new

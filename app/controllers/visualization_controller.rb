@@ -24,7 +24,12 @@ class VisualizationController < ApplicationController
     @choosen_projects_w_d  = get_choosen_projects_w_d()
     my_pdrs                = SequencePdrInfo.where(dataset_id: params["dataset_ids"])
     @counts_per_dataset_id = get_counts_per_dataset_id(my_pdrs)
-    @taxonomy_w_cnts_by_d  = get_taxonomy_per_d(my_pdrs)
+    @taxonomies            = {}
+    @dat_counts_seq_tax    = {}    
+    @taxonomy_w_cnts_by_d         = get_taxonomy_per_d(my_pdrs)
+    
+    make_taxa_string_by_rank_per_d()
+    puts "TTT: @taxonomy_w_cnts_by_d = " + @taxonomy_w_cnts_by_d.inspect
     
     if params[:view]      == "heatmap"
       render :heatmap
@@ -41,23 +46,15 @@ class VisualizationController < ApplicationController
   def get_choosen_projects_w_d()
     project_array = Array.new
     d_ids  = params[:dataset_ids]   
-    puts "d_ids = " + d_ids.inspect
-    d_ids = ["3", "4", "235", "236"]
-     
     p_objs = get_choosen_projects()
-    puts "p_objs = " + p_objs.inspect
     p_objs.each do |p_obj, d_arr|
-      puts "\nURA1: p_obj: " + p_obj.inspect
-      puts "\nURA2: d_arr: " + d_arr.inspect
       
       choosen_p_w_d            = Hash.new
       choosen_p_w_d[:pid]      = p_obj[:id]
       choosen_p_w_d[:pname]    = p_obj[:project]
       choosen_p_w_d[:datasets] = d_arr.select {|d| d[:id] if d_ids.include? d[:id].to_s}
-      puts "\nURA20: choosen_p_w_d: " + choosen_p_w_d.inspect
       project_array << choosen_p_w_d
     end
-    puts "project_array = " + project_array.inspect
     return project_array
   end
   
@@ -103,8 +100,83 @@ class VisualizationController < ApplicationController
   # Dataset Load (0.3ms)  SELECT `datasets`.* FROM `datasets` WHERE `datasets`.`id` IN (2, 3)
   #   
   
-  def make_taxa_string_by_rank(taxon_strings_per_d)
-    rank = @rank_obj.rank_number + 1
+  def get_rank_names()
+    ranks      = Rank.all.sorted 
+    rank_names = []     
+    ranks.map {|rank| rank.rank == "class" ? rank_names << "klass" : rank_names << rank.rank}
+    rank_names.delete("NA")
+    return rank_names
+  end
+  
+  def get_all_taxa_from_db(rank_names)
+    puts "rank_names = " + rank_names.inspect
+    all_taxa   = Hash.new{|hash, key| hash[key] = []}
+    rank_names.each do |rank_name|
+      all_taxa[rank_name] = rank_name.camelize.constantize.all
+    end
+    puts "all_taxa = " + all_taxa.inspect
+    # {"domain"=>#<ActiveRecord::Relation [#<Domain id: 1, domain: "Archaea">, #<Domain id: 2, domain: "Bacteria">, #<Domain id: ...
+    return all_taxa
+  end  
+  
+  def get_taxon(taxonomy, rank_name, all_taxa)
+    id_name    = rank_name + "_id"    
+    tax_id_val = taxonomy.attributes[id_name]
+    # puts "LLL: taxonomy.attributes[id_name] = " + taxonomy.attributes[id_name].inspect
+    
+    res   = all_taxa[rank_name].select{|t| t.id == tax_id_val}  
+    # puts "LLL1: res = " + res.inspect
+    taxon = res[0][rank_name]  
+    # puts "LLL2: taxon = " + taxon.inspect
+    # LLL: taxonomy.attributes[id_name] = 5
+    # LLL1: res = [#<Klass id: 5, klass: "Alphaproteobacteria">]
+    # LLL2: taxon = "Alphaproteobacteria"
+    
+    return taxon
+  end
+  
+  def make_taxa_string(rank_names)
+    all_taxa = get_all_taxa_from_db(rank_names)
+    # puts "URA3 = @dat_counts_seq_tax: " + @dat_counts_seq_tax.inspect
+
+    taxon_strings_per_d  = Hash.new{|hash, key| hash[key] = []}
+
+    @dat_counts_seq_tax.each do |ob|
+      # puts "from loop: ob[:dataset_id] = " + ob[:dataset_id].inspect 
+      # puts "from loop: ob[:taxonomy_id] = " + ob[:taxonomy_id].inspect 
+      # puts "*" * 10
+
+      @taxonomies.each do |taxonomy|
+        taxon_arr  = []
+        # puts "from loop: taxonomy = " + taxonomy.inspect 
+        # puts "*" * 10
+        rank_names.each do |rank_name|
+          taxon_arr << get_taxon(taxonomy, rank_name, all_taxa)    
+        end
+        # puts "from loop: taxon_arr = " + taxon_arr.inspect 
+        # puts "*" * 10
+        taxon_strings_per_d[ob[:dataset_id]] << taxon_arr
+      end    
+    end 
+
+    # puts "taxon_strings_per_d " + taxon_strings_per_d.inspect
+    # puts "=" * 10
+
+    return taxon_strings_per_d
+  end
+
+  # def make_taxa_string_by_rank_per_d()
+  #   rank = @rank_obj.rank_number + 1
+  #   puts "HHHHH: taxonomies" + @taxonomies.inspect
+  #   rank_names   = get_rank_names()
+  #   taxa_strings = make_taxa_string(rank_names)
+  # end
+  
+  def make_taxa_string_by_rank_per_d()
+    rank                = @rank_obj.rank_number + 1
+    rank_names          = get_rank_names()
+    taxon_strings_per_d = make_taxa_string(rank_names)
+    
     taxon_string_by_rank_per_d  = Hash.new{|hash, key| hash[key] = []}
 
 
@@ -112,8 +184,8 @@ class VisualizationController < ApplicationController
       taxon_string_arr.each do |taxon_string_orig|
         taxon_string_by_rank = taxon_string_orig.take(rank)
         # .join(";")
-        # puts "UUU " + taxon_string_by_rank.inspect
-        # puts "-" * 7
+        puts "UUU " + taxon_string_by_rank.inspect
+        puts "-" * 7
         taxon_string_by_rank_per_d[dataset_id] << taxon_string_by_rank
       end
     end
@@ -122,5 +194,6 @@ class VisualizationController < ApplicationController
     # UUU {3=>["Bacteria;Proteobacteria;Gammaproteobacteria;Enterobacteriales;Enterobacteriaceae", "Bacteria;Actinobacteria;class_NA;Actinomycetales;Intrasporangiaceae", "Bacteria;Proteobacteria;Alphaproteobacteria;order_NA;family_NA"], 4=>["Bacteria;Proteobacteria;Gammaproteobacteria;Enterobacteriales;Enterobacteriaceae", "Bacteria;Actinobacteria;class_NA;Actinomycetales;Intrasporangiaceae"]}
     return taxon_string_by_rank_per_d
   end
+  
   
 end
