@@ -20,15 +20,7 @@ module TaxaCountHelper
     tax_hash_obj = TaxaCount.new
     tax_hash     = tax_hash_obj.create(taxonomies, dat_counts_seq)
     puts "\nRES: tax_hash = " + tax_hash.inspect
-    
-    # a = tax_hash_obj.get_cnts_per_dataset_ids_by_tax_ids(tax_hash, [2]) #{3=>13, 4=>6}
-    # puts "[2], get_cnts_per_dataset_ids_by_tax_ids = " + a.inspect
-    # a = tax_hash_obj.get_cnts_per_dataset_ids_by_tax_ids(tax_hash, [2, 3]) #{3=>11, 4=>4}
-    # puts "[2, 3], get_cnts_per_dataset_ids_by_tax_ids = " + a.inspect
-    # a = tax_hash_obj.get_cnts_per_dataset_ids_by_tax_ids(tax_hash, [2, 3, 3, 16, 18, 129, 129, 4]) #=>{3=>8, 4=>4}
-    # puts "[2, 3, 3, 16, 18, 129, 1, 4], get_cnts_per_dataset_ids_by_tax_ids = " + a.inspect
-    # puts "HERE: tax_hash_obj = " +  tax_hash_obj.inspect
-    
+    # RES: tax_hash = {2=>{3=>{3=>{16=>{18=>{129=>{129=>{4=>{:datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, 5=>{65=>{129=>{129=>{129=>{4=>{:datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>11, 4=>4}}, 4=>{32=>{5=>{52=>{76=>{129=>{4=>{:datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>13, 4=>6}}}
     
     return tax_hash
     # uniq_seq_info_ids_per_d = get_uniq_seq_info_ids(seq_ids_n_cnt_per_d)

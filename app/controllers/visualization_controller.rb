@@ -72,16 +72,24 @@ class VisualizationController < ApplicationController
   end
   
   def get_counts_per_dataset_id(my_pdrs)
+    puts "my_pdrs = " + my_pdrs.inspect
+    
     counts_per_dataset_id = Hash.new
     
     my_pdrs.each do |d|
-      if counts_per_dataset_id[d.attributes[:dataset_id]].nil? 
-        counts_per_dataset_id[d.attributes[:dataset_id]] = d.attributes[:seq_count]
+      puts "my_pdrs.each = " + d.inspect
+      #<SequencePdrInfo id: 1620, dataset_id: 4, sequence_id: 1005, seq_count: 20, classifier: "GAST", created_at: "2013-08-19 13:04:05", updated_at: "2013-08-19 13:04:05">
+      puts "d[:dataset_id] = " + d[:dataset_id].inspect
+      puts "d[:seq_count] = " + d[:seq_count].inspect
+      
+      if counts_per_dataset_id[d[:dataset_id]].nil? 
+        counts_per_dataset_id[d[:dataset_id]] = d[:seq_count]
       else
-        counts_per_dataset_id[d.attributes[:dataset_id]] += d.attributes[:seq_count]
+        counts_per_dataset_id[d[:dataset_id]] += d[:seq_count]
       end
     end
 
+    puts "counts_per_dataset_id = " + counts_per_dataset_id.to_s
     return counts_per_dataset_id
   end
 
@@ -89,5 +97,25 @@ class VisualizationController < ApplicationController
   # Dataset Load (0.3ms)  SELECT `datasets`.* FROM `datasets`
   # Dataset Load (0.3ms)  SELECT `datasets`.* FROM `datasets` WHERE `datasets`.`id` IN (2, 3)
   #   
+  
+  def make_taxa_string_by_rank(taxon_strings_per_d)
+    rank = @rank_obj.rank_number + 1
+    taxon_string_by_rank_per_d  = Hash.new{|hash, key| hash[key] = []}
+
+
+    taxon_strings_per_d.each do |dataset_id, taxon_string_arr|
+      taxon_string_arr.each do |taxon_string_orig|
+        taxon_string_by_rank = taxon_string_orig.take(rank)
+        # .join(";")
+        # puts "UUU " + taxon_string_by_rank.inspect
+        # puts "-" * 7
+        taxon_string_by_rank_per_d[dataset_id] << taxon_string_by_rank
+      end
+    end
+    puts "taxon_string_by_rank_per_d = " + taxon_string_by_rank_per_d.inspect
+    puts "-" * 7
+    # UUU {3=>["Bacteria;Proteobacteria;Gammaproteobacteria;Enterobacteriales;Enterobacteriaceae", "Bacteria;Actinobacteria;class_NA;Actinomycetales;Intrasporangiaceae", "Bacteria;Proteobacteria;Alphaproteobacteria;order_NA;family_NA"], 4=>["Bacteria;Proteobacteria;Gammaproteobacteria;Enterobacteriales;Enterobacteriaceae", "Bacteria;Actinobacteria;class_NA;Actinomycetales;Intrasporangiaceae"]}
+    return taxon_string_by_rank_per_d
+  end
   
 end

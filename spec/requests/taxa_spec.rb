@@ -43,13 +43,13 @@ describe "Taxa" do
   end
   
   it "should give correct taxa per dataset counts" do
-    a = @tax_hash_obj.get_cnts_per_dataset_ids_by_tax_ids(@tax_hash, [2]) #{3=>13, 4=>6}
+    a = @tax_hash_obj.get_cnts_per_dataset_ids_by_tax_ids(@tax_hash, [2])
     a.should == {3=>13, 4=>6}
 
-    a = @tax_hash_obj.get_cnts_per_dataset_ids_by_tax_ids(@tax_hash, [2, 3]) #{3=>11, 4=>4}
+    a = @tax_hash_obj.get_cnts_per_dataset_ids_by_tax_ids(@tax_hash, [2, 3])
     a.should == {3=>11, 4=>4}
 
-    a = @tax_hash_obj.get_cnts_per_dataset_ids_by_tax_ids(@tax_hash, [2, 3, 3, 16, 18, 129, 129, 4]) #=>{3=>8, 4=>4}
+    a = @tax_hash_obj.get_cnts_per_dataset_ids_by_tax_ids(@tax_hash, [2, 3, 3, 16, 18, 129, 129, 4])
     a.should == {3=>8, 4=>4}
     
   end
