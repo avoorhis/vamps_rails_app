@@ -187,8 +187,39 @@ class VisualizationController < ApplicationController
     rank_number = @rank_obj.rank_number
     
     ranks_to_use = rank_names[0..rank_number]
-    puts "MMM2: rank = " + ranks_to_use.inspect
-    make_taxa_string(ranks_to_use)
+    rank_id_names = ranks_to_use.map{|rank_name| rank_name + "_id" }
+    puts "MMM2: rank_id_names = " + rank_id_names.inspect
+    
+    res = @taxonomies.map{|t| tax_ids = []; t.attributes.select{|a| tax_ids << t[a] if rank_id_names.include? a }; puts "tax_ids = " + tax_ids.inspect}
+
+    
+    # res = @taxonomies.map{|t| puts t.attributes}
+    # {"id"=>82, "domain_id"=>2, "phylum_id"=>3, "klass_id"=>3, "order_id"=>16, "family_id"=>18, "genus_id"=>129, "species_id"=>129, "strain_id"=>4, "created_at"=>Mon, 19 Aug 2013 08:44:13 EDT -04:00, "updated_at"=>Mon, 19 Aug 2013 08:44:13 EDT -04:00}
+    
+    # res = @taxonomies.map(&:id)
+    # LLL1: res = [82, 96, 137]
+    
+    # .each do |taxonomy|
+    #   taxonomy_id_strings_by_rank  = []
+    #   # puts "from loop: taxonomy = " + taxonomy.inspect 
+    #   # puts "*" * 10
+    #   # res   = taxonomy.select{|t| t.id == tax_id_val}  
+    #   # ranks_to_use = ["domain", "phylum", "klass"]
+    #   
+    #   res = taxonomy.map(&:id)
+    #   # .select{|t| taxonomy.attributes[id_name] if rank_id_names.include? id_name}  
+      puts "\n---------\nLLL1: res = " + res.inspect
+    #     
+    #     # tax_id  = taxonomy.attributes[id_name]
+    #     # puts "\n---------\nLLL: taxonomy.attributes[id_name] = " + tax_id.inspect
+    #   # end
+    # end
+        # res   = all_taxa[rank_name].select{|t| t.id == tax_id_val}  
+        
+    # get_taxon(taxonomy, rank_name, all_taxa) 
+    
+    
+    # make_taxa_string(ranks_to_use)
   end
   
   # def make_taxa_string_by_rank_per_d()
