@@ -190,9 +190,10 @@ class VisualizationController < ApplicationController
     rank_id_names = ranks_to_use.map{|rank_name| rank_name + "_id" }
     puts "MMM2: rank_id_names = " + rank_id_names.inspect
     
-    res = @taxonomies.map{|t| tax_ids = []; t.attributes.select{|a| tax_ids << t[a] if rank_id_names.include? a }; puts "tax_ids = " + tax_ids.inspect}
-
-    
+    taxonomy_id_strings_by_rank = []
+    @taxonomies.map{|t| tax_ids = []; t.attributes.select{|a| tax_ids << t[a] if rank_id_names.include? a }; taxonomy_id_strings_by_rank << tax_ids}
+    puts "EEE: taxonomy_id_strings_by_rank = " + taxonomy_id_strings_by_rank.inspect
+    return taxonomy_id_strings_by_rank
     # res = @taxonomies.map{|t| puts t.attributes}
     # {"id"=>82, "domain_id"=>2, "phylum_id"=>3, "klass_id"=>3, "order_id"=>16, "family_id"=>18, "genus_id"=>129, "species_id"=>129, "strain_id"=>4, "created_at"=>Mon, 19 Aug 2013 08:44:13 EDT -04:00, "updated_at"=>Mon, 19 Aug 2013 08:44:13 EDT -04:00}
     
@@ -208,7 +209,7 @@ class VisualizationController < ApplicationController
     #   
     #   res = taxonomy.map(&:id)
     #   # .select{|t| taxonomy.attributes[id_name] if rank_id_names.include? id_name}  
-      puts "\n---------\nLLL1: res = " + res.inspect
+      # puts "\n---------\nLLL1: res = " + res.inspect
     #     
     #     # tax_id  = taxonomy.attributes[id_name]
     #     # puts "\n---------\nLLL: taxonomy.attributes[id_name] = " + tax_id.inspect
