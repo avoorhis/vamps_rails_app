@@ -16,7 +16,6 @@ module TaxaCountHelper
     
     taxonomies = get_taxonomies(dat_counts_seq)
     puts "\nHHH: taxonomies = " + taxonomies.inspect
-    # TODO: create taxonomy per dataset first? or keep tax_id and get dataset_id?
 
     tax_hash_obj = TaxaCount.new
     tax_hash     = tax_hash_obj.create(taxonomies, tax_hash, dat_counts_seq)

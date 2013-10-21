@@ -18,24 +18,7 @@ class TaxaCount
   # not tested yet
   def get_tax_hash_by_tax_ids(tax_hash, tax_ids)
      tax_hash_temp = tax_hash
-     puts "\n--------\nQQQ: tax_hash = " + tax_hash.to_s
-     for i in (0...tax_ids.length)
-       puts "\n--------\nQQQ0: i = " + i.to_s
-       puts "QQQ1: tax_hash_temp = " + tax_hash_temp.to_s
-       puts "QQQ2: tax_ids = " + tax_ids.to_s
-       # puts "QQQ3: dat_cnt_seq_t = " + dat_cnt_seq_t.to_s
-       # puts "QQQ4: tax_hash_temp[taxon_str[i]][:datasets_ids] = " + tax_hash_temp[taxon_str[i]][:datasets_ids].inspect
-       puts "QQQ5: tax_hash_temp[#{tax_ids[i]}][:datasets_ids] = " + tax_hash_temp[tax_ids[i]][:datasets_ids].inspect
-       
-       if i == tax_ids.length - 1
-           puts "i == tax_ids.length - 1"
-           puts "URRA: tax_hash_temp[tax_ids[i]][:datasets_ids] = " + tax_hash_temp[tax_ids[i]][:datasets_ids].inspect 
-       end
-  
-       puts "ELSE: tax_ids[i] = " + tax_ids[i].inspect
-       puts "tax_hash_temp[tax_ids[i]] = " + tax_hash_temp[tax_ids[i]].inspect
-       tax_hash_temp = tax_hash_temp[tax_ids[i]]
-     end
+     (0...tax_ids.length).map {|i| tax_hash_temp = tax_hash_temp[tax_ids[i]]}
      puts "RES1: tax_hash_temp[:datasets_ids] = " + tax_hash_temp[:datasets_ids].inspect          
      tax_hash_temp
   end
