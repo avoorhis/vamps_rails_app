@@ -26,10 +26,10 @@ class VisualizationController < ApplicationController
     @counts_per_dataset_id = get_counts_per_dataset_id(my_pdrs)
     @taxonomies            = {}
     @dat_counts_seq_tax    = {}    
-    @taxonomy_w_cnts_by_d         = get_taxonomy_per_d(my_pdrs)
+    @taxonomy_w_cnts_by_d  = get_taxonomy_per_d(my_pdrs)
     
     make_taxa_string_by_rank_per_d()
-    puts "TTT: @taxonomy_w_cnts_by_d = " + @taxonomy_w_cnts_by_d.inspect
+    # puts "TTT: @taxonomy_w_cnts_by_d = " + @taxonomy_w_cnts_by_d.inspect
     
     if params[:view]      == "heatmap"
       render :heatmap
@@ -134,66 +134,71 @@ class VisualizationController < ApplicationController
     
     return taxon
   end
-  
-  def make_taxa_string(rank_names)
-    all_taxa = get_all_taxa_from_db(rank_names)
-    # puts "URA3 = @dat_counts_seq_tax: " + @dat_counts_seq_tax.inspect
-
-    taxon_strings_per_d  = Hash.new{|hash, key| hash[key] = []}
-
-    @dat_counts_seq_tax.each do |ob|
-      # puts "from loop: ob[:dataset_id] = " + ob[:dataset_id].inspect 
-      # puts "from loop: ob[:taxonomy_id] = " + ob[:taxonomy_id].inspect 
-      # puts "*" * 10
-
-      @taxonomies.each do |taxonomy|
-        taxon_arr  = []
-        # puts "from loop: taxonomy = " + taxonomy.inspect 
-        # puts "*" * 10
-        rank_names.each do |rank_name|
-          taxon_arr << get_taxon(taxonomy, rank_name, all_taxa)    
-        end
-        # puts "from loop: taxon_arr = " + taxon_arr.inspect 
-        # puts "*" * 10
-        taxon_strings_per_d[ob[:dataset_id]] << taxon_arr
-      end    
-    end 
-
-    # puts "taxon_strings_per_d " + taxon_strings_per_d.inspect
-    # puts "=" * 10
-
-    return taxon_strings_per_d
-  end
-
-  # def make_taxa_string_by_rank_per_d()
-  #   rank = @rank_obj.rank_number + 1
-  #   puts "HHHHH: taxonomies" + @taxonomies.inspect
-  #   rank_names   = get_rank_names()
-  #   taxa_strings = make_taxa_string(rank_names)
-  # end
-  
-  def make_taxa_string_by_rank_per_d()
-    rank                = @rank_obj.rank_number + 1
-    rank_names          = get_rank_names()
-    taxon_strings_per_d = make_taxa_string(rank_names)
     
-    taxon_string_by_rank_per_d  = Hash.new{|hash, key| hash[key] = []}
+  # def make_taxa_string(rank_names)
+  #   all_taxa = get_all_taxa_from_db(rank_names)
+  #   puts "URA3 = @dat_counts_seq_tax: " + @dat_counts_seq_tax.inspect
+  # 
+  #   taxon_strings_per_d  = Hash.new{|hash, key| hash[key] = []}
+  # 
+  #   @dat_counts_seq_tax.each do |ob|
+  #     # puts "from loop: ob[:dataset_id] = " + ob[:dataset_id].inspect 
+  #     # puts "from loop: ob[:taxonomy_id] = " + ob[:taxonomy_id].inspect 
+  #     # puts "*" * 10
+  # 
+  #     @taxonomies.each do |taxonomy|
+  #       taxon_arr  = []
+  #       # puts "from loop: taxonomy = " + taxonomy.inspect 
+  #       # puts "*" * 10
+  #       rank_names.each do |rank_name|
+  #         taxon_arr << get_taxon(taxonomy, rank_name, all_taxa)    
+  #       end
+  #       # puts "from loop: taxon_arr = " + taxon_arr.inspect 
+  #       # puts "*" * 10
+  #       taxon_strings_per_d[ob[:dataset_id]] << taxon_arr
+  #     end    
+  #   end 
+  # 
+  #   # puts "taxon_strings_per_d " + taxon_strings_per_d.inspect
+  #   # puts "=" * 10
+  # 
+  #   return taxon_strings_per_d
+  # end
 
-
-    taxon_strings_per_d.each do |dataset_id, taxon_string_arr|
-      taxon_string_arr.each do |taxon_string_orig|
-        taxon_string_by_rank = taxon_string_orig.take(rank)
-        # .join(";")
-        puts "UUU " + taxon_string_by_rank.inspect
-        puts "-" * 7
-        taxon_string_by_rank_per_d[dataset_id] << taxon_string_by_rank
-      end
-    end
-    puts "taxon_string_by_rank_per_d = " + taxon_string_by_rank_per_d.inspect
-    puts "-" * 7
-    # UUU {3=>["Bacteria;Proteobacteria;Gammaproteobacteria;Enterobacteriales;Enterobacteriaceae", "Bacteria;Actinobacteria;class_NA;Actinomycetales;Intrasporangiaceae", "Bacteria;Proteobacteria;Alphaproteobacteria;order_NA;family_NA"], 4=>["Bacteria;Proteobacteria;Gammaproteobacteria;Enterobacteriales;Enterobacteriaceae", "Bacteria;Actinobacteria;class_NA;Actinomycetales;Intrasporangiaceae"]}
-    return taxon_string_by_rank_per_d
+  def make_taxa_string_by_rank_per_d()
+    puts "HHHHH: @taxonomy_w_cnts_by_d" + @taxonomy_w_cnts_by_d.inspect
+    # HHHHH: @taxonomy_w_cnts_by_d{2=>{3=>{3=>{16=>{18=>{129=>{129=>{4=>{:datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, 5=>{65=>{129=>{129=>{129=>{4=>{:datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>11, 4=>4}}, 4=>{32=>{5=>{52=>{76=>{129=>{4=>{:datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>13, 4=>6}}}
+    # TODO:
+    # RESULT for rank = klass:  {3=>["Bacteria;Proteobacteria;Gammaproteobacteria", "Bacteria;Actinobacteria;class_NA", "Bacteria;Proteobacteria;Alphaproteobacteria"], 4=>["Bacteria;Proteobacteria;Gammaproteobacteria", "Bacteria;Actinobacteria;class_NA"]}
+    # 1) make taxonomy_id strings from Taxonomy by rank
+    # 2) get taxon names
+    # 3) arrang by ids
+    # 4) add counts to show in tax_table_view
+    
   end
   
+  # def make_taxa_string_by_rank_per_d()
+  #    rank                = @rank_obj.rank_number + 1
+  #    rank_names          = get_rank_names()
+  #    taxon_strings_per_d = make_taxa_string(rank_names)
+  #    
+  #    taxon_string_by_rank_per_d  = Hash.new{|hash, key| hash[key] = []}
+  # 
+  # 
+  #    taxon_strings_per_d.each do |dataset_id, taxon_string_arr|
+  #      taxon_string_arr.each do |taxon_string_orig|
+  #        taxon_string_by_rank = taxon_string_orig.take(rank)
+  #        # .join(";")
+  #        puts "UUU " + taxon_string_by_rank.inspect
+  #        puts "-" * 7
+  #        taxon_string_by_rank_per_d[dataset_id] << taxon_string_by_rank
+  #      end
+  #    end
+  #    puts "taxon_string_by_rank_per_d = " + taxon_string_by_rank_per_d.inspect
+  #    puts "-" * 7
+  #    # UUU {3=>["Bacteria;Proteobacteria;Gammaproteobacteria;Enterobacteriales;Enterobacteriaceae", "Bacteria;Actinobacteria;class_NA;Actinomycetales;Intrasporangiaceae", "Bacteria;Proteobacteria;Alphaproteobacteria;order_NA;family_NA"], 4=>["Bacteria;Proteobacteria;Gammaproteobacteria;Enterobacteriales;Enterobacteriaceae", "Bacteria;Actinobacteria;class_NA;Actinomycetales;Intrasporangiaceae"]}
+  #    return taxon_string_by_rank_per_d
+  #  end
+  #  
   
 end
