@@ -10,7 +10,7 @@ describe "Taxa" do
     login_as(@user, :scope => :user)
 
     @projects   = @user.projects      
-    @taxonomies = Array.new(3) { FactoryGirl.build(:taxonomy) } 
+    @taxonomies = Array.new(3) { FactoryGirl.create(:taxonomy) } 
        
     puts "Ura2"
     puts @taxonomies.inspect
@@ -25,25 +25,9 @@ describe "Taxa" do
   
   it "should give correct taxa per dataset counts" do
     # puts "@projects = " + @projects.inspect
-    dataset_ids = [1,2]
+    dataset_ids = [3,4]
+    dat_counts_seq = [{:dataset_id=>3, :sequence_id=>1001, :seq_count=>2, :taxonomy_id=>1}, {:dataset_id=>3, :sequence_id=>1002, :seq_count=>103, :taxonomy_id=>2}, {:dataset_id=>3, :sequence_id=>1004, :seq_count=>8, :taxonomy_id=>3}, {:dataset_id=>3, :sequence_id=>1005, :seq_count=>203, :taxonomy_id=>2}, {:dataset_id=>3, :sequence_id=>1007, :seq_count=>3, :taxonomy_id=>137}, {:dataset_id=>4, :sequence_id=>1001, :seq_count=>2, :taxonomy_id=>1}, {:dataset_id=>4, :sequence_id=>1002, :seq_count=>13, :taxonomy_id=>2}, {:dataset_id=>4, :sequence_id=>1004, :seq_count=>4, :taxonomy_id=>3}, {:dataset_id=>4, :sequence_id=>1005, :seq_count=>20, :taxonomy_id=>2}]
     
-    # @projects.each do |p|
-    #   # puts "p.datasets = " + p.datasets.inspect
-    #   p.datasets.each do |d|
-    #     # puts "d = " + d.inspect
-    #     dataset_ids << d[:id]
-    #   end
-    # end
-    # puts "dataset_ids = " + dataset_ids.inspect
-    #     seq = 
-    #     sequence = FactoryGirl.create(:sequence)
-    #     puts "sequence = " + sequence.inspect
-    #     
-    #     puts "SequencePdrInfo = " + SequencePdrInfo.last.inspect
-    #     my_pdrs = SequencePdrInfo.where(dataset_id: [1, 2])
-    #     puts "my_pdrs = " + my_pdrs.inspect
-    #     
-    dat_counts_seq = [{:dataset_id=>3, :sequence_id=>1001, :seq_count=>2, :taxonomy_id=>96}, {:dataset_id=>3, :sequence_id=>1002, :seq_count=>103, :taxonomy_id=>214}, {:dataset_id=>3, :sequence_id=>1004, :seq_count=>8, :taxonomy_id=>82}, {:dataset_id=>3, :sequence_id=>1005, :seq_count=>203, :taxonomy_id=>214}, {:dataset_id=>3, :sequence_id=>1007, :seq_count=>3, :taxonomy_id=>137}, {:dataset_id=>4, :sequence_id=>1001, :seq_count=>2, :taxonomy_id=>96}, {:dataset_id=>4, :sequence_id=>1002, :seq_count=>13, :taxonomy_id=>214}, {:dataset_id=>4, :sequence_id=>1004, :seq_count=>4, :taxonomy_id=>82}, {:dataset_id=>4, :sequence_id=>1005, :seq_count=>20, :taxonomy_id=>214}]
     
     tax_hash_obj = TaxaCount.new
     
