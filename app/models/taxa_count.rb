@@ -22,28 +22,6 @@ class TaxaCount
      puts "RES1: tax_hash_temp[:datasets_ids] = " + tax_hash_temp[:datasets_ids].inspect  
      @datasets_ids_cnts = tax_hash_temp[:datasets_ids]     
   end
-  # 
-  # def get_tax_hash_by_tax_ids(tax_hash, taxon_str)
-  #    tax_hash_temp = Hash.recursive
-  #    # tax_hash
-  #    for i in (0...taxon_str.length)
-  #      if i == taxon_str.length - 1
-  #        puts "URA: tax_hash_temp[taxon_str[i]][:dataset_ids] = " + tax_hash_temp[taxon_str[i]][:dataset_ids].inspect
-  #        return tax_hash_temp[taxon_str[i]][:dataset_ids]
-  #        
-  #        # tax_hash_next                             = tax_hash_temp[taxon_str[i]][:datasets_ids]
-  #        # tax_hash_next[dat_cnt_seq_t[:dataset_id]] = get_knt(tax_hash_next, dat_cnt_seq_t)          
-  #      end
-  #      
-  #      if i == 0
-  #        tax_hash_temp = tax_hash_temp[taxon_str[0]]
-  #      end
-  #      
-  #      tax_hash_temp = tax_hash_temp[taxon_str[i]]      
-  #    end
-  #        
-  #  end
-  #    
 
   private
   
