@@ -47,10 +47,14 @@ class VisualizationController < ApplicationController
     p_objs = get_choosen_projects()
     puts "p_objs = " + p_objs.inspect
     p_objs.each do |p_obj, d_arr|
+      puts "\nURA1: p_obj: " + p_obj.inspect
+      puts "\nURA2: d_arr: " + d_arr.inspect
+      
       choosen_p_w_d            = Hash.new
       choosen_p_w_d[:pid]      = p_obj[:id]
       choosen_p_w_d[:pname]    = p_obj[:project]
-      choosen_p_w_d[:datasets] = d_arr.select {|d| d.attributes[:id] if d_ids.include? d.attributes[:id].to_s}
+      choosen_p_w_d[:datasets] = d_arr.select {|d| d[:id] if d_ids.include? d[:id].to_s}
+      puts "\nURA20: choosen_p_w_d: " + choosen_p_w_d.inspect
       project_array << choosen_p_w_d
     end
     puts "project_array = " + project_array.inspect
@@ -59,11 +63,7 @@ class VisualizationController < ApplicationController
   
   def get_choosen_projects()
     datasets_by_project_all = make_datasets_by_project_hash()
-    puts "\nURA: datasets_by_project_all: " + datasets_by_project_all.inspect
-    # p_objs = datasets_by_project_all.select {|p_o| p_o[:id]  }
-    
     p_objs = datasets_by_project_all.select {|p_o| p_o[:id] if params[:project_ids].include? p_o[:id].to_s }
-    puts "\nURA1: p_objs: " + p_objs.inspect
     return p_objs
   end  
   
