@@ -1,5 +1,6 @@
 require 'spec_helper'
-require 'create_ranks_w_data_helper.rb'
+require 'create_ranks_w_data_helper'
+require 'create_sequences_helper'
 include TaxaCountHelper
 
 describe "Taxa" do
@@ -23,27 +24,42 @@ describe "Taxa" do
   end
   
   it "should give correct taxa per dataset counts" do
-    puts "@projects = " + @projects.inspect
-    seq = 
-    sequence = FactoryGirl.create(:sequence)
-    puts "sequence = " + sequence.inspect
+    # puts "@projects = " + @projects.inspect
+    dataset_ids = [1,2]
     
-    dataset_ids = []
-    @projects.each do |p|
-      puts "p.datasets = " + p.datasets.inspect
-      p.datasets.each do |d|
-        puts "d = " + d.inspect
-      end
-    end
-    puts "SequencePdrInfo = " + SequencePdrInfo.last.inspect
-    my_pdrs = SequencePdrInfo.where(dataset_id: [1, 2])
-    puts "my_pdrs = " + my_pdrs.inspect
+    # @projects.each do |p|
+    #   # puts "p.datasets = " + p.datasets.inspect
+    #   p.datasets.each do |d|
+    #     # puts "d = " + d.inspect
+    #     dataset_ids << d[:id]
+    #   end
+    # end
+    # puts "dataset_ids = " + dataset_ids.inspect
+    #     seq = 
+    #     sequence = FactoryGirl.create(:sequence)
+    #     puts "sequence = " + sequence.inspect
+    #     
+    #     puts "SequencePdrInfo = " + SequencePdrInfo.last.inspect
+    #     my_pdrs = SequencePdrInfo.where(dataset_id: [1, 2])
+    #     puts "my_pdrs = " + my_pdrs.inspect
+    #     
+    dat_counts_seq = [{:dataset_id=>3, :sequence_id=>1001, :seq_count=>2, :taxonomy_id=>96}, {:dataset_id=>3, :sequence_id=>1002, :seq_count=>103, :taxonomy_id=>214}, {:dataset_id=>3, :sequence_id=>1004, :seq_count=>8, :taxonomy_id=>82}, {:dataset_id=>3, :sequence_id=>1005, :seq_count=>203, :taxonomy_id=>214}, {:dataset_id=>3, :sequence_id=>1007, :seq_count=>3, :taxonomy_id=>137}, {:dataset_id=>4, :sequence_id=>1001, :seq_count=>2, :taxonomy_id=>96}, {:dataset_id=>4, :sequence_id=>1002, :seq_count=>13, :taxonomy_id=>214}, {:dataset_id=>4, :sequence_id=>1004, :seq_count=>4, :taxonomy_id=>82}, {:dataset_id=>4, :sequence_id=>1005, :seq_count=>20, :taxonomy_id=>214}]
+    
+    tax_hash_obj = TaxaCount.new
+    
+    # tax_hash = {2=>{3=>{3=>{16=>{18=>{129=>{129=>{4=>{:datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, 5=>{65=>{129=>{129=>{129=>{4=>{:datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>11, 4=>4}}, 4=>{32=>{5=>{52=>{76=>{129=>{4=>{:datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>13, 4=>6}}}
+
+
+
     # dat_counts_seq = create_dat_seq_cnts(my_pdrs)  
     # 
     # taxonomies = get_taxonomies(dat_counts_seq)
-    # tax_hash_obj = TaxaCount.new
-    # tax_hash     = tax_hash_obj.create(@taxonomies, tax_hash, dat_counts_seq)
-    # puts "\nRES: tax_hash = " + tax_hash.inspect
+    
+    
+    
+    tax_hash_obj = TaxaCount.new
+    tax_hash     = tax_hash_obj.create(@taxonomies, tax_hash, dat_counts_seq)
+    puts "\nRES: tax_hash = " + tax_hash.inspect
     # 
     # tax_hash_obj.get_tax_hash_by_tax_ids(tax_hash, [2]) #{3=>13, 4=>6}
     # tax_hash_obj.get_tax_hash_by_tax_ids(tax_hash, [2, 3]) #{3=>11, 4=>4}
