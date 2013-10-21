@@ -18,8 +18,15 @@ class TaxaCount
   # not tested yet
   def get_tax_hash_by_tax_ids(tax_hash, tax_ids)
      tax_hash_temp = tax_hash
+     puts "\n--------\nQQQ: tax_hash = " + tax_hash.to_s
      for i in (0...tax_ids.length)
-       puts "\n-----\ni == #{i}"
+       puts "\n--------\nQQQ0: i = " + i.to_s
+       puts "QQQ1: tax_hash_temp = " + tax_hash_temp.to_s
+       puts "QQQ2: tax_ids = " + tax_ids.to_s
+       # puts "QQQ3: dat_cnt_seq_t = " + dat_cnt_seq_t.to_s
+       # puts "QQQ4: tax_hash_temp[taxon_str[i]][:datasets_ids] = " + tax_hash_temp[taxon_str[i]][:datasets_ids].inspect
+       puts "QQQ5: tax_hash_temp[#{tax_ids[i]}][:datasets_ids] = " + tax_hash_temp[tax_ids[i]][:datasets_ids].inspect
+       
        if i == tax_ids.length - 1
            puts "i == tax_ids.length - 1"
            puts "URRA: tax_hash_temp[tax_ids[i]][:datasets_ids] = " + tax_hash_temp[tax_ids[i]][:datasets_ids].inspect 
@@ -29,7 +36,7 @@ class TaxaCount
        puts "tax_hash_temp[tax_ids[i]] = " + tax_hash_temp[tax_ids[i]].inspect
        tax_hash_temp = tax_hash_temp[tax_ids[i]]
      end
-     puts "tax_hash_temp = " + tax_hash_temp.inspect          
+     puts "RES1: tax_hash_temp[:datasets_ids] = " + tax_hash_temp[:datasets_ids].inspect          
      tax_hash_temp
   end
   # 
@@ -71,7 +78,8 @@ class TaxaCount
       dat_counts_seq_t = get_dat_counts_seq_by_t(t_o, dat_counts_seq)
 
       dat_counts_seq_t.each do |dat_cnt_seq_t|                
-        (1..RANKS_AMOUNT-1).each do |n|
+        # (1..RANKS_AMOUNT-1).each do |n|
+        (1..RANKS_AMOUNT).each do |n|
           add_dat_id_knt_to_tax_hash(tax_hash, t_o.attributes.values[1, n], dat_cnt_seq_t)
         end
 			end      
@@ -82,21 +90,39 @@ class TaxaCount
   def add_dat_id_knt_to_tax_hash(tax_hash, taxon_str, dat_cnt_seq_t)
     tax_hash_temp = tax_hash
     for i in (0...taxon_str.length)
+      # puts "\n--------\nQQQ: i = " + i.to_s
+      # puts "QQQ1: tax_hash = " + tax_hash.to_s
+      # puts "QQQ2: taxon_str = " + taxon_str.to_s
+      # puts "QQQ3: dat_cnt_seq_t = " + dat_cnt_seq_t.to_s
+      # puts "QQQ4: tax_hash_temp[taxon_str[i]][:datasets_ids] = " + tax_hash_temp[taxon_str[i]][:datasets_ids].inspect
+      # puts "QQQ5: tax_hash_temp[#{taxon_str[i]}][:datasets_ids] = " + tax_hash_temp[taxon_str[i]][:datasets_ids].inspect
+      if tax_hash_temp[taxon_str[i]][:datasets_ids].nil?
+        tax_hash_temp[taxon_str[i]][:datasets_ids] = {}
+      end
       if i == taxon_str.length - 1
         tax_hash_next                             = tax_hash_temp[taxon_str[i]][:datasets_ids]
+         # || {}
+        # puts "QQQ5a: tax_hash_next = " + tax_hash_next.inspect
+        
         tax_hash_next[dat_cnt_seq_t[:dataset_id]] = get_knt(tax_hash_next, dat_cnt_seq_t)          
       end
       tax_hash_temp = tax_hash_temp[taxon_str[i]]      
     end
+    # puts "QQQ6: tax_hash_temp = " + tax_hash_temp.inspect
+    
     tax_hash_temp    
   end
   
   def get_knt(tax_hash_next, dat_cnt_seq_t)  
+    puts "\nKKK(get_knt): tax_hash_next = " + tax_hash_next.inspect
+    puts "KKK1: dat_cnt_seq_t = " + dat_cnt_seq_t.to_s
+    
     if tax_hash_next[dat_cnt_seq_t[:dataset_id]].is_a? Numeric
       knt = tax_hash_next[dat_cnt_seq_t[:dataset_id]] + dat_cnt_seq_t[:seq_count]
     else
       knt = dat_cnt_seq_t[:seq_count]
     end
+    puts "KKK2: knt = " + knt.inspect
     return knt
   end
   

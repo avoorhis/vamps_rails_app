@@ -20,12 +20,14 @@ module TaxaCountHelper
 
     tax_hash_obj = TaxaCount.new
     tax_hash     = tax_hash_obj.create(taxonomies, tax_hash, dat_counts_seq)
-    puts "\nPPP: tax_hash = " + tax_hash.inspect
+    puts "\nRES: tax_hash = " + tax_hash.inspect
     
     tax_hash_obj.get_tax_hash_by_tax_ids(tax_hash, [2]) #{3=>13, 4=>6}
     tax_hash_obj.get_tax_hash_by_tax_ids(tax_hash, [2, 3]) #{3=>11, 4=>4}
     puts "[2, 3, 3, 16, 18, 129, 1, 4]"
-    tax_hash_obj.get_tax_hash_by_tax_ids(tax_hash, [2, 3, 3, 16, 18, 129, 1, 4]) #=>{3=>8, 4=>4}
+    puts "HERE:"
+    tax_hash_obj.get_tax_hash_by_tax_ids(tax_hash, [2, 3, 3, 16, 18, 129, 129, 4]) #=>{3=>8, 4=>4}
+    
     
     return tax_hash
     # uniq_seq_info_ids_per_d = get_uniq_seq_info_ids(seq_ids_n_cnt_per_d)
