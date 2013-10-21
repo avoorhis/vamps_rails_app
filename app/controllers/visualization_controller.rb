@@ -40,8 +40,12 @@ class VisualizationController < ApplicationController
   
   def get_choosen_projects_w_d()
     project_array = Array.new
-    d_ids  = params[:dataset_ids]    
+    d_ids  = params[:dataset_ids]   
+    puts "d_ids = " + d_ids.inspect
+    d_ids = ["3", "4", "235", "236"]
+     
     p_objs = get_choosen_projects()
+    puts "p_objs = " + p_objs.inspect
     p_objs.each do |p_obj, d_arr|
       choosen_p_w_d            = Hash.new
       choosen_p_w_d[:pid]      = p_obj[:id]
@@ -49,12 +53,18 @@ class VisualizationController < ApplicationController
       choosen_p_w_d[:datasets] = d_arr.select {|d| d.attributes[:id] if d_ids.include? d.attributes[:id].to_s}
       project_array << choosen_p_w_d
     end
+    puts "project_array = " + project_array.inspect
     return project_array
   end
   
   def get_choosen_projects()
     datasets_by_project_all = make_datasets_by_project_hash()
-    p_objs = datasets_by_project_all.select {|p_o| p_o.attributes[:id] if params[:project_ids].include? p_o.attributes[:id].to_s }
+    puts "\nURA: datasets_by_project_all: " + datasets_by_project_all.inspect
+    # p_objs = datasets_by_project_all.select {|p_o| p_o[:id]  }
+    
+    p_objs = datasets_by_project_all.select {|p_o| p_o[:id] if params[:project_ids].include? p_o[:id].to_s }
+    puts "\nURA1: p_objs: " + p_objs.inspect
+    return p_objs
   end  
   
   def make_datasets_by_project_hash()
@@ -72,16 +82,11 @@ class VisualizationController < ApplicationController
   end
   
   def get_counts_per_dataset_id(my_pdrs)
-    puts "my_pdrs = " + my_pdrs.inspect
-    
     counts_per_dataset_id = Hash.new
     
     my_pdrs.each do |d|
-      puts "my_pdrs.each = " + d.inspect
+      # puts "my_pdrs.each = " + d.inspect
       #<SequencePdrInfo id: 1620, dataset_id: 4, sequence_id: 1005, seq_count: 20, classifier: "GAST", created_at: "2013-08-19 13:04:05", updated_at: "2013-08-19 13:04:05">
-      puts "d[:dataset_id] = " + d[:dataset_id].inspect
-      puts "d[:seq_count] = " + d[:seq_count].inspect
-      
       if counts_per_dataset_id[d[:dataset_id]].nil? 
         counts_per_dataset_id[d[:dataset_id]] = d[:seq_count]
       else
@@ -89,7 +94,7 @@ class VisualizationController < ApplicationController
       end
     end
 
-    puts "counts_per_dataset_id = " + counts_per_dataset_id.to_s
+    # puts "counts_per_dataset_id = " + counts_per_dataset_id.to_s
     return counts_per_dataset_id
   end
 
