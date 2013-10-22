@@ -1,4 +1,6 @@
 class TaxonomyWNamesFromAll 
+  #   # TODO:
+  #   # RESULT for rank = klass:  {3=>["Bacteria;Proteobacteria;Gammaproteobacteria", "Bacteria;Actinobacteria;class_NA", "Bacteria;Proteobacteria;Alphaproteobacteria"], 4=>["Bacteria;Proteobacteria;Gammaproteobacteria", "Bacteria;Actinobacteria;class_NA"]}
   # 1) make taxonomy_id strings from Taxonomy by rank
   # 2) get taxon names
 
@@ -10,14 +12,14 @@ class TaxonomyWNamesFromAll
     end
   end
 
-  def create(dat_counts_seq_tax, taxonomies)  
+  def create(rank_number, taxonomies, dat_counts_seq_tax)
     @taxonomies         = taxonomies
     @dat_counts_seq_tax = dat_counts_seq_tax
-    rank_names  = get_rank_names_all()
+    rank_names          = get_rank_names_all()
     taxon_strings_per_d = make_taxa_string(rank_names)
     puts "taxon_strings_per_d from obj1" + taxon_strings_per_d.inspect
     puts "=" * 10
-    
+    return taxon_strings_per_d
   end
 
   private

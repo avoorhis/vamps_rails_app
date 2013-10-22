@@ -38,9 +38,9 @@ class VisualizationController < ApplicationController
     puts "YYY: taxon_strings_upto_rank = " + taxon_strings_upto_rank.inspect
 
     taxon_strings_upto_rank_obj1 = TaxonomyWNamesFromAll.new
-    taxon_strings_upto_rank1     = taxon_strings_upto_rank_obj1.create(@dat_counts_seq_tax, @taxonomies)
-
-
+    taxon_strings_upto_rank1     = taxon_strings_upto_rank_obj1.create(rank_number, @taxonomies, @dat_counts_seq_tax)
+    croped_taxon_strings_per_d   = cut_taxon_strings_per_d_to_rank(rank_number, taxon_strings_upto_rank1)    
+    puts "YYY3: croped_taxon_strings_per_d = " + croped_taxon_strings_per_d.inspect
 
     # ranks_to_use                  = get_ranks_to_use()    
     # taxonomy_id_strings_upto_rank = make_taxonomy_id_strings_upto_rank(ranks_to_use)
@@ -200,4 +200,15 @@ class VisualizationController < ApplicationController
   #  end
   #  
   
+  def cut_taxon_strings_per_d_to_rank(rank_number, taxon_strings_upto_rank1)
+    croped_taxon_strings_per_d = Hash.new{|hash, key| hash[key] = []}
+    
+    # taxon_strings_upto_rank1 = from obj1{3=>[["Bacteria", "Proteobacteria", "Gammaproteobacteria", "Enterobacteriales", "Enterobacteriaceae", "genus_NA", "", "strain_NA"], ["Bacteria", "Actinobacteria", "class_NA", "Actinomycetales", "Intrasporangiaceae", "Serinicoccus", "", "strain_NA"], ["Bacteria", "Proteobacteria
+    taxon_strings_upto_rank1.each do |d_id, tax_str_arrs|
+      # puts "YYY1: d_id = #{d_id.to_s}, tax_str_arrs = " + tax_str_arrs.inspect
+      croped_taxon_strings_per_d[d_id] = tax_str_arrs.map{|t| t[0..rank_number]}
+      # puts "YYY2: croped_taxon_strings_per_d = " + croped_taxon_strings_per_d.inspect
+    end
+    return croped_taxon_strings_per_d
+  end
 end
