@@ -28,11 +28,14 @@ class VisualizationController < ApplicationController
     @dat_counts_seq_tax    = {}    
     @taxonomy_w_cnts_by_d  = get_taxonomy_per_d(my_pdrs)
     
-    taxonomy_id_strings_upto_rank = make_taxonomy_id_strings_upto_rank()
-    rank_names = get_rank_names()
-    rank_number = @rank_obj.rank_number
+    # 1) make taxonomy_id strings from Taxonomy by rank
+    # 2) get taxon names
+    # 3) arrange by dataset_ids
+    # 4) add counts to show in tax_table_view    
     
-    ranks_to_use = rank_names[0..rank_number]
+    ranks_to_use = get_ranks_to_use()
+    
+    taxonomy_id_strings_upto_rank = make_taxonomy_id_strings_upto_rank(ranks_to_use)
     
     all_taxa = get_all_taxa_from_db(ranks_to_use)
     puts "AAA: all_taxa = " + all_taxa.inspect
@@ -44,17 +47,11 @@ class VisualizationController < ApplicationController
         puts "i = #{i.inspect}"
         puts "ranks_to_use[#{i}] = " + ranks_to_use[i].inspect
         puts "v[#{i}] = " + v[i].inspect
-        # ranks_to_use[0] = "domain"
-        # v[0] = 2
-        # i = 1
-        # ranks_to_use[1] = "phylum"
-        # v[1] = 3
-        # i = 2
-        # ranks_to_use[2] = "klass"
-        # v[2] = 3
-        # i = 3
         res   = all_taxa[ranks_to_use[i]].select{|t| t.id == v[i]}  
         puts "res = " + res.inspect
+        # ranks_to_use[2] = "klass"
+        # v[2] = 32
+        # res = [#<Klass id: 32, klass: "class_NA">]
       # ranks_to_use.each do |r|
         # res   = all_taxa[r].select{|t| t.id == tax_id_val}  
         # use order name
@@ -138,7 +135,7 @@ class VisualizationController < ApplicationController
   # Dataset Load (0.3ms)  SELECT `datasets`.* FROM `datasets` WHERE `datasets`.`id` IN (2, 3)
   #   
   
-  def get_rank_names()
+  def get_rank_names_all()
     ranks      = Rank.all.sorted 
     rank_names = []     
     ranks.map {|rank| rank.rank == "class" ? rank_names << "klass" : rank_names << rank.rank}
@@ -211,7 +208,7 @@ class VisualizationController < ApplicationController
     # RESULT for rank = klass:  {3=>["Bacteria;Proteobacteria;Gammaproteobacteria", "Bacteria;Actinobacteria;class_NA", "Bacteria;Proteobacteria;Alphaproteobacteria"], 4=>["Bacteria;Proteobacteria;Gammaproteobacteria", "Bacteria;Actinobacteria;class_NA"]}
     # 1) make taxonomy_id strings from Taxonomy by rank
     # taxonomy_id_strings_upto_rank = make_taxonomy_id_strings_upto_rank()
-    # rank_names = get_rank_names()
+    # rank_names = get_rank_names_all()
     # rank_number = @rank_obj.rank_number
     # 
     # ranks_to_use = rank_names[0..rank_number]
@@ -231,16 +228,11 @@ class VisualizationController < ApplicationController
     
   end
   
-  def make_taxonomy_id_strings_upto_rank()
+  def make_taxonomy_id_strings_upto_rank(ranks_to_use)
     # from Taxonomy 
     # TODO: refactoring
     
     puts "MMM: @taxonomies = " + @taxonomies.inspect
-    puts "MMM1: @rank_obj.rank_number = " + @rank_obj.rank_number.inspect
-    rank_names = get_rank_names()
-    rank_number = @rank_obj.rank_number
-    
-    ranks_to_use = rank_names[0..rank_number]
     rank_id_names = ranks_to_use.map{|rank_name| rank_name + "_id" }
     puts "MMM2: rank_id_names = " + rank_id_names.inspect
     
@@ -281,7 +273,7 @@ class VisualizationController < ApplicationController
   
   # def make_taxa_string_by_rank_per_d()
   #    rank                = @rank_obj.rank_number + 1
-  #    rank_names          = get_rank_names()
+  #    rank_names          = get_rank_names_all()
   #    taxon_strings_per_d = make_taxa_string(rank_names)
   #    
   #    taxon_string_by_rank_per_d  = Hash.new{|hash, key| hash[key] = []}
@@ -302,5 +294,13 @@ class VisualizationController < ApplicationController
   #    return taxon_string_by_rank_per_d
   #  end
   #  
+  
+  def get_ranks_to_use()  
+    puts "MMM1: @rank_obj.rank_number = " + @rank_obj.rank_number.inspect
+    rank_names  = get_rank_names_all()
+    rank_number = @rank_obj.rank_number  
+    rank_names[0..rank_number]
+  end
+  
   
 end
