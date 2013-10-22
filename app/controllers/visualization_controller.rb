@@ -36,6 +36,12 @@ class VisualizationController < ApplicationController
     taxon_strings_upto_rank_obj = TaxonomyWNames.new
     taxon_strings_upto_rank     = taxon_strings_upto_rank_obj.create(rank_number, @taxonomies)
     puts "YYY: taxon_strings_upto_rank = " + taxon_strings_upto_rank.inspect
+
+    taxon_strings_upto_rank_obj1 = TaxonomyWNamesFromAll.new
+    taxon_strings_upto_rank1     = taxon_strings_upto_rank_obj1.create(@dat_counts_seq_tax, @taxonomies)
+
+
+
     # ranks_to_use                  = get_ranks_to_use()    
     # taxonomy_id_strings_upto_rank = make_taxonomy_id_strings_upto_rank(ranks_to_use)
     # taxon_strings_by_t_id         = make_taxon_strings_by_t_id(ranks_to_use, taxonomy_id_strings_upto_rank)
@@ -112,80 +118,64 @@ class VisualizationController < ApplicationController
   # Dataset Load (0.3ms)  SELECT `datasets`.* FROM `datasets` WHERE `datasets`.`id` IN (2, 3)
   #   
   
-  
-  def get_taxon(taxonomy, rank_name, all_taxa)
-    id_name    = rank_name + "_id"    
-    tax_id_val = taxonomy.attributes[id_name]
-    # puts "LLL: taxonomy.attributes[id_name] = " + taxonomy.attributes[id_name].inspect
-    
-    res   = all_taxa[rank_name].select{|t| t.id == tax_id_val}  
-    # puts "LLL1: res = " + res.inspect
-    taxon = res[0][rank_name]  
-    # puts "LLL2: taxon = " + taxon.inspect
-    # LLL: taxonomy.attributes[id_name] = 5
-    # LLL1: res = [#<Klass id: 5, klass: "Alphaproteobacteria">]
-    # LLL2: taxon = "Alphaproteobacteria"
-    
-    return taxon
-  end
-    
-  def make_taxa_string(rank_names)
-    all_taxa = get_all_taxa_from_db(rank_names)
-    puts "URA3 = @dat_counts_seq_tax: " + @dat_counts_seq_tax.inspect
-  
-    taxon_strings_per_d  = Hash.new{|hash, key| hash[key] = []}
-  
-    @dat_counts_seq_tax.each do |ob|
-      # puts "from loop: ob[:dataset_id] = " + ob[:dataset_id].inspect 
-      # puts "from loop: ob[:taxonomy_id] = " + ob[:taxonomy_id].inspect 
-      # puts "*" * 10
-  
-      @taxonomies.each do |taxonomy|
-        taxon_arr  = []
-        # puts "from loop: taxonomy = " + taxonomy.inspect 
-        # puts "*" * 10
-        rank_names.each do |rank_name|
-          taxon_arr << get_taxon(taxonomy, rank_name, all_taxa)    
-        end
-        # puts "from loop: taxon_arr = " + taxon_arr.inspect 
-        # puts "*" * 10
-        taxon_strings_per_d[ob[:dataset_id]] << taxon_arr
-      end    
-    end 
-  
-    puts "taxon_strings_per_d " + taxon_strings_per_d.inspect
-    puts "=" * 10
-  
-    return taxon_strings_per_d
-  end
+  # 
+  # def make_taxa_string(rank_names)
+  #   all_taxa = get_all_taxa_from_db(rank_names)
+  #   puts "URA3 = @dat_counts_seq_tax: " + @dat_counts_seq_tax.inspect
+  # 
+  #   taxon_strings_per_d  = Hash.new{|hash, key| hash[key] = []}
+  # 
+  #   @dat_counts_seq_tax.each do |ob|
+  #     # puts "from loop: ob[:dataset_id] = " + ob[:dataset_id].inspect 
+  #     # puts "from loop: ob[:taxonomy_id] = " + ob[:taxonomy_id].inspect 
+  #     # puts "*" * 10
+  # 
+  #     @taxonomies.each do |taxonomy|
+  #       taxon_arr  = []
+  #       # puts "from loop: taxonomy = " + taxonomy.inspect 
+  #       # puts "*" * 10
+  #       rank_names.each do |rank_name|
+  #         taxon_arr << get_taxon(taxonomy, rank_name, all_taxa)    
+  #       end
+  #       # puts "from loop: taxon_arr = " + taxon_arr.inspect 
+  #       # puts "*" * 10
+  #       taxon_strings_per_d[ob[:dataset_id]] << taxon_arr
+  #     end    
+  #   end 
+  # 
+  #   puts "taxon_strings_per_d " + taxon_strings_per_d.inspect
+  #   puts "=" * 10
+  # 
+  #   return taxon_strings_per_d
+  # end
 
-  def make_taxa_string_by_rank_per_d()
-    # puts "HHHHH: @taxonomy_w_cnts_by_d" + @taxonomy_w_cnts_by_d.inspect
-    # HHHHH: @taxonomy_w_cnts_by_d{2=>{3=>{3=>{16=>{18=>{129=>{129=>{4=>{:datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, 5=>{65=>{129=>{129=>{129=>{4=>{:datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>11, 4=>4}}, 4=>{32=>{5=>{52=>{76=>{129=>{4=>{:datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>13, 4=>6}}}
-    # TODO:
-    # RESULT for rank = klass:  {3=>["Bacteria;Proteobacteria;Gammaproteobacteria", "Bacteria;Actinobacteria;class_NA", "Bacteria;Proteobacteria;Alphaproteobacteria"], 4=>["Bacteria;Proteobacteria;Gammaproteobacteria", "Bacteria;Actinobacteria;class_NA"]}
-    # 1) make taxonomy_id strings from Taxonomy by rank
-    # taxonomy_id_strings_upto_rank = make_taxonomy_id_strings_upto_rank()
-    # rank_names = get_rank_names_all()
-    # rank_number = @rank_obj.rank_number
-    # 
-    # ranks_to_use = rank_names[0..rank_number]
-    # 
-    # all_taxa = get_all_taxa_from_db(ranks_to_use)
-    # puts "AAA: all_taxa = " + all_taxa.inspect
-    # taxonomy_id_strings_upto_rank.each do |taxonomy_id, taxon_ids_arr|
-    #   
-    #   taxon_ids_arr
-    #   # 82=>[2, 3, 3]
-    #   res   = all_taxa[rank_name].select{|t| t.id == tax_id_val}  
-    # end
-    
-    # 2) get taxon names
-    # 3) arrange by dataset_ids
-    # 4) add counts to show in tax_table_view
-    
-  end
-  
+  # def make_taxa_string_by_rank_per_d()
+  #   # puts "HHHHH: @taxonomy_w_cnts_by_d" + @taxonomy_w_cnts_by_d.inspect
+  #   # HHHHH: @taxonomy_w_cnts_by_d{2=>{3=>{3=>{16=>{18=>{129=>{129=>{4=>{:datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, 5=>{65=>{129=>{129=>{129=>{4=>{:datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>11, 4=>4}}, 4=>{32=>{5=>{52=>{76=>{129=>{4=>{:datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>13, 4=>6}}}
+  #   # TODO:
+  #   # RESULT for rank = klass:  {3=>["Bacteria;Proteobacteria;Gammaproteobacteria", "Bacteria;Actinobacteria;class_NA", "Bacteria;Proteobacteria;Alphaproteobacteria"], 4=>["Bacteria;Proteobacteria;Gammaproteobacteria", "Bacteria;Actinobacteria;class_NA"]}
+  #   # 1) make taxonomy_id strings from Taxonomy by rank
+  #   # taxonomy_id_strings_upto_rank = make_taxonomy_id_strings_upto_rank()
+  #   # rank_names = get_rank_names_all()
+  #   # rank_number = @rank_obj.rank_number
+  #   # 
+  #   # ranks_to_use = rank_names[0..rank_number]
+  #   # 
+  #   # all_taxa = get_all_taxa_from_db(ranks_to_use)
+  #   # puts "AAA: all_taxa = " + all_taxa.inspect
+  #   # taxonomy_id_strings_upto_rank.each do |taxonomy_id, taxon_ids_arr|
+  #   #   
+  #   #   taxon_ids_arr
+  #   #   # 82=>[2, 3, 3]
+  #   #   res   = all_taxa[rank_name].select{|t| t.id == tax_id_val}  
+  #   # end
+  #   
+  #   # 2) get taxon names
+  #   # 3) arrange by dataset_ids
+  #   # 4) add counts to show in tax_table_view
+  #   
+  # end
+  # 
   # def make_taxa_string_by_rank_per_d()
   #    rank                = @rank_obj.rank_number + 1
   #    rank_names          = get_rank_names_all()

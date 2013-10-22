@@ -21,7 +21,6 @@ describe "TaxonomyWNames" do
     visit "/visualization"      
   end
   
-  
   it "gives correct taxon_strings_upto_rank" do
     taxon_strings_upto_rank = @taxon_strings_upto_rank_obj.create(2, @taxonomies)
     puts "URA test: taxon_strings_upto_rank = " + taxon_strings_upto_rank.inspect
