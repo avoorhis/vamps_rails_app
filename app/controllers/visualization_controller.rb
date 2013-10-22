@@ -39,10 +39,25 @@ class VisualizationController < ApplicationController
     taxonomy_id_strings_upto_rank.each do |k, v|
       puts "k = #{k.inspect}, v = #{v.inspect}"
       # k = 82, v = [2, 3, 3]
-      ranks_to_use.each do |r|
-        res   = all_taxa[r].select{|t| t.id == tax_id_val}  
-        use order name
-        puts "r = #{r.inspect}"
+      
+      (0...ranks_to_use.size).each do |i|
+        puts "i = #{i.inspect}"
+        puts "ranks_to_use[#{i}] = " + ranks_to_use[i].inspect
+        puts "v[#{i}] = " + v[i].inspect
+        # ranks_to_use[0] = "domain"
+        # v[0] = 2
+        # i = 1
+        # ranks_to_use[1] = "phylum"
+        # v[1] = 3
+        # i = 2
+        # ranks_to_use[2] = "klass"
+        # v[2] = 3
+        # i = 3
+        res   = all_taxa[ranks_to_use[i]].select{|t| t.id == v[i]}  
+        puts "res = " + res.inspect
+      # ranks_to_use.each do |r|
+        # res   = all_taxa[r].select{|t| t.id == tax_id_val}  
+        # use order name
         # r = "domain"
         # r = "phylum"
         # r = "klass"
