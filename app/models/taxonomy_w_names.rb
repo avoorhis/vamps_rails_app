@@ -10,10 +10,9 @@ class TaxonomyWNames
     end
   end
 
-  def create(rank_obj, taxonomies)  
-    @rank_obj                     = rank_obj
+  def create(rank_number, taxonomies)  
     @taxonomies                   = taxonomies
-    ranks_to_use                  = get_ranks_to_use() 
+    ranks_to_use                  = get_ranks_to_use(rank_number) 
     rank_id_names                 = ranks_to_use.map{|rank_name| rank_name + "_id" }
     puts "MMM2: rank_id_names = " + rank_id_names.inspect
        
@@ -23,10 +22,8 @@ class TaxonomyWNames
 
   private
   
-  def get_ranks_to_use()  
-    puts "MMM1: @rank_obj.rank_number = " + @rank_obj.rank_number.inspect
+  def get_ranks_to_use(rank_number)  
     rank_names  = get_rank_names_all()
-    rank_number = @rank_obj.rank_number  
     rank_names[0..rank_number]
   end
   

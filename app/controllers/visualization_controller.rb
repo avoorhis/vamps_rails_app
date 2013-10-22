@@ -20,7 +20,8 @@ class VisualizationController < ApplicationController
       return      
     end
     
-    rank_obj              = Rank.find(params[:tax_id])
+    rank_obj               = Rank.find(params[:tax_id])
+    rank_number            = rank_obj.rank_number
     @choosen_projects_w_d  = get_choosen_projects_w_d()
     my_pdrs                = SequencePdrInfo.where(dataset_id: params["dataset_ids"])
     @counts_per_dataset_id = get_counts_per_dataset_id(my_pdrs)
@@ -33,7 +34,7 @@ class VisualizationController < ApplicationController
     # 3) arrange by dataset_ids
     # 4) add counts to show in tax_table_view    
     taxon_strings_upto_rank_obj = TaxonomyWNames.new
-    taxon_strings_upto_rank     = taxon_strings_upto_rank_obj.create(rank_obj, @taxonomies)
+    taxon_strings_upto_rank     = taxon_strings_upto_rank_obj.create(rank_number, @taxonomies)
     puts "YYY: taxon_strings_upto_rank = " + taxon_strings_upto_rank.inspect
     # ranks_to_use                  = get_ranks_to_use()    
     # taxonomy_id_strings_upto_rank = make_taxonomy_id_strings_upto_rank(ranks_to_use)
