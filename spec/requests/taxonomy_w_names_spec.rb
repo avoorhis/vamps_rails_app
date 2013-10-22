@@ -4,6 +4,7 @@ require 'create_ranks_w_data_helper'
 
 describe "TaxonomyWNames" do
   before(:each) do
+    
     @user = FactoryGirl.create(:user)
     @user.confirm!    
     login_as(@user, :scope => :user)

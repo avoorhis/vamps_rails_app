@@ -101,6 +101,7 @@ end
   
 describe "User not logged in" do
   before(:each) do
+    Rank.delete_all
     @ranks    = FactoryGirl.create(:rank)
     # @taxa     = Array.new(3) { FactoryGirl.build(:taxon) } 
   end  
