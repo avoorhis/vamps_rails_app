@@ -161,6 +161,13 @@ ActiveRecord::Schema.define(version: 20130917211303) do
 
   add_index "ranks", ["rank"], name: "rank", unique: true, using: :btree
 
+  create_table "refssu115_notes", primary_key: "refssu115_notes_id", force: true do |t|
+    t.string "tax_silva115", limit: 254, default: "", null: false
+    t.string "node",         limit: 64,  default: "", null: false
+    t.string "rank",         limit: 32,  default: "", null: false
+    t.string "remark",       limit: 1,   default: "", null: false
+  end
+
   create_table "sequence_pdr_infos", force: true do |t|
     t.integer  "dataset_id",                             null: false
     t.integer  "sequence_id",                            null: false
@@ -210,19 +217,9 @@ ActiveRecord::Schema.define(version: 20130917211303) do
 
   add_index "strains", ["strain"], name: "strain", unique: true, using: :btree
 
-  create_table "superkingdoms", force: true do |t|
-    t.string "superkingdom", limit: 300, default: "", null: false
+  create_table "tax_silva115_a_temp", id: false, force: true do |t|
+    t.string "tax_silva115", limit: 254, default: "", null: false
   end
-
-  add_index "superkingdoms", ["superkingdom"], name: "superkingdom", unique: true, using: :btree
-
-  create_table "taxa", force: true do |t|
-    t.string  "taxon",   limit: 300
-    t.integer "rank_id",             null: false
-  end
-
-  add_index "taxa", ["rank_id"], name: "taxon_fk_rank_id", using: :btree
-  add_index "taxa", ["taxon"], name: "taxon", unique: true, using: :btree
 
   create_table "taxonomies", force: true do |t|
     t.integer  "domain_id"
@@ -253,29 +250,6 @@ ActiveRecord::Schema.define(version: 20130917211303) do
   end
 
   add_index "taxonomies_old", ["taxonomy"], name: "taxonomy", unique: true, using: :btree
-
-  create_table "taxonomies_sep", force: true do |t|
-    t.string   "superkingdom",    limit: 60, default: "", null: false
-    t.integer  "superkingdom_id"
-    t.string   "phylum",          limit: 60, default: "", null: false
-    t.integer  "phylum_id"
-    t.string   "class",           limit: 60, default: "", null: false
-    t.integer  "class_id"
-    t.string   "orderx",          limit: 60, default: "", null: false
-    t.integer  "orderx_id"
-    t.string   "family",          limit: 60, default: "", null: false
-    t.integer  "family_id"
-    t.string   "genus",           limit: 60, default: "", null: false
-    t.integer  "genus_id"
-    t.string   "species",         limit: 60, default: "", null: false
-    t.integer  "species_id"
-    t.string   "strain",          limit: 60, default: "", null: false
-    t.integer  "strain_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "taxonomies_sep", ["superkingdom", "phylum", "class", "orderx", "family", "genus", "species", "strain"], name: "all_names", unique: true, using: :btree
 
   create_table "users", force: true do |t|
     t.string   "username",               limit: 20

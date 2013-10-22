@@ -50,4 +50,5 @@ describe "Projects and Datasets list" do
     page.should have_content("Community Visualization")    
   end
   
+  
 end

@@ -1,4 +1,13 @@
 Rank.delete_all
+Taxonomy.delete_all
+Domain.delete_all
+Phylum.delete_all
+Klass.delete_all
+Family.delete_all
+Order.delete_all
+Genus.delete_all
+Species.delete_all
+Strain.delete_all
 
 ranks_array = [{:rank => "NA", :rank_number => 10},
 {:rank => "class", :rank_number => 2},
@@ -21,6 +30,7 @@ domain_arr = [{:domain => "Archaea"},
 {:domain => "Eukarya"},
 {:domain => "Organelle"},
 {:domain => "Unknown"}]
+
 @domains = Array.new
 domain_arr.each do |my_hash|
    @domains.push(FactoryGirl.create(:domain, domain: my_hash[:domain]))       
