@@ -34,22 +34,25 @@ class VisualizationController < ApplicationController
     # 3) arrange by dataset_ids
     # 4) add counts to show in tax_table_view    
     
-    (1..10).each do
-      result = Benchmark.measure do
-        taxon_strings_upto_rank_obj = TaxonomyWNames.new
-        taxon_strings_upto_rank     = taxon_strings_upto_rank_obj.create(rank_number, @taxonomies)
-      end
-      puts "TaxonomyWNames result " + result.to_s
-
-      result1 = Benchmark.measure do
-        taxon_strings_upto_rank_obj1 = TaxonomyWNamesFromAll.new
-        taxon_strings_upto_rank1     = taxon_strings_upto_rank_obj1.create(rank_number, @taxonomies, @dat_counts_seq_tax)
-        croped_taxon_strings_per_d   = cut_taxon_strings_per_d_to_rank(rank_number, taxon_strings_upto_rank1)    
-      end
-      puts "TaxonomyWNamesFromAll result " + result1.to_s 
-      puts "-" * 10
-    end
-    
+    # (1..10).each do
+    #   result = Benchmark.measure do
+    #     taxon_strings_upto_rank_obj = TaxonomyWNames.new
+    #     taxon_strings_upto_rank     = taxon_strings_upto_rank_obj.create(rank_number, @taxonomies)
+    #   end
+    #   puts "TaxonomyWNames result " + result.to_s
+    # 
+    #   result1 = Benchmark.measure do
+    #     taxon_strings_upto_rank_obj1 = TaxonomyWNamesFromAll.new
+    #     taxon_strings_upto_rank1     = taxon_strings_upto_rank_obj1.create(rank_number, @taxonomies, @dat_counts_seq_tax)
+    #     croped_taxon_strings_per_d   = cut_taxon_strings_per_d_to_rank(rank_number, taxon_strings_upto_rank1)    
+    #   end
+    #   puts "TaxonomyWNamesFromAll result " + result1.to_s 
+    #   puts "-" * 10
+    # end
+    taxon_strings_upto_rank_obj = TaxonomyWNames.new
+    taxon_strings_upto_rank     = taxon_strings_upto_rank_obj.create(rank_number, @taxonomies)
+    taxon_strings_per_d = organize_tax_by_d_id(taxon_strings_upto_rank) 
+    puts "NNN: taxon_strings_per_d result " + taxon_strings_per_d.inspect 
     # taxon_strings_upto_rank_obj = TaxonomyWNames.new
     # taxon_strings_upto_rank     = taxon_strings_upto_rank_obj.create(rank_number, @taxonomies)
     # puts "YYY: taxon_strings_upto_rank = " + taxon_strings_upto_rank.inspect
@@ -232,11 +235,20 @@ class VisualizationController < ApplicationController
   def organize_tax_by_d_id(taxon_strings_upto_rank) 
     taxon_strings_per_d = Hash.new{|hash, key| hash[key] = []}
     taxon_strings_upto_rank.each do |tax_id, taxon_str_arr|
+      puts "UUU0: tax_id = " + tax_id.inspect
+      puts "UUU01: taxon_str_arr = " + taxon_str_arr.inspect
       @dat_counts_seq_tax.each do |dat_counts_seq_tax_hash|
-        
+        # a = dat_counts_seq_tax_hash[0].select {|h| h[:dataset_id] if h[:taxonomy_id].to_s == tax_id.to_s }
+        puts "UUU1: dat_counts_seq_tax_hash = " + dat_counts_seq_tax_hash.inspect
+        puts "UUU11: dat_counts_seq_tax_hash[:taxonomy_id] = " + dat_counts_seq_tax_hash[:taxonomy_id].inspect
+        # UUU1: dat_counts_seq_tax_hash = {:dataset_id=>3, :sequence_id=>1001, :seq_count=>2, :taxonomy_id=>96}
+        taxon_strings_per_d[dat_counts_seq_tax_hash[:dataset_id]] << taxon_str_arr.uniq
       end
+      puts "UUU2: taxon_strings_per_d = " + taxon_strings_per_d.inspect
     end
   # YYY: taxon_strings_upto_rank = {82=>["Bacteria", "Proteobacteria", "Gammaproteobacteria"], 96=>["Bacteria", "Actinobacteria", "class_NA"], 137=>["Bacteria", "Proteobacteria", "Alphaproteobacteria"]}
   # URA3 = @dat_counts_seq_tax: [{:dataset_id=>3, :sequence_id=>1001, :seq_count=>2, :taxonomy_id=>96}, {:dataset_id=>3, :sequence_id=>1002, :seq_count=>103, :taxonomy_id=>214}, {:dataset_id=>3, :sequence_id=>1004, :seq_count=>8, :taxonomy_id=>82}, {:dataset_id=>3, :sequence_id=>1005, :seq_count=>203, :taxonomy_id=>214}, {:dataset_id=>3, :sequence_id=>1007, :seq_count=>3, :taxonomy_id=>137}, {:dataset_id=>4, :sequence_id=>1001, :seq_count=>2, :taxonomy_id=>96}, {:dataset_id=>4, :sequence_id=>1002, :seq_count=>13, :taxonomy_id=>214}, {:dataset_id=>4, :sequence_id=>1004, :seq_count=>4, :taxonomy_id=>82}, {:dataset_id=>4, :sequence_id=>1005, :seq_count=>20, :taxonomy_id=>214}]
+    return taxon_strings_per_d
   end
+  
 end
