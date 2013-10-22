@@ -2,7 +2,7 @@ class TaxaCount
 
   RANKS_AMOUNT = Rank.where('rank != "NA"').size
   
-  attr_accessor :taxa_count_per_d, :taxonomies, :cnts_per_dataset_ids_by_tax_ids
+  attr_accessor :taxa_count_per_d, :cnts_per_dataset_ids_by_tax_ids
 
   def initialize(attributes = {})
     attributes.each do |name, value|
@@ -18,7 +18,7 @@ class TaxaCount
   def get_cnts_per_dataset_ids_by_tax_ids(tax_hash, tax_ids)
      tax_hash_temp = tax_hash
      (0...tax_ids.length).map {|i| tax_hash_temp = tax_hash_temp[tax_ids[i]]}
-     @datasets_ids_cnts = tax_hash_temp[:datasets_ids]     
+     @cnts_per_dataset_ids_by_tax_ids = tax_hash_temp[:datasets_ids]     
   end
 
   private
