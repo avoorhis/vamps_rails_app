@@ -11,11 +11,13 @@ class TaxonomyWNames
   end
 
   def create(rank_obj, taxonomies)  
-    @rank_obj   = rank_obj
-    @taxonomies = taxonomies
-    # @taxon_strings_by_t_id        = Hash.new{|hash, key| hash[key] = []}
-    ranks_to_use                  = get_ranks_to_use()    
-    taxonomy_id_strings_upto_rank = make_taxonomy_id_strings_upto_rank(ranks_to_use)
+    @rank_obj                     = rank_obj
+    @taxonomies                   = taxonomies
+    ranks_to_use                  = get_ranks_to_use() 
+    rank_id_names                 = ranks_to_use.map{|rank_name| rank_name + "_id" }
+    puts "MMM2: rank_id_names = " + rank_id_names.inspect
+       
+    taxonomy_id_strings_upto_rank = make_taxonomy_id_strings_upto_rank(rank_id_names)
     @taxon_strings_by_t_id        = make_taxon_strings_by_t_id(ranks_to_use, taxonomy_id_strings_upto_rank)
   end
 
@@ -27,7 +29,6 @@ class TaxonomyWNames
     rank_number = @rank_obj.rank_number  
     rank_names[0..rank_number]
   end
-  
   
   def get_rank_names_all()
     ranks      = Rank.all.sorted 
@@ -48,13 +49,11 @@ class TaxonomyWNames
     # {"domain"=>#<ActiveRecord::Relation [#<Domain id: 1, domain: "Archaea">, #<Domain id: 2, domain: "Bacteria">, #<Domain id: ...
     return all_taxa
   end
-  def make_taxonomy_id_strings_upto_rank(ranks_to_use)
+  
+  def make_taxonomy_id_strings_upto_rank(rank_id_names)
     # from Taxonomy 
-    # TODO: refactoring
     
     puts "MMM: @taxonomies = " + @taxonomies.inspect
-    rank_id_names = ranks_to_use.map{|rank_name| rank_name + "_id" }
-    puts "MMM2: rank_id_names = " + rank_id_names.inspect
     
     taxonomy_id_strings_upto_rank = Hash.new{|hash, key| hash[key] = []}
     @taxonomies.map{|t| tax_ids = []; t.attributes.select{|a| tax_ids << t[a] if rank_id_names.include? a }; taxonomy_id_strings_upto_rank[t[:id]] = tax_ids}
@@ -62,33 +61,6 @@ class TaxonomyWNames
     # EEE: taxonomy_id_strings_upto_rank = {82=>[2, 3, 3], 96=>[2, 4, 32], 137=>[2, 3, 5]}
     
     return taxonomy_id_strings_upto_rank
-    # res = @taxonomies.map{|t| puts t.attributes}
-    # {"id"=>82, "domain_id"=>2, "phylum_id"=>3, "klass_id"=>3, "order_id"=>16, "family_id"=>18, "genus_id"=>129, "species_id"=>129, "strain_id"=>4, "created_at"=>Mon, 19 Aug 2013 08:44:13 EDT -04:00, "updated_at"=>Mon, 19 Aug 2013 08:44:13 EDT -04:00}
-    
-    # res = @taxonomies.map(&:id)
-    # LLL1: res = [82, 96, 137]
-    
-    # .each do |taxonomy|
-    #   taxonomy_id_strings_upto_rank  = []
-    #   # puts "from loop: taxonomy = " + taxonomy.inspect 
-    #   # puts "*" * 10
-    #   # res   = taxonomy.select{|t| t.id == tax_id_val}  
-    #   # ranks_to_use = ["domain", "phylum", "klass"]
-    #   
-    #   res = taxonomy.map(&:id)
-    #   # .select{|t| taxonomy.attributes[id_name] if rank_id_names.include? id_name}  
-      # puts "\n---------\nLLL1: res = " + res.inspect
-    #     
-    #     # tax_id  = taxonomy.attributes[id_name]
-    #     # puts "\n---------\nLLL: taxonomy.attributes[id_name] = " + tax_id.inspect
-    #   # end
-    # end
-        # res   = all_taxa[rank_name].select{|t| t.id == tax_id_val}  
-        
-    # get_taxon(taxonomy, rank_name, all_taxa) 
-    
-    
-    # make_taxa_string(ranks_to_use)
   end
   
   
@@ -126,7 +98,7 @@ class TaxonomyWNames
       taxon_strings_upto_rank[taxonomy_id] = taxon_arr
       # {82=>[2, 3, 3], 96=>[2, 4, 32], 137=>[2, 3, 5]}
     end
-    puts "taxon_strings_upto_rank = " + taxon_strings_upto_rank.inspect
+    # puts "taxon_strings_upto_rank = " + taxon_strings_upto_rank.inspect
     # taxon_strings_upto_rank = {82=>["Bacteria", "Proteobacteria", "Gammaproteobacteria"], 96=>["Bacteria", "Actinobacteria", "class_NA"], 137=>["Bacteria", "Proteobacteria", "Alphaproteobacteria"]}
     # todo: benchmark, what's' faster for choosen taxonomy ids
     # 1) every time get taxon_names up to the choosen rank
