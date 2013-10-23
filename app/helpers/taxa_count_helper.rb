@@ -8,17 +8,40 @@ module TaxaCountHelper
   end
 
   def get_taxonomy_per_d(my_pdrs, tax_hash_obj)
-    dat_counts_seq = create_dat_seq_cnts(my_pdrs)  
-    all_seq_ui     = get_all_sequence_uniq_infos(dat_counts_seq.map { |u| u[:sequence_id] })
 
-    add_tax_id(dat_counts_seq, all_seq_ui)
+    dat_counts_seq = []
+    result = Benchmark.measure do
+      dat_counts_seq = create_dat_seq_cnts(my_pdrs)  
+    end
+    puts "create_dat_seq_cnts(my_pdrs)  result " + result.to_s
+    
+    result = Benchmark.measure do
+      all_seq_ui     = get_all_sequence_uniq_infos(dat_counts_seq.map { |u| u[:sequence_id] })
+    end
+    all_seq_ui     = get_all_sequence_uniq_infos(dat_counts_seq.map { |u| u[:sequence_id] })
+    puts "get_all_sequence_uniq_infos(dat_counts_seq.map { |u| u[:sequence_id] }) result " + result.to_s
+    
+    result = Benchmark.measure do
+      add_tax_id(dat_counts_seq, all_seq_ui)
+    end
+    puts "add_tax_id(dat_counts_seq, all_seq_ui) result " + result.to_s
+      
     @dat_counts_seq_tax = dat_counts_seq
     
-    taxonomies = get_taxonomies(dat_counts_seq)
-    @taxonomies = taxonomies
+    result = Benchmark.measure do
+      @taxonomies = get_taxonomies(dat_counts_seq)
+    end
+    puts "get_taxonomies(dat_counts_seq) result " + result.to_s
+
+    # @taxonomies = taxonomies
     # puts "\nHHH: taxonomies = " + taxonomies.inspect
 
-    tax_hash     = tax_hash_obj.create(taxonomies, dat_counts_seq)
+    tax_hash = {}
+    result = Benchmark.measure do
+      tax_hash     = tax_hash_obj.create(@taxonomies, dat_counts_seq)
+    end
+    puts "tax_hash_obj.create(taxonomies, dat_counts_seq) result " + result.to_s
+      
     # puts "\nRES: tax_hash = " + tax_hash.inspect
     # RES: tax_hash = {2=>{3=>{3=>{16=>{18=>{129=>{129=>{4=>{:datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, 5=>{65=>{129=>{129=>{129=>{4=>{:datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>11, 4=>4}}, 4=>{32=>{5=>{52=>{76=>{129=>{4=>{:datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>13, 4=>6}}}
     
