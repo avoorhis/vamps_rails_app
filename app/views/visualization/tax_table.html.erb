@@ -26,7 +26,6 @@
     <% n = 0 %>
     
     <% @taxonomy_w_cnts_by_d.each do |taxonomy_id, data| %>
-    <%= data.inspect%>
       <% n += 1 %>
       <tr>
         <td class='td-text-right'><%= n %></td><td nowrap='nowrap' class='td-text-left'  ><%=  data[0].join(";") %></td>  
