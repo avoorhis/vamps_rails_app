@@ -27,29 +27,37 @@ class VisualizationController < ApplicationController
     @counts_per_dataset_id = get_counts_per_dataset_id(my_pdrs)
     @taxonomies            = {}
     @dat_counts_seq_tax    = {}    
-    @taxonomy_w_cnts_by_d  = get_taxonomy_per_d(my_pdrs)
+    taxonomy_per_d         = get_taxonomy_per_d(my_pdrs)
     
     # 1) make taxonomy_id strings from Taxonomy by rank
     # 2) get taxon names
     # 3) arrange by dataset_ids
     # 4) add counts to show in tax_table_view    
+    taxon_strings_upto_rank_obj = TaxonomyWNames.new
+    taxon_strings_upto_rank     = taxon_strings_upto_rank_obj.create(rank_number, @taxonomies)
+    taxon_strings_per_d         = organize_tax_by_d_id(taxon_strings_upto_rank)         
     
-    (1..100).each do
-      result = Benchmark.measure do
-        taxon_strings_upto_rank_obj = TaxonomyWNames.new
-        taxon_strings_upto_rank     = taxon_strings_upto_rank_obj.create(rank_number, @taxonomies)
-        taxon_strings_per_d         = organize_tax_by_d_id(taxon_strings_upto_rank)         
-      end
-      puts "TaxonomyWNames result " + result.to_s
+    puts "AAA1, taxonomy_per_d = " + taxonomy_per_d.inspect
+    puts "BBB, taxon_strings_per_d = " + taxon_strings_per_d.inspect
+    @taxonomy_w_cnts_by_d       = taxonomy_per_d
+    # <% @taxonomy_w_cnts_by_d.each do |taxon_string, data| %>
     
-      result1 = Benchmark.measure do
-        taxon_strings_upto_rank_obj1 = TaxonomyWNamesFromAll.new
-        taxon_strings_upto_rank1     = taxon_strings_upto_rank_obj1.create(rank_number, @taxonomies, @dat_counts_seq_tax)
-        croped_taxon_strings_per_d   = cut_taxon_strings_per_d_to_rank(rank_number, taxon_strings_upto_rank1)    
-      end
-      puts "TaxonomyWNamesFromAll result " + result1.to_s 
-      puts "-" * 10
-    end
+    # (1..100).each do
+    #   result = Benchmark.measure do
+    #     taxon_strings_upto_rank_obj = TaxonomyWNames.new
+    #     taxon_strings_upto_rank     = taxon_strings_upto_rank_obj.create(rank_number, @taxonomies)
+    #     taxon_strings_per_d         = organize_tax_by_d_id(taxon_strings_upto_rank)         
+    #   end
+    #   puts "TaxonomyWNames result " + result.to_s
+    # 
+    #   result1 = Benchmark.measure do
+    #     taxon_strings_upto_rank_obj1 = TaxonomyWNamesFromAll.new
+    #     taxon_strings_upto_rank1     = taxon_strings_upto_rank_obj1.create(rank_number, @taxonomies, @dat_counts_seq_tax)
+    #     croped_taxon_strings_per_d   = cut_taxon_strings_per_d_to_rank(rank_number, taxon_strings_upto_rank1)    
+    #   end
+    #   puts "TaxonomyWNamesFromAll result " + result1.to_s 
+    #   puts "-" * 10
+    # end
     # taxon_strings_upto_rank_obj = TaxonomyWNames.new
     # taxon_strings_upto_rank     = taxon_strings_upto_rank_obj.create(rank_number, @taxonomies)
     # taxon_strings_per_d = organize_tax_by_d_id(taxon_strings_upto_rank) 

@@ -61,7 +61,7 @@ module TaxaCountHelper
   end
 
   def get_taxonomies(dat_counts_seq)
-    tax_ids = dat_counts_seq.map{|i| i[:taxonomy_id]}.uniq
+    tax_ids = dat_counts_seq.map{|i| i[:taxonomy_id]}
     Taxonomy.where(id: tax_ids.uniq)
   end
   
