@@ -23,7 +23,7 @@ class VisualizationController < ApplicationController
     rank_obj               = Rank.find(params[:tax_id])
     rank_number            = rank_obj.rank_number
     @choosen_projects_w_d  = get_choosen_projects_w_d()
-    my_pdrs                = SequencePdrInfo.where(dataset_id: params["dataset_ids"])
+    my_pdrs                = SequencePdrInfo.where(dataset_id: params["dataset_ids"].uniq)
     @counts_per_dataset_id = get_counts_per_dataset_id(my_pdrs)
     @taxonomies            = {}
     @dat_counts_seq_tax    = {}    
@@ -228,7 +228,7 @@ class VisualizationController < ApplicationController
     taxon_strings_upto_rank1.each do |d_id, tax_str_arrs|
       # puts "YYY1: d_id = #{d_id.to_s}, tax_str_arrs = " + tax_str_arrs.inspect
       croped_taxon_strings_per_d[d_id] = tax_str_arrs.map{|t| t[0..rank_number]}.uniq
-      puts "YYY2: croped_taxon_strings_per_d = " + croped_taxon_strings_per_d.inspect
+      # puts "YYY2: croped_taxon_strings_per_d = " + croped_taxon_strings_per_d.inspect
     end
     return croped_taxon_strings_per_d
   end
@@ -243,15 +243,15 @@ class VisualizationController < ApplicationController
         # puts "UUU1: dat_counts_seq_tax_hash = " + dat_counts_seq_tax_hash.inspect
         # puts "UUU11: dat_counts_seq_tax_hash[:taxonomy_id] = " + dat_counts_seq_tax_hash[:taxonomy_id].inspect
         # UUU1: dat_counts_seq_tax_hash = {:dataset_id=>3, :sequence_id=>1001, :seq_count=>2, :taxonomy_id=>96}
-        taxon_strings_per_d[dat_counts_seq_tax_hash[:dataset_id]] << taxon_str_arr.uniq
+        taxon_strings_per_d[dat_counts_seq_tax_hash[:dataset_id]] << taxon_str_arr unless taxon_strings_per_d[dat_counts_seq_tax_hash[:dataset_id]].include?(taxon_str_arr)
         # puts "UUU12: taxon_strings_per_d = " + taxon_strings_per_d.inspect
         
       end
-      # puts "UUU2: taxon_strings_per_d = " + taxon_strings_per_d.inspect
     end
   # YYY: taxon_strings_upto_rank = {82=>["Bacteria", "Proteobacteria", "Gammaproteobacteria"], 96=>["Bacteria", "Actinobacteria", "class_NA"], 137=>["Bacteria", "Proteobacteria", "Alphaproteobacteria"]}
   # URA3 = @dat_counts_seq_tax: [{:dataset_id=>3, :sequence_id=>1001, :seq_count=>2, :taxonomy_id=>96}, {:dataset_id=>3, :sequence_id=>1002, :seq_count=>103, :taxonomy_id=>214}, {:dataset_id=>3, :sequence_id=>1004, :seq_count=>8, :taxonomy_id=>82}, {:dataset_id=>3, :sequence_id=>1005, :seq_count=>203, :taxonomy_id=>214}, {:dataset_id=>3, :sequence_id=>1007, :seq_count=>3, :taxonomy_id=>137}, {:dataset_id=>4, :sequence_id=>1001, :seq_count=>2, :taxonomy_id=>96}, {:dataset_id=>4, :sequence_id=>1002, :seq_count=>13, :taxonomy_id=>214}, {:dataset_id=>4, :sequence_id=>1004, :seq_count=>4, :taxonomy_id=>82}, {:dataset_id=>4, :sequence_id=>1005, :seq_count=>20, :taxonomy_id=>214}]
-    taxon_strings_per_d.map{|id, val_arr| taxon_strings_per_d[id] = val_arr.uniq}
+    # puts "UUU22: taxon_strings_per_d = " + taxon_strings_per_d.inspect
+    # taxon_strings_per_d.map{|id, val_arr| taxon_strings_per_d[id] = val_arr.uniq}
     return taxon_strings_per_d
   end
   

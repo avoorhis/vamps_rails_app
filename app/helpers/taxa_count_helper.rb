@@ -16,11 +16,11 @@ module TaxaCountHelper
     
     taxonomies = get_taxonomies(dat_counts_seq)
     @taxonomies = taxonomies
-    puts "\nHHH: taxonomies = " + taxonomies.inspect
+    # puts "\nHHH: taxonomies = " + taxonomies.inspect
 
     tax_hash_obj = TaxaCount.new
     tax_hash     = tax_hash_obj.create(taxonomies, dat_counts_seq)
-    puts "\nRES: tax_hash = " + tax_hash.inspect
+    # puts "\nRES: tax_hash = " + tax_hash.inspect
     # RES: tax_hash = {2=>{3=>{3=>{16=>{18=>{129=>{129=>{4=>{:datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, 5=>{65=>{129=>{129=>{129=>{4=>{:datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>11, 4=>4}}, 4=>{32=>{5=>{52=>{76=>{129=>{4=>{:datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>13, 4=>6}}}
     
     return tax_hash
@@ -50,7 +50,7 @@ module TaxaCountHelper
   end
 
   def get_all_sequence_uniq_infos(seq_u_ids)
-    SequenceUniqInfo.where(sequence_id: seq_u_ids)
+    SequenceUniqInfo.where(sequence_id: seq_u_ids.uniq)
   end
 
   def add_tax_id(dat_counts_seq, all_seq_ui)
@@ -62,7 +62,7 @@ module TaxaCountHelper
 
   def get_taxonomies(dat_counts_seq)
     tax_ids = dat_counts_seq.map{|i| i[:taxonomy_id]}.uniq
-    Taxonomy.where(id: tax_ids)
+    Taxonomy.where(id: tax_ids.uniq)
   end
   
 end

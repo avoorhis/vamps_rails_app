@@ -17,8 +17,8 @@ class TaxonomyWNamesFromAll
     @dat_counts_seq_tax = dat_counts_seq_tax
     rank_names          = get_rank_names_all()
     taxon_strings_per_d = make_taxa_string(rank_names)
-    puts "taxon_strings_per_d from obj1" + taxon_strings_per_d.inspect
-    puts "=" * 10
+    # puts "taxon_strings_per_d from obj1" + taxon_strings_per_d.inspect
+    # puts "=" * 10
     return taxon_strings_per_d
   end
 
@@ -38,7 +38,7 @@ class TaxonomyWNamesFromAll
   
   def make_taxa_string(rank_names)
     all_taxa = get_all_taxa_from_db(rank_names)
-    puts "URA3 = @dat_counts_seq_tax: " + @dat_counts_seq_tax.inspect
+    # puts "URA3 = @dat_counts_seq_tax: " + @dat_counts_seq_tax.inspect
   
     taxon_strings_per_d  = Hash.new{|hash, key| hash[key] = []}
   
@@ -87,7 +87,7 @@ class TaxonomyWNamesFromAll
     rank_names = []     
     ranks.map {|rank| rank.rank == "class" ? rank_names << "klass" : rank_names << rank.rank}
     rank_names.delete("NA")
-    puts "RRRRR: rank_names = " + rank_names.inspect
+    # puts "RRRRR: rank_names = " + rank_names.inspect
     return rank_names
   end
    

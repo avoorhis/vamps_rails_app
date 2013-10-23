@@ -14,7 +14,7 @@ class TaxonomyWNames
     @taxonomies                   = taxonomies
     ranks_to_use                  = get_ranks_to_use(rank_number) 
     rank_id_names                 = ranks_to_use.map{|rank_name| rank_name + "_id" }
-    puts "MMM2: rank_id_names = " + rank_id_names.inspect
+    # puts "MMM2: rank_id_names = " + rank_id_names.inspect
        
     taxonomy_id_strings_upto_rank = make_taxonomy_id_strings_upto_rank(rank_id_names)
     @taxon_strings_by_t_id        = make_taxon_strings_by_t_id(ranks_to_use, taxonomy_id_strings_upto_rank)
@@ -32,7 +32,7 @@ class TaxonomyWNames
     rank_names = []     
     ranks.map {|rank| rank.rank == "class" ? rank_names << "klass" : rank_names << rank.rank}
     rank_names.delete("NA")
-    puts "RRRRR: rank_names = " + rank_names.inspect
+    # puts "RRRRR: rank_names = " + rank_names.inspect
     return rank_names
   end
   
@@ -50,11 +50,11 @@ class TaxonomyWNames
   def make_taxonomy_id_strings_upto_rank(rank_id_names)
     # from Taxonomy 
     
-    puts "MMM: @taxonomies = " + @taxonomies.inspect
+    # puts "MMM: @taxonomies = " + @taxonomies.inspect
     
     taxonomy_id_strings_upto_rank = Hash.new{|hash, key| hash[key] = []}
     @taxonomies.map{|t| tax_ids = []; t.attributes.select{|a| tax_ids << t[a] if rank_id_names.include? a }; taxonomy_id_strings_upto_rank[t[:id]] = tax_ids}
-    puts "EEE: taxonomy_id_strings_upto_rank = " + taxonomy_id_strings_upto_rank.inspect
+    # puts "EEE: taxonomy_id_strings_upto_rank = " + taxonomy_id_strings_upto_rank.inspect
     # EEE: taxonomy_id_strings_upto_rank = {82=>[2, 3, 3], 96=>[2, 4, 32], 137=>[2, 3, 5]}
     
     return taxonomy_id_strings_upto_rank
@@ -63,9 +63,9 @@ class TaxonomyWNames
   
   def make_taxon_strings_by_t_id(ranks_to_use, taxonomy_id_strings_upto_rank)
     all_taxa = get_all_taxa_from_db(ranks_to_use)
-    puts "AAA: all_taxa = " + all_taxa.inspect
-    puts "AAA: ranks_to_use = " + ranks_to_use.inspect
-    puts "AAA: taxonomy_id_strings_upto_rank = " + taxonomy_id_strings_upto_rank.inspect
+    # puts "AAA: all_taxa = " + all_taxa.inspect
+    # puts "AAA: ranks_to_use = " + ranks_to_use.inspect
+    # puts "AAA: taxonomy_id_strings_upto_rank = " + taxonomy_id_strings_upto_rank.inspect
     taxon_strings_upto_rank = Hash.new{|hash, key| hash[key] = []}
     
     taxonomy_id_strings_upto_rank.each do |taxonomy_id, taxon_ids_arr|
