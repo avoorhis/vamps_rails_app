@@ -22,46 +22,20 @@ class VisualizationController < ApplicationController
     
     rank_obj               = Rank.find(params[:tax_id])
     rank_number            = rank_obj.rank_number
-    result = Benchmark.measure do
-      @choosen_projects_w_d  = get_choosen_projects_w_d()
-    end
-    puts "get_choosen_projects_w_d() result " + result.to_s
-    
-    result = Benchmark.measure do
-      my_pdrs                = SequencePdrInfo.where(dataset_id: params["dataset_ids"].uniq)
-    end
-    puts "SequencePdrInfo.where(dataset_id: params[\"dataset_ids\"].uniq) result " + result.to_s
+    @choosen_projects_w_d  = get_choosen_projects_w_d()
     my_pdrs                = SequencePdrInfo.where(dataset_id: params["dataset_ids"].uniq)
-    
-    result = Benchmark.measure do
-      @counts_per_dataset_id = get_counts_per_dataset_id(my_pdrs)
-    end
-    puts "get_counts_per_dataset_id(my_pdrs) result " + result.to_s
-    
+    @counts_per_dataset_id = get_counts_per_dataset_id(my_pdrs)
     @taxonomies            = {}
     @dat_counts_seq_tax    = {}    
     
     tax_hash_obj           = TaxaCount.new    
-
-    result = Benchmark.measure do
-      taxonomy_per_d         = get_taxonomy_per_d(my_pdrs, tax_hash_obj)
-    end
-    puts "get_taxonomy_per_d(my_pdrs, tax_hash_obj) result " + result.to_s
     taxonomy_per_d         = get_taxonomy_per_d(my_pdrs, tax_hash_obj)
-    
     # 1) make taxonomy_id strings from Taxonomy by rank
     # 2) get taxon names
     # 3) arrange by dataset_ids
     # 4) add counts to show in tax_table_view    
     taxon_strings_upto_rank_obj = TaxonomyWNames.new
-    result = Benchmark.measure do
-      taxonomy_ids_upto_rank, taxon_strings_upto_rank = taxon_strings_upto_rank_obj.create(rank_number, @taxonomies)
-    end
-    # todo: split!
     taxonomy_ids_upto_rank, taxon_strings_upto_rank = taxon_strings_upto_rank_obj.create(rank_number, @taxonomies)
-    
-    puts "taxon_strings_upto_rank_obj.create(rank_number, @taxonomies) result " + result.to_s
-    
     # TODO: make separate methods
     # puts "TTT, taxonomy_ids_upto_rank = " + taxonomy_ids_upto_rank.inspect
     # puts "TTT1, taxon_strings_upto_rank = " + taxon_strings_upto_rank.inspect
@@ -70,11 +44,7 @@ class VisualizationController < ApplicationController
     # puts "AAA1, taxonomy_per_d = " + taxonomy_per_d.inspect
     # puts "BBB, taxon_strings_per_d = " + taxon_strings_per_d.inspect
 
-    result = Benchmark.measure do
-      @taxonomy_w_cnts_by_d = make_taxon_strings_w_counts_per_d(taxon_strings_upto_rank, taxonomy_ids_upto_rank, tax_hash_obj, taxonomy_per_d)
-    end
-    # todo: less arguments
-    puts "make_taxon_strings_w_counts_per_d(taxon_strings_upto_rank, taxonomy_ids_upto_rank, tax_hash_obj, taxonomy_per_d) result " + result.to_s
+    @taxonomy_w_cnts_by_d = make_taxon_strings_w_counts_per_d(taxon_strings_upto_rank, taxonomy_ids_upto_rank, tax_hash_obj, taxonomy_per_d)
 
     # puts "HHH, @taxonomy_w_cnts_by_d = " + @taxonomy_w_cnts_by_d.inspect
     
