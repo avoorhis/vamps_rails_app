@@ -27,7 +27,9 @@ class VisualizationController < ApplicationController
     @counts_per_dataset_id = get_counts_per_dataset_id(my_pdrs)
     @taxonomies            = {}
     @dat_counts_seq_tax    = {}    
-    taxonomy_per_d         = get_taxonomy_per_d(my_pdrs)
+    
+    tax_hash_obj           = TaxaCount.new    
+    taxonomy_per_d         = get_taxonomy_per_d(my_pdrs, tax_hash_obj)
     # 1) make taxonomy_id strings from Taxonomy by rank
     # 2) get taxon names
     # 3) arrange by dataset_ids
@@ -36,11 +38,17 @@ class VisualizationController < ApplicationController
     taxonomy_ids_upto_rank, taxon_strings_upto_rank = taxon_strings_upto_rank_obj.create(rank_number, @taxonomies)
     taxon_strings_per_d         = organize_tax_by_d_id(taxon_strings_upto_rank)         
     # TODO: make separate methods
-    puts "TTT, taxonomy_id_strings_upto_rank = " + taxonomy_id_strings_upto_rank.inspect
+    puts "TTT, taxonomy_ids_upto_rank = " + taxonomy_ids_upto_rank.inspect
+    puts "TTT1, taxon_strings_upto_rank = " + taxon_strings_upto_rank.inspect
     
     # puts "TTT, @taxonomies = " + @taxonomies.inspect
     puts "AAA1, taxonomy_per_d = " + taxonomy_per_d.inspect
     puts "BBB, taxon_strings_per_d = " + taxon_strings_per_d.inspect
+    
+    
+    # a = @tax_hash_obj.get_cnts_per_dataset_ids_by_tax_ids(@tax_hash, [2])
+    
+    
     @taxonomy_w_cnts_by_d       = taxonomy_per_d
     # <% @taxonomy_w_cnts_by_d.each do |taxon_string, data| %>
     
