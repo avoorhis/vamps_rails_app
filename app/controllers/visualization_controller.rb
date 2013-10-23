@@ -28,15 +28,17 @@ class VisualizationController < ApplicationController
     @taxonomies            = {}
     @dat_counts_seq_tax    = {}    
     taxonomy_per_d         = get_taxonomy_per_d(my_pdrs)
-    
     # 1) make taxonomy_id strings from Taxonomy by rank
     # 2) get taxon names
     # 3) arrange by dataset_ids
     # 4) add counts to show in tax_table_view    
     taxon_strings_upto_rank_obj = TaxonomyWNames.new
-    taxon_strings_upto_rank     = taxon_strings_upto_rank_obj.create(rank_number, @taxonomies)
+    taxonomy_ids_upto_rank, taxon_strings_upto_rank = taxon_strings_upto_rank_obj.create(rank_number, @taxonomies)
     taxon_strings_per_d         = organize_tax_by_d_id(taxon_strings_upto_rank)         
+    # TODO: make separate methods
+    puts "TTT, taxonomy_id_strings_upto_rank = " + taxonomy_id_strings_upto_rank.inspect
     
+    # puts "TTT, @taxonomies = " + @taxonomies.inspect
     puts "AAA1, taxonomy_per_d = " + taxonomy_per_d.inspect
     puts "BBB, taxon_strings_per_d = " + taxon_strings_per_d.inspect
     @taxonomy_w_cnts_by_d       = taxonomy_per_d

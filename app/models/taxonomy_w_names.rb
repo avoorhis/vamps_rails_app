@@ -2,7 +2,7 @@ class TaxonomyWNames
   # 1) make taxonomy_id strings from Taxonomy by rank
   # 2) get taxon names
 
-  attr_accessor :taxon_strings_by_t_id
+  attr_accessor :taxon_strings_by_t_id, :taxonomy_id_strings_upto_rank
 
   def initialize(attributes = {})
     attributes.each do |name, value|
@@ -16,10 +16,26 @@ class TaxonomyWNames
     rank_id_names                 = ranks_to_use.map{|rank_name| rank_name + "_id" }
     # puts "MMM2: rank_id_names = " + rank_id_names.inspect
        
-    taxonomy_id_strings_upto_rank = make_taxonomy_id_strings_upto_rank(rank_id_names)
+    @taxonomy_id_strings_upto_rank = make_taxonomy_id_strings_upto_rank(rank_id_names)
+    puts "MMM2: @taxonomy_id_strings_upto_rank = " + @taxonomy_id_strings_upto_rank.inspect
     @taxon_strings_by_t_id        = make_taxon_strings_by_t_id(ranks_to_use, taxonomy_id_strings_upto_rank)
+    return @taxonomy_id_strings_upto_rank, @taxon_strings_by_t_id
   end
 
+  def make_taxonomy_id_strings_upto_rank(rank_id_names)
+    # from Taxonomy 
+    
+    # puts "MMM: @taxonomies = " + @taxonomies.inspect
+    
+    taxonomy_id_strings_upto_rank = Hash.new{|hash, key| hash[key] = []}
+    @taxonomies.map{|t| tax_ids = []; t.attributes.select{|a| tax_ids << t[a] if rank_id_names.include? a }; taxonomy_id_strings_upto_rank[t[:id]] = tax_ids}
+    # puts "EEE: taxonomy_id_strings_upto_rank = " + taxonomy_id_strings_upto_rank.inspect
+    # EEE: taxonomy_id_strings_upto_rank = {82=>[2, 3, 3], 96=>[2, 4, 32], 137=>[2, 3, 5]}
+    
+    return taxonomy_id_strings_upto_rank
+  end
+  
+ 
   private
   
   def get_ranks_to_use(rank_number)  
@@ -46,20 +62,6 @@ class TaxonomyWNames
     # {"domain"=>#<ActiveRecord::Relation [#<Domain id: 1, domain: "Archaea">, #<Domain id: 2, domain: "Bacteria">, #<Domain id: ...
     return all_taxa
   end
-  
-  def make_taxonomy_id_strings_upto_rank(rank_id_names)
-    # from Taxonomy 
-    
-    # puts "MMM: @taxonomies = " + @taxonomies.inspect
-    
-    taxonomy_id_strings_upto_rank = Hash.new{|hash, key| hash[key] = []}
-    @taxonomies.map{|t| tax_ids = []; t.attributes.select{|a| tax_ids << t[a] if rank_id_names.include? a }; taxonomy_id_strings_upto_rank[t[:id]] = tax_ids}
-    # puts "EEE: taxonomy_id_strings_upto_rank = " + taxonomy_id_strings_upto_rank.inspect
-    # EEE: taxonomy_id_strings_upto_rank = {82=>[2, 3, 3], 96=>[2, 4, 32], 137=>[2, 3, 5]}
-    
-    return taxonomy_id_strings_upto_rank
-  end
-  
   
   def make_taxon_strings_by_t_id(ranks_to_use, taxonomy_id_strings_upto_rank)
     all_taxa = get_all_taxa_from_db(ranks_to_use)
