@@ -15,11 +15,11 @@ module TaxaCountHelper
     end
     puts "create_dat_seq_cnts(my_pdrs)  result " + result.to_s
     
-    result = Benchmark.measure do
-      all_seq_ui     = get_all_sequence_uniq_infos(dat_counts_seq.map { |u| u[:sequence_id] })
-    end
-    all_seq_ui     = get_all_sequence_uniq_infos(dat_counts_seq.map { |u| u[:sequence_id] })
-    puts "get_all_sequence_uniq_infos(dat_counts_seq.map { |u| u[:sequence_id] }) result " + result.to_s
+    # result = Benchmark.measure do
+    #   all_seq_ui     = get_all_sequence_uniq_infos(dat_counts_seq.map { |u| u[:sequence_id] })
+    # end
+    # all_seq_ui     = get_all_sequence_uniq_infos(dat_counts_seq.map { |u| u[:sequence_id] })
+    # puts "get_all_sequence_uniq_infos(dat_counts_seq.map { |u| u[:sequence_id] }) result " + result.to_s
     
     # result = Benchmark.measure do
     #   add_tax_id(dat_counts_seq, all_seq_ui)
@@ -75,28 +75,28 @@ module TaxaCountHelper
     return dat_seq_cnts
   end
 
-  def get_all_sequence_uniq_infos(seq_u_ids)
-    SequenceUniqInfo.where(sequence_id: seq_u_ids.uniq)
-  end
+  # def get_all_sequence_uniq_infos(seq_u_ids)
+  #   SequenceUniqInfo.where(sequence_id: seq_u_ids.uniq)
+  # end
 
-  def add_tax_id(dat_counts_seq, all_seq_ui)
-    # puts "\nAAA: dat_counts_seq = " + dat_counts_seq.inspect
-    # puts "\nall_seq_ui = "+ all_seq_ui.inspect
-      all_seq_ui.each do |u| 
-        # puts "\nOOO2 all_seq_ui.each = " + u.inspect
-        dat_counts_seq.each do |i|
-          # puts "\nOOO1 dat_counts_seq.each = " + i.inspect
-        
-        if (u.attributes["sequence_id"] == i[:sequence_id])
-          # puts "\nOOO"
-          # puts u.attributes["taxonomy_id"]
-          i[:taxonomy_id] = u.attributes["taxonomy_id"]
-        end
-      end
-      # i[:taxonomy_id] = all_seq_ui.select {|u| u.attributes["sequence_id"] == i[:sequence_id]}.map{|a| a.attributes["taxonomy_id"]}[0]
-    end
-    return dat_counts_seq
-  end
+  # def add_tax_id(dat_counts_seq, all_seq_ui)
+  #   # puts "\nAAA: dat_counts_seq = " + dat_counts_seq.inspect
+  #   # puts "\nall_seq_ui = "+ all_seq_ui.inspect
+  #     all_seq_ui.each do |u| 
+  #       # puts "\nOOO2 all_seq_ui.each = " + u.inspect
+  #       dat_counts_seq.each do |i|
+  #         # puts "\nOOO1 dat_counts_seq.each = " + i.inspect
+  #       
+  #       if (u.attributes["sequence_id"] == i[:sequence_id])
+  #         # puts "\nOOO"
+  #         # puts u.attributes["taxonomy_id"]
+  #         i[:taxonomy_id] = u.attributes["taxonomy_id"]
+  #       end
+  #     end
+  #     # i[:taxonomy_id] = all_seq_ui.select {|u| u.attributes["sequence_id"] == i[:sequence_id]}.map{|a| a.attributes["taxonomy_id"]}[0]
+  #   end
+  #   return dat_counts_seq
+  # end
 
   def get_taxonomies(dat_counts_seq)
     tax_ids = dat_counts_seq.map{|i| i[:taxonomy_id]}
