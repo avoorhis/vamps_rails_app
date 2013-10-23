@@ -37,16 +37,16 @@ class VisualizationController < ApplicationController
     taxon_strings_upto_rank_obj = TaxonomyWNames.new
     taxonomy_ids_upto_rank, taxon_strings_upto_rank = taxon_strings_upto_rank_obj.create(rank_number, @taxonomies)
     # TODO: make separate methods
-    puts "TTT, taxonomy_ids_upto_rank = " + taxonomy_ids_upto_rank.inspect
-    puts "TTT1, taxon_strings_upto_rank = " + taxon_strings_upto_rank.inspect
+    # puts "TTT, taxonomy_ids_upto_rank = " + taxonomy_ids_upto_rank.inspect
+    # puts "TTT1, taxon_strings_upto_rank = " + taxon_strings_upto_rank.inspect
     
     # puts "TTT, @taxonomies = " + @taxonomies.inspect
-    puts "AAA1, taxonomy_per_d = " + taxonomy_per_d.inspect
+    # puts "AAA1, taxonomy_per_d = " + taxonomy_per_d.inspect
     # puts "BBB, taxon_strings_per_d = " + taxon_strings_per_d.inspect
 
     @taxonomy_w_cnts_by_d = make_taxon_strings_w_counts_per_d(taxon_strings_upto_rank, taxonomy_ids_upto_rank, tax_hash_obj, taxonomy_per_d)
 
-    puts "HHH, @taxonomy_w_cnts_by_d = " + @taxonomy_w_cnts_by_d.inspect
+    # puts "HHH, @taxonomy_w_cnts_by_d = " + @taxonomy_w_cnts_by_d.inspect
     
     # @taxonomy_w_cnts_by_d       = taxonomy_per_d
     # <% @taxonomy_w_cnts_by_d.each do |taxon_string, data| %>
@@ -236,23 +236,22 @@ class VisualizationController < ApplicationController
   def make_taxon_strings_w_counts_per_d(taxon_strings_upto_rank, taxonomy_ids_upto_rank, tax_hash_obj, taxonomy_per_d)
     taxon_strings_w_counts_per_d = Hash.new{|hash, key| hash[key] = []}
     taxonomy_ids_upto_rank.each do |taxonomy_id, taxa_ids_arr|
-      taxon_strings_w_counts_per_d[taxonomy_id] << taxon_strings_upto_rank[taxonomy_id]
-      
+      taxon_strings_w_counts_per_d[taxonomy_id] << taxon_strings_upto_rank[taxonomy_id]      
       taxon_strings_w_counts_per_d[taxonomy_id] << fill_zeros(tax_hash_obj.get_cnts_per_dataset_ids_by_tax_ids(taxonomy_per_d, taxa_ids_arr))
     end
-    puts "\nPPP, taxon_strings_w_counts_per_d = " + taxon_strings_w_counts_per_d.inspect
+    # puts "\nPPP, taxon_strings_w_counts_per_d = " + taxon_strings_w_counts_per_d.inspect
     # PPP, taxon_strings_w_counts_per_d = {82=>["Bacteria", "Proteobacteria", "Gammaproteobacteria", {3=>8, 4=>4}], 96=>["Bacteria", "Actinobacteria", "class_NA", {3=>2, 4=>2}], 137=>["Bacteria", "Proteobacteria", "Alphaproteobacteria", {3=>3}]}
     
     return taxon_strings_w_counts_per_d
   end
+  
   def fill_zeros(cnts_per_dataset_ids_by_tax_ids)
-    puts "VVV: params[\"dataset_ids\"] = " + params["dataset_ids"].inspect
-    puts "VVV1: cnts_per_dataset_ids_by_tax_ids = " + cnts_per_dataset_ids_by_tax_ids.inspect
+    # puts "VVV: params[\"dataset_ids\"] = " + params["dataset_ids"].inspect
+    # puts "VVV1: cnts_per_dataset_ids_by_tax_ids = " + cnts_per_dataset_ids_by_tax_ids.inspect
     params["dataset_ids"].each do |d_id|
-      puts "LLL: cnts_per_dataset_ids_by_tax_ids[d_id.to_i] = " + cnts_per_dataset_ids_by_tax_ids[d_id.to_i].inspect
       cnts_per_dataset_ids_by_tax_ids[d_id.to_i] = 0 unless cnts_per_dataset_ids_by_tax_ids[d_id.to_i].is_a? Numeric
     end
-    puts "WWW: cnts_per_dataset_ids_by_tax_ids = " + cnts_per_dataset_ids_by_tax_ids.inspect
+    # puts "WWW: cnts_per_dataset_ids_by_tax_ids = " + cnts_per_dataset_ids_by_tax_ids.inspect
     return cnts_per_dataset_ids_by_tax_ids
   end
   

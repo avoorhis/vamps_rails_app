@@ -17,7 +17,7 @@ class TaxonomyWNames
     # puts "MMM2: rank_id_names = " + rank_id_names.inspect
        
     @taxonomy_id_strings_upto_rank = make_taxonomy_id_strings_upto_rank(rank_id_names)
-    puts "MMM2: @taxonomy_id_strings_upto_rank = " + @taxonomy_id_strings_upto_rank.inspect
+    # puts "MMM2: @taxonomy_id_strings_upto_rank = " + @taxonomy_id_strings_upto_rank.inspect
     @taxon_strings_by_t_id        = make_taxon_strings_by_t_id(ranks_to_use, taxonomy_id_strings_upto_rank)
     return @taxonomy_id_strings_upto_rank, @taxon_strings_by_t_id
   end
