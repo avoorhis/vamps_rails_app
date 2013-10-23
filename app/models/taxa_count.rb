@@ -16,13 +16,9 @@ class TaxaCount
   end
     
   def get_cnts_per_dataset_ids_by_tax_ids(tax_hash, tax_ids)
-    puts "URA, tax_ids = " + tax_ids.inspect
-    puts "URA, tax_hash = " + tax_hash.inspect
      tax_hash_temp = tax_hash
      (0...tax_ids.length).map {|i| tax_hash_temp = tax_hash_temp[tax_ids[i]]}
      @cnts_per_dataset_ids_by_tax_ids = tax_hash_temp[:datasets_ids]     
-     puts "URA, @cnts_per_dataset_ids_by_tax_ids = " + @cnts_per_dataset_ids_by_tax_ids.inspect
-     return @cnts_per_dataset_ids_by_tax_ids
   end
 
   private

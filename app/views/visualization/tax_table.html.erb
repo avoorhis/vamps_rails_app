@@ -25,14 +25,14 @@
 	
     <% n = 0 %>
     
-    <% @taxonomy_w_cnts_by_d.each do |taxon_string, data| %>
+    <% @taxonomy_w_cnts_by_d.each do |taxonomy_id, data| %>
+    <%= data.inspect%>
       <% n += 1 %>
       <tr>
-        <td class='td-text-right'><%= n %></td><td nowrap='nowrap' class='td-text-left'  ><%= taxon_string %></td>  
-        <% data[:cnts].each do |d_id, cnt|%>
+        <td class='td-text-right'><%= n %></td><td nowrap='nowrap' class='td-text-left'  ><%=  data[0].join(";") %></td>  
+        <% data[1].each do |d_id, cnt|%>
             <td style='text-align:right;padding:1px 3px;'><%= cnt %></td>      
         <% end %>        
-        <td style='text-align:right;padding:1px 3px;'><%= data[:sum] %></td>      
       </tr>
     <% end %>
     

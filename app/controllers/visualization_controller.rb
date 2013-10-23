@@ -36,20 +36,27 @@ class VisualizationController < ApplicationController
     # 4) add counts to show in tax_table_view    
     taxon_strings_upto_rank_obj = TaxonomyWNames.new
     taxonomy_ids_upto_rank, taxon_strings_upto_rank = taxon_strings_upto_rank_obj.create(rank_number, @taxonomies)
-    taxon_strings_per_d         = organize_tax_by_d_id(taxon_strings_upto_rank)         
+    # taxon_strings_per_d         = organize_tax_by_d_id(taxon_strings_upto_rank)         
     # TODO: make separate methods
     puts "TTT, taxonomy_ids_upto_rank = " + taxonomy_ids_upto_rank.inspect
     puts "TTT1, taxon_strings_upto_rank = " + taxon_strings_upto_rank.inspect
     
     # puts "TTT, @taxonomies = " + @taxonomies.inspect
     puts "AAA1, taxonomy_per_d = " + taxonomy_per_d.inspect
-    puts "BBB, taxon_strings_per_d = " + taxon_strings_per_d.inspect
+    # puts "BBB, taxon_strings_per_d = " + taxon_strings_per_d.inspect
     
     
     # a = @tax_hash_obj.get_cnts_per_dataset_ids_by_tax_ids(@tax_hash, [2])
+    # taxonomy_ids_upto_rank.each do |taxonomy_is, taxa_ids_arr|
+    #   a = tax_hash_obj.get_cnts_per_dataset_ids_by_tax_ids(taxonomy_per_d, taxa_ids_arr)
+    #   puts "HHH, a = " + a.inspect
+    # end
+
+    @taxonomy_w_cnts_by_d = make_taxon_strings_w_counts_per_d(taxon_strings_upto_rank, taxonomy_ids_upto_rank, tax_hash_obj, taxonomy_per_d)
+
+    puts "HHH, @taxonomy_w_cnts_by_d = " + @taxonomy_w_cnts_by_d.inspect
     
-    
-    @taxonomy_w_cnts_by_d       = taxonomy_per_d
+    # @taxonomy_w_cnts_by_d       = taxonomy_per_d
     # <% @taxonomy_w_cnts_by_d.each do |taxon_string, data| %>
     
     # (1..100).each do
@@ -251,24 +258,52 @@ class VisualizationController < ApplicationController
     return croped_taxon_strings_per_d
   end
   
+  def make_taxon_strings_w_counts_per_d(taxon_strings_upto_rank, taxonomy_ids_upto_rank, tax_hash_obj, taxonomy_per_d)
+    taxon_strings_w_counts_per_d = Hash.new{|hash, key| hash[key] = []}
+
+
+    # taxon_strings_w_counts_per_d = {82 => [["Bacteria", "Proteobacteria", "Gammaproteobacteria"], 3=>8, 4=>4], 96 => [["Bacteria", "Actinobacteria", "class_NA"], 3=>2, 4=>2]}
+    # taxon_strings_w_counts_per_d = taxon_strings_upto_rank
+    taxonomy_ids_upto_rank.each do |taxonomy_id, taxa_ids_arr|
+      taxon_strings_w_counts_per_d[taxonomy_id] << taxon_strings_upto_rank[taxonomy_id]
+      a = tax_hash_obj.get_cnts_per_dataset_ids_by_tax_ids(taxonomy_per_d, taxa_ids_arr)
+      taxon_strings_w_counts_per_d[taxonomy_id] << a
+    end
+    puts "\nPPP, taxon_strings_w_counts_per_d = " + taxon_strings_w_counts_per_d.inspect
+    # PPP, taxon_strings_w_counts_per_d = {82=>["Bacteria", "Proteobacteria", "Gammaproteobacteria", {3=>8, 4=>4}], 96=>["Bacteria", "Actinobacteria", "class_NA", {3=>2, 4=>2}], 137=>["Bacteria", "Proteobacteria", "Alphaproteobacteria", {3=>3}]}
+    
+    return taxon_strings_w_counts_per_d
+  end
+  
+  
   def organize_tax_by_d_id(taxon_strings_upto_rank) 
     taxon_strings_per_d = Hash.new{|hash, key| hash[key] = []}
+
     taxon_strings_upto_rank.each do |tax_id, taxon_str_arr|
-      # puts "UUU0: tax_id = " + tax_id.inspect
-      # puts "UUU01: taxon_str_arr = " + taxon_str_arr.inspect
+      inner_hash = Hash.new
+      puts "UUU0: tax_id = " + tax_id.inspect
+      puts "UUU01: taxon_str_arr = " + taxon_str_arr.inspect
       @dat_counts_seq_tax.each do |dat_counts_seq_tax_hash|
         # a = dat_counts_seq_tax_hash[0].select {|h| h[:dataset_id] if h[:taxonomy_id].to_s == tax_id.to_s }
-        # puts "UUU1: dat_counts_seq_tax_hash = " + dat_counts_seq_tax_hash.inspect
+        puts "UUU1: dat_counts_seq_tax_hash = " + dat_counts_seq_tax_hash.inspect
+        inner_hash[tax_id] = taxon_str_arr
         # puts "UUU11: dat_counts_seq_tax_hash[:taxonomy_id] = " + dat_counts_seq_tax_hash[:taxonomy_id].inspect
         # UUU1: dat_counts_seq_tax_hash = {:dataset_id=>3, :sequence_id=>1001, :seq_count=>2, :taxonomy_id=>96}
-        taxon_strings_per_d[dat_counts_seq_tax_hash[:dataset_id]] << taxon_str_arr unless taxon_strings_per_d[dat_counts_seq_tax_hash[:dataset_id]].include?(taxon_str_arr)
+        # taxon_strings_per_d[dat_counts_seq_tax_hash[:dataset_id]][tax_id] << taxon_str_arr 
+        # unless taxon_strings_per_d[dat_counts_seq_tax_hash[:dataset_id]][tax_id].include?(taxon_str_arr)
         # puts "UUU12: taxon_strings_per_d = " + taxon_strings_per_d.inspect
+        taxon_strings_per_d[dat_counts_seq_tax_hash[:dataset_id]] << inner_hash unless taxon_strings_per_d[dat_counts_seq_tax_hash[:dataset_id]].include?(inner_hash)
+        # unless h[k]
+        puts "UUU100: taxon_strings_per_d[dat_counts_seq_tax_hash[:dataset_id]] = " + taxon_strings_per_d[dat_counts_seq_tax_hash[:dataset_id]].inspect
+        puts "UUU101: taxon_strings_per_d[#{dat_counts_seq_tax_hash[:dataset_id]}] = " + taxon_strings_per_d[dat_counts_seq_tax_hash[:dataset_id]].inspect
         
       end
+      puts "UUU12: inner_hash = " + inner_hash.inspect
+      
     end
   # YYY: taxon_strings_upto_rank = {82=>["Bacteria", "Proteobacteria", "Gammaproteobacteria"], 96=>["Bacteria", "Actinobacteria", "class_NA"], 137=>["Bacteria", "Proteobacteria", "Alphaproteobacteria"]}
   # URA3 = @dat_counts_seq_tax: [{:dataset_id=>3, :sequence_id=>1001, :seq_count=>2, :taxonomy_id=>96}, {:dataset_id=>3, :sequence_id=>1002, :seq_count=>103, :taxonomy_id=>214}, {:dataset_id=>3, :sequence_id=>1004, :seq_count=>8, :taxonomy_id=>82}, {:dataset_id=>3, :sequence_id=>1005, :seq_count=>203, :taxonomy_id=>214}, {:dataset_id=>3, :sequence_id=>1007, :seq_count=>3, :taxonomy_id=>137}, {:dataset_id=>4, :sequence_id=>1001, :seq_count=>2, :taxonomy_id=>96}, {:dataset_id=>4, :sequence_id=>1002, :seq_count=>13, :taxonomy_id=>214}, {:dataset_id=>4, :sequence_id=>1004, :seq_count=>4, :taxonomy_id=>82}, {:dataset_id=>4, :sequence_id=>1005, :seq_count=>20, :taxonomy_id=>214}]
-    # puts "UUU22: taxon_strings_per_d = " + taxon_strings_per_d.inspect
+    puts "UUU22: taxon_strings_per_d = " + taxon_strings_per_d.inspect
     # taxon_strings_per_d.map{|id, val_arr| taxon_strings_per_d[id] = val_arr.uniq}
     return taxon_strings_per_d
   end
