@@ -16,26 +16,12 @@ class TaxonomyWNames
     rank_id_names                 = ranks_to_use.map{|rank_name| rank_name + "_id" }
     # puts "MMM2: rank_id_names = " + rank_id_names.inspect
        
-    @taxonomy_id_strings_upto_rank = make_taxonomy_id_strings_upto_rank(rank_id_names)
-    # puts "MMM2: @taxonomy_id_strings_upto_rank = " + @taxonomy_id_strings_upto_rank.inspect
-    @taxon_strings_by_t_id        = make_taxon_strings_by_t_id(ranks_to_use, taxonomy_id_strings_upto_rank)
-    return @taxonomy_id_strings_upto_rank, @taxon_strings_by_t_id
+    taxonomy_id_strings_upto_rank = make_taxonomy_id_strings_upto_rank(rank_id_names)
+    @taxonomy_by_t_id        = make_taxon_strings_by_t_id(ranks_to_use, taxonomy_id_strings_upto_rank)
+    # puts "333: @taxonomy_by_t_id = " + @taxonomy_by_t_id.inspect
+    return @taxonomy_by_t_id
   end
 
-  def make_taxonomy_id_strings_upto_rank(rank_id_names)
-    # from Taxonomy 
-    
-    # puts "MMM: @taxonomies = " + @taxonomies.inspect
-    
-    taxonomy_id_strings_upto_rank = Hash.new{|hash, key| hash[key] = []}
-    @taxonomies.map{|t| tax_ids = []; t.attributes.select{|a| tax_ids << t[a] if rank_id_names.include? a }; taxonomy_id_strings_upto_rank[t[:id]] = tax_ids}
-    # puts "EEE: taxonomy_id_strings_upto_rank = " + taxonomy_id_strings_upto_rank.inspect
-    # EEE: taxonomy_id_strings_upto_rank = {82=>[2, 3, 3], 96=>[2, 4, 32], 137=>[2, 3, 5]}
-    
-    return taxonomy_id_strings_upto_rank
-  end
-  
- 
   private
   
   def get_ranks_to_use(rank_number)  
@@ -68,7 +54,8 @@ class TaxonomyWNames
     # puts "AAA: all_taxa = " + all_taxa.inspect
     # puts "AAA: ranks_to_use = " + ranks_to_use.inspect
     # puts "AAA: taxonomy_id_strings_upto_rank = " + taxonomy_id_strings_upto_rank.inspect
-    taxon_strings_upto_rank = Hash.new{|hash, key| hash[key] = []}
+    # taxon_strings_upto_rank = Hash.new{|hash, key| hash[key] = []}
+    taxon_strings_upto_rank = Hash.recursive
     
     taxonomy_id_strings_upto_rank.each do |taxonomy_id, taxon_ids_arr|
       # puts "taxonomy_id = #{taxonomy_id.inspect}, taxon_ids_arr = #{taxon_ids_arr.inspect}"
@@ -94,16 +81,30 @@ class TaxonomyWNames
       # puts "taxon_arr = " + taxon_arr.inspect
       # taxon_arr = ["Bacteria", "Proteobacteria", "Gammaproteobacteria"]
       
-      taxon_strings_upto_rank[taxonomy_id] = taxon_arr
+      taxon_strings_upto_rank[taxonomy_id][:taxon_string] = taxon_arr
+      taxon_strings_upto_rank[taxonomy_id][:tax_ids]      = taxon_ids_arr    
       # {82=>[2, 3, 3], 96=>[2, 4, 32], 137=>[2, 3, 5]}
     end
-    # puts "taxon_strings_upto_rank = " + taxon_strings_upto_rank.inspect
+    # puts "TTT5: taxon_strings_upto_rank = " + taxon_strings_upto_rank.inspect
     # taxon_strings_upto_rank = {82=>["Bacteria", "Proteobacteria", "Gammaproteobacteria"], 96=>["Bacteria", "Actinobacteria", "class_NA"], 137=>["Bacteria", "Proteobacteria", "Alphaproteobacteria"]}
     # todo: benchmark, what's' faster for choosen taxonomy ids
     # 1) every time get taxon_names up to the choosen rank
     # 2) have all taxon names and cut down to the choosen rank every time (genus: 128kb, 2591; species: 176 kb, 4527)
     # do that in the taxonomy object?
     return taxon_strings_upto_rank
+  end
+  
+  def make_taxonomy_id_strings_upto_rank(rank_id_names)
+    # from Taxonomy 
+    
+    # puts "MMM: @taxonomies = " + @taxonomies.inspect
+    
+    taxonomy_id_strings_upto_rank = Hash.new{|hash, key| hash[key] = []}
+    @taxonomies.map{|t| tax_ids = []; t.attributes.select{|a| tax_ids << t[a] if rank_id_names.include? a }; taxonomy_id_strings_upto_rank[t[:id]] = tax_ids}
+    # puts "EEE: taxonomy_id_strings_upto_rank = " + taxonomy_id_strings_upto_rank.inspect
+    # EEE: taxonomy_id_strings_upto_rank = {82=>[2, 3, 3], 96=>[2, 4, 32], 137=>[2, 3, 5]}
+    
+    return taxonomy_id_strings_upto_rank
   end
   
   

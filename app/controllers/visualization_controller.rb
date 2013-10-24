@@ -42,23 +42,24 @@ class VisualizationController < ApplicationController
     @dat_counts_seq_tax    = {}    
     
     tax_hash_obj           = TaxaCount.new    
-
+    taxonomy_per_d = Hash.new
     result = Benchmark.measure do
       taxonomy_per_d         = get_taxonomy_per_d(my_pdrs, tax_hash_obj)
     end
     puts "get_taxonomy_per_d(my_pdrs, tax_hash_obj) result " + result.to_s
-    taxonomy_per_d         = get_taxonomy_per_d(my_pdrs, tax_hash_obj)
+    # taxonomy_per_d         = get_taxonomy_per_d(my_pdrs, tax_hash_obj)
     
     # 1) make taxonomy_id strings from Taxonomy by rank
     # 2) get taxon names
     # 3) arrange by dataset_ids
     # 4) add counts to show in tax_table_view    
-    taxon_strings_upto_rank_obj = TaxonomyWNames.new
+    taxonomy_by_t_id_upto_rank_obj = TaxonomyWNames.new
+    taxonomy_by_t_id_upto_rank     = Hash.new
     result = Benchmark.measure do
-      taxonomy_ids_upto_rank, taxon_strings_upto_rank = taxon_strings_upto_rank_obj.create(rank_number, @taxonomies)
+      taxonomy_by_t_id_upto_rank = taxonomy_by_t_id_upto_rank_obj.create(rank_number, @taxonomies)
     end
     # todo: split!
-    taxonomy_ids_upto_rank, taxon_strings_upto_rank = taxon_strings_upto_rank_obj.create(rank_number, @taxonomies)
+    # taxonomy_ids_upto_rank, taxon_strings_upto_rank = taxon_strings_upto_rank_obj.create(rank_number, @taxonomies)
     
     puts "taxon_strings_upto_rank_obj.create(rank_number, @taxonomies) result " + result.to_s
     
@@ -70,13 +71,14 @@ class VisualizationController < ApplicationController
     # puts "AAA1, taxonomy_per_d = " + taxonomy_per_d.inspect
     # puts "BBB, taxon_strings_per_d = " + taxon_strings_per_d.inspect
 
+
     result = Benchmark.measure do
-      @taxonomy_w_cnts_by_d = make_taxon_strings_w_counts_per_d(taxon_strings_upto_rank, taxonomy_ids_upto_rank, tax_hash_obj, taxonomy_per_d)
+      @taxonomy_w_cnts_by_d = make_taxon_strings_w_counts_per_d(taxonomy_by_t_id_upto_rank, tax_hash_obj, taxonomy_per_d)
     end
     # todo: less arguments
-    puts "make_taxon_strings_w_counts_per_d(taxon_strings_upto_rank, taxonomy_ids_upto_rank, tax_hash_obj, taxonomy_per_d) result " + result.to_s
+    puts "make_taxon_strings_w_counts_per_d(taxonomy_by_t_id_upto_rank, tax_hash_obj, taxonomy_per_d) result " + result.to_s
 
-    # puts "HHH, @taxonomy_w_cnts_by_d = " + @taxonomy_w_cnts_by_d.inspect
+    puts "HHH, @taxonomy_w_cnts_by_d = " + @taxonomy_w_cnts_by_d.inspect
     
     # @taxonomy_w_cnts_by_d       = taxonomy_per_d
     # <% @taxonomy_w_cnts_by_d.each do |taxon_string, data| %>
@@ -263,11 +265,11 @@ class VisualizationController < ApplicationController
     return croped_taxon_strings_per_d
   end
   
-  def make_taxon_strings_w_counts_per_d(taxon_strings_upto_rank, taxonomy_ids_upto_rank, tax_hash_obj, taxonomy_per_d)
+  def make_taxon_strings_w_counts_per_d(taxonomy_by_t_id_upto_rank, tax_hash_obj, taxonomy_per_d)
     taxon_strings_w_counts_per_d = Hash.new{|hash, key| hash[key] = []}
-    taxonomy_ids_upto_rank.each do |taxonomy_id, taxa_ids_arr|
-      taxon_strings_w_counts_per_d[taxonomy_id] << taxon_strings_upto_rank[taxonomy_id]      
-      taxon_strings_w_counts_per_d[taxonomy_id] << fill_zeros(tax_hash_obj.get_cnts_per_dataset_ids_by_tax_ids(taxonomy_per_d, taxa_ids_arr))
+    taxonomy_by_t_id_upto_rank.each do |taxonomy_id, taxonomy_hash|
+      taxon_strings_w_counts_per_d[taxonomy_id] << taxonomy_hash[:taxon_string]      
+      taxon_strings_w_counts_per_d[taxonomy_id] << fill_zeros(tax_hash_obj.get_cnts_per_dataset_ids_by_tax_ids(taxonomy_per_d, taxonomy_hash[:tax_ids]))
     end
     # puts "\nPPP, taxon_strings_w_counts_per_d = " + taxon_strings_w_counts_per_d.inspect
     # PPP, taxon_strings_w_counts_per_d = {82=>["Bacteria", "Proteobacteria", "Gammaproteobacteria", {3=>8, 4=>4}], 96=>["Bacteria", "Actinobacteria", "class_NA", {3=>2, 4=>2}], 137=>["Bacteria", "Proteobacteria", "Alphaproteobacteria", {3=>3}]}
