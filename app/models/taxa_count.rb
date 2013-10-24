@@ -32,16 +32,53 @@ class TaxaCount
     return tax_ids_hash
   end  
   
+  # def add_dataset_ids(taxonomies, tax_hash, dat_counts_seq)
+  #    taxonomies.each do |tax_obj|
+  #       dat_counts_seq_t = get_dat_counts_seq_by_t(tax_obj, dat_counts_seq)
+  # 
+  #       dat_counts_seq_t.each do |dat_cnt_seq_t|                
+  #         (1..RANKS_AMOUNT).each do |n|
+  #           add_dat_id_knt_to_tax_hash(tax_hash, tax_obj.attributes.values[1, n], dat_cnt_seq_t)
+  #         end
+  #       end      
+  #     end
+  #     return tax_hash
+  #   end
+  #   
   def add_dataset_ids(taxonomies, tax_hash, dat_counts_seq)
+   puts "=" * 8
+   puts "\ntax_hash = " + tax_hash.inspect
+   puts "\ndat_counts_seq = " + dat_counts_seq.inspect
+   
    taxonomies.each do |tax_obj|
-      dat_counts_seq_t = get_dat_counts_seq_by_t(tax_obj, dat_counts_seq)
+     # result = Benchmark.measure do
+     # end
+     # puts "create_tax_ids_hash(taxonomies) result " + result.to_s
+      puts "\ntax_obj = " + tax_obj.inspect
+      result = Benchmark.measure do
+        dat_counts_seq_t = get_dat_counts_seq_by_t(tax_obj, dat_counts_seq)
+      end
+      puts "get_dat_counts_seq_by_t(tax_obj, dat_counts_seq) result " + result.to_s
+      # dat_counts_seq_t = get_dat_counts_seq_by_t(tax_obj, dat_counts_seq)
+      # puts "\ndat_counts_seq_t = " + dat_counts_seq_t.inspect
 
-      dat_counts_seq_t.each do |dat_cnt_seq_t|                
-        (1..RANKS_AMOUNT).each do |n|
-          add_dat_id_knt_to_tax_hash(tax_hash, tax_obj.attributes.values[1, n], dat_cnt_seq_t)
-        end
-      end      
+      result = Benchmark.measure do
+        # dat_cnt_seq_t d[:taxonomy_id] == taxonomy_obj[:id]
+        dat_counts_seq.each do |dat_cnt_seq_t|   
+          if (dat_cnt_seq_t[:taxonomy_id] == tax_obj[:id])             
+            (1..RANKS_AMOUNT).each do |n|
+              puts "\ntaxon_str = tax_obj.attributes.values[1, n] = " + tax_obj.attributes.values[1, n].inspect
+              puts "\ndat_cnt_seq_t = " + dat_cnt_seq_t.inspect
+            
+              add_dat_id_knt_to_tax_hash(tax_hash, tax_obj.attributes.values[1, n], dat_cnt_seq_t)
+            end
+          end
+        end      
+      end
+      puts "dat_counts_seq_t.each result " + result.to_s
     end
+    puts "+" * 8
+    
     return tax_hash
   end
   
