@@ -66,12 +66,17 @@ module TaxaCountHelper
       interm_hash[:dataset_id]  = v[:dataset_id]
       interm_hash[:sequence_id] = v[:sequence_id]
       interm_hash[:seq_count]   = v[:seq_count]
-      # puts "\nVVV"
-      # puts "v[:sequence_id] = " + v[:sequence_id].inspect
-      interm_hash[:taxonomy_id] = SequenceUniqInfo.find(v[:sequence_id]).taxonomy_id
+      # puts "\nVVV1"
+      # puts "v.sequence_uniq_info.taxonomy_id = " + v.sequence_uniq_info.taxonomy_id.inspect
+      # puts "\nVVV2"
+      # puts "SequenceUniqInfo.find(v[:sequence_id]).taxonomy_id = " + SequenceUniqInfo.find(v[:sequence_id]).taxonomy_id.inspect
+      interm_hash[:taxonomy_id] = v.sequence_uniq_info.taxonomy_id
+      # SequenceUniqInfo.find(v[:sequence_id]).taxonomy_id
       
       dat_seq_cnts << interm_hash
     end
+    puts "\nJJJ2"
+    
     return dat_seq_cnts
   end
 

@@ -27,11 +27,14 @@ class VisualizationController < ApplicationController
     end
     puts "get_choosen_projects_w_d() result " + result.to_s
     
+    my_pdrs = Hash.new
+    # @people = Person.find(:all, :include => :addresses)
     result = Benchmark.measure do
-      my_pdrs                = SequencePdrInfo.where(dataset_id: params["dataset_ids"].uniq)
+      # my_pdrs                = SequencePdrInfo.includes(:sequence_uniq_info).where(dataset_id: params["dataset_ids"].uniq)
+      my_pdrs = SequencePdrInfo.taxonomy_ids.where(dataset_id: params["dataset_ids"].uniq)
     end
+    # puts "PPP: my_pdrs = " + my_pdrs.inspect
     puts "SequencePdrInfo.where(dataset_id: params[\"dataset_ids\"].uniq) result " + result.to_s
-    my_pdrs                = SequencePdrInfo.where(dataset_id: params["dataset_ids"].uniq)
     
     result = Benchmark.measure do
       @counts_per_dataset_id = get_counts_per_dataset_id(my_pdrs)
@@ -78,7 +81,7 @@ class VisualizationController < ApplicationController
     # todo: less arguments
     puts "make_taxon_strings_w_counts_per_d(taxonomy_by_t_id_upto_rank, tax_hash_obj, taxonomy_per_d) result " + result.to_s
 
-    puts "HHH, @taxonomy_w_cnts_by_d = " + @taxonomy_w_cnts_by_d.inspect
+    # puts "HHH, @taxonomy_w_cnts_by_d = " + @taxonomy_w_cnts_by_d.inspect
     
     # @taxonomy_w_cnts_by_d       = taxonomy_per_d
     # <% @taxonomy_w_cnts_by_d.each do |taxon_string, data| %>
