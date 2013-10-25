@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'create_ranks_w_data_helper'
+require 'create_sequences_helper'
 include TaxaCountHelper
 
 describe "Taxa" do
@@ -18,7 +19,7 @@ describe "Taxa" do
     @taxonomies << FactoryGirl.create(:taxonomy, id: 137, domain_id: 2, phylum_id: 3, klass_id: 5, order_id: 65, family_id: 129, genus_id: 129, species_id: 129, strain_id: 4)
     # @taxonomies = Array.new(3) { FactoryGirl.create(:taxonomy) } 
 
-    @dat_counts_seq = [{:dataset_id=>3, :sequence_id=>1001, :seq_count=>2, :taxonomy_id=>96}, {:dataset_id=>3, :sequence_id=>1004, :seq_count=>8, :taxonomy_id=>82}, {:dataset_id=>3, :sequence_id=>1007, :seq_count=>3, :taxonomy_id=>137}, {:dataset_id=>4, :sequence_id=>1001, :seq_count=>2, :taxonomy_id=>96}, {:dataset_id=>4, :sequence_id=>1004, :seq_count=>4, :taxonomy_id=>82}]
+    @dat_counts_seq = [{:dataset_id=>3, :sequence_id=>1, :seq_count=>2, :taxonomy_id=>96}, {:dataset_id=>3, :sequence_id=>4, :seq_count=>8, :taxonomy_id=>82}, {:dataset_id=>3, :sequence_id=>5, :seq_count=>3, :taxonomy_id=>137}, {:dataset_id=>4, :sequence_id=>1, :seq_count=>2, :taxonomy_id=>96}, {:dataset_id=>4, :sequence_id=>4, :seq_count=>4, :taxonomy_id=>82}]
     # puts "@dat_counts_seq = " + @dat_counts_seq.inspect
     
     @tax_hash_obj = TaxaCount.new
@@ -63,11 +64,24 @@ describe "Taxa" do
     puts "URA: #{project_name}, dataset = #{dataset.inspect}"
     check(project_name)
     find_button('Submit').click
+    @dat_counts_seq = [{:dataset_id=>3, :sequence_id=>1, :seq_count=>2, :taxonomy_id=>96}, {:dataset_id=>3, :sequence_id=>4, :seq_count=>8, :taxonomy_id=>82}, {:dataset_id=>3, :sequence_id=>5, :seq_count=>3, :taxonomy_id=>137}, {:dataset_id=>4, :sequence_id=>1, :seq_count=>2, :taxonomy_id=>96}, {:dataset_id=>4, :sequence_id=>4, :seq_count=>4, :taxonomy_id=>82}]
+    
+    @sequence_pdr_info = Array.new
+    @sequence_pdr_info << FactoryGirl.create(:sequence_pdr_info, dataset_id: 3, sequence_id: 1, seq_count: 2)
+    @sequence_pdr_info << FactoryGirl.create(:sequence_pdr_info, dataset_id: 3, sequence_id: 4, seq_count: 8)
+    @sequence_pdr_info << FactoryGirl.create(:sequence_pdr_info, dataset_id: 3, sequence_id: 5, seq_count: 3)
+    @sequence_pdr_info << FactoryGirl.create(:sequence_pdr_info, dataset_id: 4, sequence_id: 1, seq_count: 2)
+    @sequence_pdr_info << FactoryGirl.create(:sequence_pdr_info, dataset_id: 4, sequence_id: 4, seq_count: 4)
+    puts "-" * 5
+    puts "@sequence_pdr_info = " + @sequence_pdr_info.inspect
+
+    puts "-" * 5
+    
+    
     puts page.body
     # visit "/tax_table"
     page.should have_content("Total count")    
     # Couldn't find Rank without an ID
-    
     
   end
 

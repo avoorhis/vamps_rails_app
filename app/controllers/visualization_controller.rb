@@ -32,7 +32,7 @@ class VisualizationController < ApplicationController
     result = Benchmark.measure do
       my_pdrs = SequencePdrInfo.taxonomy_ids.where(dataset_id: params["dataset_ids"].uniq)
     end
-    # puts "PPP: my_pdrs = " + my_pdrs.inspect
+    puts "PPP: my_pdrs = " + my_pdrs.inspect
     puts "SequencePdrInfo.where(dataset_id: params[\"dataset_ids\"].uniq) result " + result.to_s
     
     result = Benchmark.measure do

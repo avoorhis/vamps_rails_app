@@ -9,7 +9,7 @@ FactoryGirl.define do
     end
     
     sequence(:dataset){|n| "#{n}_Stockton" }
-		dataset.dataset_description "121_Stockton"
-		dataset.project_id          1
+    dataset.dataset_description "121_Stockton"
+    dataset.project_id          1
   end
 end
