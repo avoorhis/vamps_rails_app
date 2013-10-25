@@ -17,7 +17,7 @@ describe "Projects and Datasets list" do
   end
   
   it "should have projects and datasets" do
-    puts page.body
+    # puts page.body
     page.should have_content("SLM_NIH_v")
     
     page.html.should include('_Stockton')

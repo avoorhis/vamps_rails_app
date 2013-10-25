@@ -15,6 +15,7 @@ class VisualizationController < ApplicationController
   end
 
   def parse_view
+    # todo: simplify, comment
     unless (params.has_key?(:dataset_ids))
       dataset_not_choosen()
       return      

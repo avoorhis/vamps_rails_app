@@ -23,7 +23,7 @@ describe "TaxonomyWNames" do
   
   it "gives correct taxon_strings_upto_rank" do
     taxon_strings_upto_rank = @taxon_strings_upto_rank_obj.create(2, @taxonomies)
-    puts "URA test: taxon_strings_upto_rank = " + taxon_strings_upto_rank.inspect
+    # puts "URA test: taxon_strings_upto_rank = " + taxon_strings_upto_rank.inspect
 
     taxon_strings_upto_rank.should == {82=>["Bacteria", "Proteobacteria", "Gammaproteobacteria"], 96=>["Bacteria", "Actinobacteria", "class_NA"], 137=>["Bacteria", "Proteobacteria", "Alphaproteobacteria"]}
     

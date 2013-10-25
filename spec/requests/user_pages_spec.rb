@@ -22,7 +22,7 @@ describe "User registration" do
   end
   
   it "should create a user and displays a confirmation link" do
-    puts page.body
+    # puts page.body
     
     page.should have_no_content("Welcome! You have signed up successfully.")
     page.should have_content("A message with a confirmation link has been sent to your email address. Please open the link to activate your account")
