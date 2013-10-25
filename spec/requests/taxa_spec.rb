@@ -13,6 +13,7 @@ describe "Taxa" do
 
     @projects   = @user.projects
       
+    # TODO: DRY: the same in taxonomy_w_names_spec.rb
     @taxonomies = Array.new
     @taxonomies << FactoryGirl.create(:taxonomy, id: 82, domain_id: 2, phylum_id: 3, klass_id: 3, order_id: 16, family_id: 18, genus_id: 129, species_id: 129, strain_id: 4)
     @taxonomies << FactoryGirl.create(:taxonomy, id: 96, domain_id: 2, phylum_id: 4, klass_id: 32, order_id: 5, family_id: 52, genus_id: 76, species_id: 129, strain_id: 4)
@@ -56,7 +57,7 @@ describe "Taxa" do
     
   end
 
-  it "shoes correct numbers on the tax_table page", :js=> true do
+  it "shows correct numbers on the tax_table page", :js=> true do
     project      = Project.first
     project_name = project.project
     dataset      = project.datasets
@@ -64,7 +65,6 @@ describe "Taxa" do
     puts "URA: #{project_name}, dataset = #{dataset.inspect}"
     check(project_name)
     find_button('Submit').click
-    @dat_counts_seq = [{:dataset_id=>3, :sequence_id=>1, :seq_count=>2, :taxonomy_id=>96}, {:dataset_id=>3, :sequence_id=>4, :seq_count=>8, :taxonomy_id=>82}, {:dataset_id=>3, :sequence_id=>5, :seq_count=>3, :taxonomy_id=>137}, {:dataset_id=>4, :sequence_id=>1, :seq_count=>2, :taxonomy_id=>96}, {:dataset_id=>4, :sequence_id=>4, :seq_count=>4, :taxonomy_id=>82}]
     
     @sequence_pdr_info = Array.new
     @sequence_pdr_info << FactoryGirl.create(:sequence_pdr_info, dataset_id: 3, sequence_id: 1, seq_count: 2)
@@ -72,8 +72,20 @@ describe "Taxa" do
     @sequence_pdr_info << FactoryGirl.create(:sequence_pdr_info, dataset_id: 3, sequence_id: 5, seq_count: 3)
     @sequence_pdr_info << FactoryGirl.create(:sequence_pdr_info, dataset_id: 4, sequence_id: 1, seq_count: 2)
     @sequence_pdr_info << FactoryGirl.create(:sequence_pdr_info, dataset_id: 4, sequence_id: 4, seq_count: 4)
+    
+#     # @dat_counts_seq = [{:dataset_id=>3, :sequence_id=>1, :seq_count=>2, :taxonomy_id=>96}, 
+# {:dataset_id=>3, :sequence_id=>4, :seq_count=>8, :taxonomy_id=>82}, 
+# {:dataset_id=>3, :sequence_id=>5, :seq_count=>3, :taxonomy_id=>137}, 
+# {:dataset_id=>4, :sequence_id=>1, :seq_count=>2, :taxonomy_id=>96}, 
+# {:dataset_id=>4, :sequence_id=>4, :seq_count=>4, :taxonomy_id=>82}]
+    
+    @sequence_uniq_info = Array.new
+    @sequence_uniq_info << FactoryGirl.create(:sequence_uniq_info, :sequence_id=>1, :taxonomy_id=>96)
+    @sequence_uniq_info << FactoryGirl.create(:sequence_uniq_info, :sequence_id=>4, :taxonomy_id=>82)
+    @sequence_uniq_info << FactoryGirl.create(:sequence_uniq_info, :sequence_id=>5, :taxonomy_id=>137)
+    
     puts "-" * 5
-    puts "@sequence_pdr_info = " + @sequence_pdr_info.inspect
+    puts "@sequence_uniq_info = " + @sequence_uniq_info.inspect
 
     puts "-" * 5
     
