@@ -29,6 +29,22 @@ describe "Taxa" do
     # puts "HERE0: @tax_hash_obj = " +  @tax_hash_obj.inspect
     # puts "@tax_hash_obj.taxa_count_per_d = " + @tax_hash_obj.taxa_count_per_d.inspect
     
+    ranks_array = [{:rank => "NA", :rank_number => 10},
+    {:rank => "class", :rank_number => 2},
+    {:rank => "domain", :rank_number => 0},
+    {:rank => "family", :rank_number => 4},
+    {:rank => "genus", :rank_number => 5},
+    {:rank => "order", :rank_number => 3},
+    {:rank => "phylum", :rank_number => 1},
+    {:rank => "species", :rank_number => 6},
+    {:rank => "strain", :rank_number => 7}
+    ]
+
+    Rank.delete_all
+    @ranks = Array.new
+    ranks_array.each do |my_hash|
+       @ranks.push(FactoryGirl.create(:rank, rank: my_hash[:rank], rank_number: my_hash[:rank_number]))       
+    end
 
     visit "/visualization"      
   end
@@ -62,10 +78,6 @@ describe "Taxa" do
     project_name = project.project
     dataset      = project.datasets
     
-    puts "URA: #{project_name}, dataset = #{dataset.inspect}"
-    check(project_name)
-    find_button('Submit').click
-    
     @sequence_pdr_info = Array.new
     @sequence_pdr_info << FactoryGirl.create(:sequence_pdr_info, dataset_id: 3, sequence_id: 1, seq_count: 2)
     @sequence_pdr_info << FactoryGirl.create(:sequence_pdr_info, dataset_id: 3, sequence_id: 4, seq_count: 8)
@@ -73,27 +85,27 @@ describe "Taxa" do
     @sequence_pdr_info << FactoryGirl.create(:sequence_pdr_info, dataset_id: 4, sequence_id: 1, seq_count: 2)
     @sequence_pdr_info << FactoryGirl.create(:sequence_pdr_info, dataset_id: 4, sequence_id: 4, seq_count: 4)
     
-#     # @dat_counts_seq = [{:dataset_id=>3, :sequence_id=>1, :seq_count=>2, :taxonomy_id=>96}, 
-# {:dataset_id=>3, :sequence_id=>4, :seq_count=>8, :taxonomy_id=>82}, 
-# {:dataset_id=>3, :sequence_id=>5, :seq_count=>3, :taxonomy_id=>137}, 
-# {:dataset_id=>4, :sequence_id=>1, :seq_count=>2, :taxonomy_id=>96}, 
-# {:dataset_id=>4, :sequence_id=>4, :seq_count=>4, :taxonomy_id=>82}]
-    
     @sequence_uniq_info = Array.new
     @sequence_uniq_info << FactoryGirl.create(:sequence_uniq_info, :sequence_id=>1, :taxonomy_id=>96)
     @sequence_uniq_info << FactoryGirl.create(:sequence_uniq_info, :sequence_id=>4, :taxonomy_id=>82)
     @sequence_uniq_info << FactoryGirl.create(:sequence_uniq_info, :sequence_id=>5, :taxonomy_id=>137)
+
     
     puts "-" * 5
-    puts "@sequence_uniq_info = " + @sequence_uniq_info.inspect
+    puts "@ranks = " + @ranks.inspect
 
     puts "-" * 5
-    
-    
     puts page.body
-    # visit "/tax_table"
+    page.choose('tax_id_2')
+    check(project_name)
+    find_button('Submit').click
+    
     page.should have_content("Total count")    
-    # Couldn't find Rank without an ID
+    # HERE: v = #<SequencePdrInfo id: 1, dataset_id: 3, sequence_id: 1, seq_count: 2, classifier: "GAST", created_at: "2013-10-25 21:15:46", updated_at: "2013-10-25 21:15:46">
+    # 
+    # An error occurred in an after hook
+    #   NoMethodError: undefined method `taxonomy_id' for nil:NilClass
+    #   occurred at /Users/ashipunova/work/bpc/vamps_rails_app/app/helpers/taxa_count_helper.rb:49:in `block in create_dat_seq_cnts'
     
   end
 

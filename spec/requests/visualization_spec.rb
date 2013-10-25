@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'create_ranks_w_data_helper'
 
 describe "Projects and Datasets list" do
   before(:each) do
@@ -21,6 +22,13 @@ describe "Projects and Datasets list" do
     page.should have_content("SLM_NIH_v")
     
     page.html.should include('_Stockton')
+  end
+
+  it "should have ranks" do
+    puts page.body
+    page.should have_content("Domain")
+    # 
+    # page.html.should include('_Stockton')
   end
 
   it "should check all underlying dataset checkboxes if its project was chosen", :js=> true do

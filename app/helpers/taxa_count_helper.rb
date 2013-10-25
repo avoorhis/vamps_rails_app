@@ -41,6 +41,7 @@ module TaxaCountHelper
     dat_seq_cnts = Array.new
     
     my_pdrs.each do |v|
+      puts "HERE: v = " + v.inspect
       interm_hash = Hash.new
       interm_hash[:dataset_id]  = v.dataset_id
       interm_hash[:sequence_id] = v.sequence_id
