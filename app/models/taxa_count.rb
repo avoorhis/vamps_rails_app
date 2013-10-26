@@ -58,12 +58,12 @@ class TaxaCount
          dat_counts_seq.each do |dat_cnt_seq_t|    
            
            if (dat_cnt_seq_t[:taxonomy_id] == tax_obj[:id])                                    
-             (1..RANKS_AMOUNT).each do |n|
+             # (1..RANKS_AMOUNT).each do |n|
                puts "\ndat_cnt_seq_t = " + dat_cnt_seq_t.inspect
-               puts "\ntax_obj.attributes.values[1, n] = " + tax_obj.attributes.values[1, n].inspect
+               puts "\ntax_obj.attributes.values[1, n] = " + tax_obj.attributes.values[1, RANKS_AMOUNT].inspect
                
-               add_dat_id_knt_to_tax_hash(tax_hash, tax_obj.attributes.values[1, n], dat_cnt_seq_t)
-             end
+               add_dat_id_knt_to_tax_hash(tax_hash, tax_obj.attributes.values[1, RANKS_AMOUNT], dat_cnt_seq_t)
+             # end
            end
          end      
        end
@@ -118,12 +118,16 @@ class TaxaCount
       if tax_hash_temp[taxon_str[i]][:datasets_ids].nil?
         tax_hash_temp[taxon_str[i]][:datasets_ids] = {}
       end
-      if i == taxon_str.length - 1
+      # if i == taxon_str.length - 1
         tax_hash_next                             = tax_hash_temp[taxon_str[i]][:datasets_ids]
+        puts "\n0) tax_hash_next = " + tax_hash_next.inspect
+        
         tax_hash_next[dat_cnt_seq_t[:dataset_id]] = get_knt(tax_hash_next, dat_cnt_seq_t)          
-        puts "\ntax_hash_next = " + tax_hash_next.inspect
-      end
+        puts "\n1) tax_hash_next = " + tax_hash_next.inspect
+      # end
       tax_hash_temp = tax_hash_temp[taxon_str[i]]      
+      puts "\n2) tax_hash_next = " + tax_hash_next.inspect
+      
     end
     return tax_hash_temp    
   end
