@@ -15,7 +15,7 @@ class VisualizationController < ApplicationController
   end
 
   def parse_view
-    # todo: simplify, comment
+    # todo: simplify, comment, see https://codeclimate.com/repos/526bee0356b1022c5301920b/VisualizationController
     unless (params.has_key?(:dataset_ids))
       dataset_not_choosen()
       return      
@@ -40,17 +40,17 @@ class VisualizationController < ApplicationController
     end
     puts "get_counts_per_dataset_id(my_pdrs) result " + result.to_s
     
-    @taxonomies            = {}
-    @dat_counts_seq_tax    = {}    
-    
-    tax_hash_obj           = TaxaCount.new    
-    taxonomy_per_d = Hash.new
-    result = Benchmark.measure do
-      taxonomy_per_d         = get_taxonomy_per_d(my_pdrs, tax_hash_obj)
-    end
-    puts "get_taxonomy_per_d(my_pdrs, tax_hash_obj) result " + result.to_s
-    
-    create_taxonomy_w_counts_to_show(rank_number, tax_hash_obj, taxonomy_per_d)
+    create_taxonomy_w_counts_to_show(rank_number, my_pdrs)
+    # @taxonomies            = {}
+    #     @dat_counts_seq_tax    = {}    
+    #     
+    #     tax_hash_obj           = TaxaCount.new    
+    #     taxonomy_per_d = Hash.new
+    #     result = Benchmark.measure do
+    #       taxonomy_per_d         = get_taxonomy_per_d(my_pdrs, tax_hash_obj)
+    #     end
+    #     puts "get_taxonomy_per_d(my_pdrs, tax_hash_obj) result " + result.to_s
+    #     
     # # 1) make taxonomy_id strings from Taxonomy by rank
     # # 2) get taxon names
     # # 3) arrange by dataset_ids
@@ -158,7 +158,17 @@ class VisualizationController < ApplicationController
     return cnts_per_dataset_ids_by_tax_ids
   end
  
-  def create_taxonomy_w_counts_to_show(rank_number, tax_hash_obj, taxonomy_per_d)
+  def create_taxonomy_w_counts_to_show(rank_number, my_pdrs)
+    @taxonomies            = {}
+    @dat_counts_seq_tax    = {}    
+    
+    tax_hash_obj           = TaxaCount.new    
+    taxonomy_per_d = Hash.new
+    result = Benchmark.measure do
+      taxonomy_per_d         = get_taxonomy_per_d(my_pdrs, tax_hash_obj)
+    end
+    puts "get_taxonomy_per_d(my_pdrs, tax_hash_obj) result " + result.to_s
+    
     # 1) make taxonomy_id strings from Taxonomy by rank
     # 2) get taxon names
     # 3) arrange by dataset_ids
