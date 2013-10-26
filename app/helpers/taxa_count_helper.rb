@@ -1,11 +1,4 @@
 module TaxaCountHelper
-  def get_rank_names()
-    ranks      = Rank.all.sorted 
-    rank_names = []     
-    ranks.map {|rank| rank.rank == "class" ? rank_names << "klass" : rank_names << rank.rank}
-    rank_names.delete("NA")
-    return rank_names
-  end
 
   def get_taxonomy_per_d(my_pdrs, tax_hash_obj)
 
