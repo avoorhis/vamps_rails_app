@@ -21,8 +21,8 @@ class VisualizationController < ApplicationController
       return      
     end
     
-    rank_obj               = Rank.find(params[:tax_id])
-    rank_number            = rank_obj.rank_number
+    # rank_obj               = Rank.find(params[:tax_id])
+    rank_number            = Rank.find(params[:tax_id]).rank_number
     result = Benchmark.measure do
       @choosen_projects_w_d  = get_choosen_projects_w_d()
     end
@@ -50,22 +50,23 @@ class VisualizationController < ApplicationController
     end
     puts "get_taxonomy_per_d(my_pdrs, tax_hash_obj) result " + result.to_s
     
-    # 1) make taxonomy_id strings from Taxonomy by rank
-    # 2) get taxon names
-    # 3) arrange by dataset_ids
-    # 4) add counts to show in tax_table_view    
-    taxonomy_by_t_id_upto_rank_obj = TaxonomyWNames.new
-    taxonomy_by_t_id_upto_rank     = Hash.new
-    result = Benchmark.measure do
-      taxonomy_by_t_id_upto_rank = taxonomy_by_t_id_upto_rank_obj.create(rank_number, @taxonomies)
-    end
-    
-    puts "taxon_strings_upto_rank_obj.create(rank_number, @taxonomies) result " + result.to_s
-    
-    result = Benchmark.measure do
-      @taxonomy_w_cnts_by_d = make_taxon_strings_w_counts_per_d(taxonomy_by_t_id_upto_rank, tax_hash_obj, taxonomy_per_d)
-    end
-    puts "make_taxon_strings_w_counts_per_d(taxonomy_by_t_id_upto_rank, tax_hash_obj, taxonomy_per_d) result " + result.to_s
+    create_taxonomy_w_counts_to_show(rank_number, tax_hash_obj, taxonomy_per_d)
+    # # 1) make taxonomy_id strings from Taxonomy by rank
+    # # 2) get taxon names
+    # # 3) arrange by dataset_ids
+    # # 4) add counts to show in tax_table_view    
+    # taxonomy_by_t_id_upto_rank_obj = TaxonomyWNames.new
+    # taxonomy_by_t_id_upto_rank     = Hash.new
+    # result = Benchmark.measure do
+    #   taxonomy_by_t_id_upto_rank = taxonomy_by_t_id_upto_rank_obj.create(rank_number, @taxonomies)
+    # end
+    # 
+    # puts "taxon_strings_upto_rank_obj.create(rank_number, @taxonomies) result " + result.to_s
+    # 
+    # result = Benchmark.measure do
+    #   @taxonomy_w_cnts_by_d = make_taxon_strings_w_counts_per_d(taxonomy_by_t_id_upto_rank, tax_hash_obj, taxonomy_per_d)
+    # end
+    # puts "make_taxon_strings_w_counts_per_d(taxonomy_by_t_id_upto_rank, tax_hash_obj, taxonomy_per_d) result " + result.to_s
 
     # puts "HHH, @taxonomy_w_cnts_by_d = " + @taxonomy_w_cnts_by_d.inspect
     
@@ -157,6 +158,25 @@ class VisualizationController < ApplicationController
     return cnts_per_dataset_ids_by_tax_ids
   end
  
+  def create_taxonomy_w_counts_to_show(rank_number, tax_hash_obj, taxonomy_per_d)
+    # 1) make taxonomy_id strings from Taxonomy by rank
+    # 2) get taxon names
+    # 3) arrange by dataset_ids
+    # 4) add counts to show in tax_table_view    
+    taxonomy_by_t_id_upto_rank_obj = TaxonomyWNames.new
+    taxonomy_by_t_id_upto_rank     = Hash.new
+    result = Benchmark.measure do
+      taxonomy_by_t_id_upto_rank = taxonomy_by_t_id_upto_rank_obj.create(rank_number, @taxonomies)
+    end
+    
+    puts "taxon_strings_upto_rank_obj.create(rank_number, @taxonomies) result " + result.to_s
+    
+    result = Benchmark.measure do
+      @taxonomy_w_cnts_by_d = make_taxon_strings_w_counts_per_d(taxonomy_by_t_id_upto_rank, tax_hash_obj, taxonomy_per_d)
+    end
+    puts "make_taxon_strings_w_counts_per_d(taxonomy_by_t_id_upto_rank, tax_hash_obj, taxonomy_per_d) result " + result.to_s
+    @taxonomy_w_cnts_by_d
+  end
 end
 
 class Hash
