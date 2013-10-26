@@ -23,22 +23,22 @@ class VisualizationController < ApplicationController
     
     # rank_obj               = Rank.find(params[:tax_id])
     rank_number            = Rank.find(params[:tax_id]).rank_number
-    # result = Benchmark.measure do
+    result = Benchmark.measure do
       @choosen_projects_w_d  = get_choosen_projects_w_d()
-    # end
-    # puts "get_choosen_projects_w_d() result " + result.to_s
+    end
+    puts "get_choosen_projects_w_d() result " + result.to_s
     
     my_pdrs = Hash.new
-    # result = Benchmark.measure do
+    result = Benchmark.measure do
       my_pdrs = SequencePdrInfo.taxonomy_ids.where(dataset_id: params["dataset_ids"].uniq)
-    # end
+    end
     # puts "PPP: my_pdrs = " + my_pdrs.inspect
-    # puts "SequencePdrInfo.where(dataset_id: params[\"dataset_ids\"].uniq) result " + result.to_s
+    puts "SequencePdrInfo.where(dataset_id: params[\"dataset_ids\"].uniq) result " + result.to_s
     
-    # result = Benchmark.measure do
+    result = Benchmark.measure do
       @counts_per_dataset_id = get_counts_per_dataset_id(my_pdrs)
-    # end
-    # puts "get_counts_per_dataset_id(my_pdrs) result " + result.to_s
+    end
+    puts "get_counts_per_dataset_id(my_pdrs) result " + result.to_s
     
     create_taxonomy_w_counts_to_show(rank_number, my_pdrs)
     # @taxonomies            = {}
