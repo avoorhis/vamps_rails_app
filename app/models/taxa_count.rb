@@ -47,20 +47,20 @@ class TaxaCount
   #   
  
   def add_dataset_ids(taxonomies, tax_hash, dat_counts_seq)
-      puts "=" * 8
-      puts "\ntax_hash = " + tax_hash.inspect
+      # puts "=" * 8
+      # puts "\ntax_hash = " + tax_hash.inspect
       # puts "\ndat_counts_seq = " + dat_counts_seq.inspect
     
       taxonomies.each do |tax_obj|
          # dat_counts_seq_t = get_dat_counts_seq_by_t(tax_obj, dat_counts_seq)
-        puts "\ntax_obj = " + tax_obj.inspect
+        # puts "\ntax_obj = " + tax_obj.inspect
    
          dat_counts_seq.each do |dat_cnt_seq_t|    
            
            if (dat_cnt_seq_t[:taxonomy_id] == tax_obj[:id])                                    
              # (1..RANKS_AMOUNT).each do |n|
-               puts "\ndat_cnt_seq_t = " + dat_cnt_seq_t.inspect
-               puts "\ntax_obj.attributes.values[1, n] = " + tax_obj.attributes.values[1, RANKS_AMOUNT].inspect
+               # puts "\ndat_cnt_seq_t = " + dat_cnt_seq_t.inspect
+               # puts "\ntax_obj.attributes.values[1, n] = " + tax_obj.attributes.values[1, RANKS_AMOUNT].inspect
                
                add_dat_id_knt_to_tax_hash(tax_hash, tax_obj.attributes.values[1, RANKS_AMOUNT], dat_cnt_seq_t)
              # end
@@ -112,7 +112,7 @@ class TaxaCount
   def add_dat_id_knt_to_tax_hash(tax_hash, taxon_str, dat_cnt_seq_t)
     tax_hash_temp = tax_hash
     for i in (0...taxon_str.length)
-      puts "\ni = " + i.inspect
+      # puts "\ni = " + i.inspect
       
       # the last rank:
       if tax_hash_temp[taxon_str[i]][:datasets_ids].nil?
@@ -120,13 +120,13 @@ class TaxaCount
       end
       # if i == taxon_str.length - 1
         tax_hash_next                             = tax_hash_temp[taxon_str[i]][:datasets_ids]
-        puts "\n0) tax_hash_next = " + tax_hash_next.inspect
+        # puts "\n0) tax_hash_next = " + tax_hash_next.inspect
         
         tax_hash_next[dat_cnt_seq_t[:dataset_id]] = get_knt(tax_hash_next, dat_cnt_seq_t)          
-        puts "\n1) tax_hash_next = " + tax_hash_next.inspect
+        # puts "\n1) tax_hash_next = " + tax_hash_next.inspect
       # end
       tax_hash_temp = tax_hash_temp[taxon_str[i]]      
-      puts "\n2) tax_hash_next = " + tax_hash_next.inspect
+      # puts "\n2) tax_hash_next = " + tax_hash_next.inspect
       
     end
     return tax_hash_temp    
