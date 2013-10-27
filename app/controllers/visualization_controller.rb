@@ -8,7 +8,6 @@ class VisualizationController < ApplicationController
   # Andy, I'm collecting all project ids togeteher, is it okay? E.g.: "project_ids"=>["6", "8"], "dataset_ids"=>["3", "4", "238", "239"]
 
   def index
-    # @all_data = get_test_sample_object()
     @datasets_by_project_all = make_datasets_by_project_hash()
     @domains  = Domain.all
     @ranks    = Rank.all.sorted    
@@ -21,8 +20,6 @@ class VisualizationController < ApplicationController
       return      
     end
     
-    # rank_obj               = Rank.find(params[:tax_id])
-    rank_number            = Rank.find(params[:tax_id]).rank_number
     result = Benchmark.measure do
       @choosen_projects_w_d  = get_choosen_projects_w_d()
     end
@@ -40,43 +37,13 @@ class VisualizationController < ApplicationController
     end
     puts "get_counts_per_dataset_id(my_pdrs) result " + result.to_s
     
-    create_taxonomy_w_counts_to_show(rank_number, my_pdrs)
-    # @taxonomies            = {}
-    #     @dat_counts_seq_tax    = {}    
-    #     
-    #     tax_hash_obj           = TaxaCount.new    
-    #     taxonomy_per_d = Hash.new
-    #     result = Benchmark.measure do
-    #       taxonomy_per_d         = get_taxonomy_per_d(my_pdrs, tax_hash_obj)
-    #     end
-    #     puts "get_taxonomy_per_d(my_pdrs, tax_hash_obj) result " + result.to_s
-    #     
-    # # 1) make taxonomy_id strings from Taxonomy by rank
-    # # 2) get taxon names
-    # # 3) arrange by dataset_ids
-    # # 4) add counts to show in tax_table_view    
-    # taxonomy_by_t_id_upto_rank_obj = TaxonomyWNames.new
-    # taxonomy_by_t_id_upto_rank     = Hash.new
-    # result = Benchmark.measure do
-    #   taxonomy_by_t_id_upto_rank = taxonomy_by_t_id_upto_rank_obj.create(rank_number, @taxonomies)
-    # end
-    # 
-    # puts "taxon_strings_upto_rank_obj.create(rank_number, @taxonomies) result " + result.to_s
-    # 
-    # result = Benchmark.measure do
-    #   @taxonomy_w_cnts_by_d = make_taxon_strings_w_counts_per_d(taxonomy_by_t_id_upto_rank, tax_hash_obj, taxonomy_per_d)
-    # end
-    # puts "make_taxon_strings_w_counts_per_d(taxonomy_by_t_id_upto_rank, tax_hash_obj, taxonomy_per_d) result " + result.to_s
-
-    # puts "HHH, @taxonomy_w_cnts_by_d = " + @taxonomy_w_cnts_by_d.inspect
+    create_taxonomy_w_counts_to_show(Rank.find(params[:tax_id]).rank_number, my_pdrs)
     
-    # puts "TTT: @taxonomy_w_cnts_by_d = " + @taxonomy_w_cnts_by_d.inspect
-    
-    if params[:view]      == "heatmap"
-      render :heatmap
-    elsif  params[:view]  == "bar_charts"
-      render :bar_charts
-    else params[:view]    == "tax_table"
+    if params[:view]     == "heatmap"
+      render :heatmap    
+    elsif  params[:view] == "bar_charts"
+      render :bar_charts 
+    else params[:view]   == "tax_table"
       #default
       render "tax_table"
     end    
@@ -137,6 +104,7 @@ class VisualizationController < ApplicationController
   end
 
   def make_taxon_strings_w_counts_per_d(taxonomy_by_t_id_upto_rank, tax_hash_obj, taxonomy_per_d)
+    # todo: move to an object?
     taxon_strings_w_counts_per_d = Hash.new{|hash, key| hash[key] = []}
     taxonomy_by_t_id_upto_rank.each do |taxonomy_id, taxonomy_hash|
       taxon_strings_w_counts_per_d[taxonomy_id] << taxonomy_hash[:taxon_string]      
@@ -151,7 +119,7 @@ class VisualizationController < ApplicationController
   def fill_zeros(cnts_per_dataset_ids_by_tax_ids)
     # puts "VVV: params[\"dataset_ids\"] = " + params["dataset_ids"].inspect
     # puts "VVV1: cnts_per_dataset_ids_by_tax_ids = " + cnts_per_dataset_ids_by_tax_ids.inspect
-    params["dataset_ids"].each do |d_id|
+    params[:dataset_ids].each do |d_id|
       cnts_per_dataset_ids_by_tax_ids[d_id.to_i] = 0 unless cnts_per_dataset_ids_by_tax_ids[d_id.to_i].is_a? Numeric
     end
     # puts "WWW: cnts_per_dataset_ids_by_tax_ids = " + cnts_per_dataset_ids_by_tax_ids.inspect
