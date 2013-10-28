@@ -5,5 +5,5 @@ class Sequence < ActiveRecord::Base
   has_one  :taxonomy, :through => :sequence_uniq_info
   
   validates :sequence_comp, uniqueness: true
-  
+  attr_accessible :id, :sequence_comp
 end
