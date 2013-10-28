@@ -14,7 +14,7 @@ FactoryGirl.define do
 		sequence(:rev_project_name){|n| "#{n}v_HIN_MLS" }
 		project.funding             "1"
 		project.user_id             1
-    project.datasets           { Array.new(3) { FactoryGirl.create(:dataset) } }
+    project.datasets           { Array.new(3) { FactoryGirl.build(:dataset) } }
     
   end
 end

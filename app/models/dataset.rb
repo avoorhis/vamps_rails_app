@@ -5,8 +5,8 @@ class Dataset < ActiveRecord::Base
   has_many   :sequence_pdr_infos
   has_many   :sequences, :through => :sequence_pdr_infos
 
-  validates :dataset, :dataset_description, :presence => true, :format => /\A[A-Za-z1-9 ,]+\z/
-  validates :dataset, :dataset, :presence => true, :format => /\A[A-Za-z1-9_]+\z/
+  validates :dataset, :dataset_description, :presence => true, :format => /\A[\w ,.]+\z/
+  validates :dataset, :dataset, :presence => true, :format => /\A\w+\z/
   validates :project_id, :presence => true
   validates_uniqueness_of :project_id, :scope => :dataset
 
