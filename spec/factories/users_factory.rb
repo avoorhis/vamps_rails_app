@@ -16,7 +16,7 @@ FactoryGirl.define do
     user.institution            "Test institution"						
     user.first_name						  "Test"
     user.last_name						  "User"
-    user.projects               { Array.new(3) { FactoryGirl.build(:project) } }    
+    user.projects               { Array.new(3) { FactoryGirl.create(:project) } }    
   end
 end
 
