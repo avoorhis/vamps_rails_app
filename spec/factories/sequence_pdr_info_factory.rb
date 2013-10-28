@@ -3,7 +3,7 @@ FactoryGirl.define do
   
   factory :sequence_pdr_info do |sequence_pdr_info|
     before(:create) do |sequence_pdr_info|
-      @sequence_uniq_info = FactoryGirl.create(:sequence_uniq_info, :sequence_id=>1, :taxonomy_id=>96)    
+      @sequence_uniq_info = FactoryGirl.build(:sequence_uniq_info, :sequence_id=>1, :taxonomy_id=>96)    
     end
     
     sequence_pdr_info.dataset_id    3
