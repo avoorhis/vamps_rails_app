@@ -82,17 +82,21 @@ describe "Taxa" do
     dataset      = project.datasets
 
     Sequence.delete_all
-    sequences_array = [{:id=>1, :sequence_comp => "AGCCTTTGACATCCTAGGACGACTTCTGGAGACAGATTTCTTCCCTTCGGGGACCTAGTGAC"},
-    {:id=>2, :sequence_comp => "TGGTCTTGACATAGTAAGAACTTTCCAGAGATGGATTGGTGCCTTCGGGAACTTACAT"},
-    {:id=>3, :sequence_comp => "TGGCCTTGACATGCAGAGAACTTTCCAGAGATGGATTGGTGCCTTCGGGAACTCTGAC"},
-    {:id=>4, :sequence_comp => "AGGTCTTGACATCCCAGTGACCGTCCTAGAGATAGGATTTTTCTTCGGAACACAGAC"},
-    {:id=>5, :sequence_comp => "TACTCTTGACATCCAGAGAACTTAGCAGAGATGCTTTGGTGCCTTCGGTCTGAGAC"}]
-    sequences_array.each do |seq|
-      puts "RRR: seq" + seq.inspect
-      Sequence.create!(id: seq[:id], sequence_comp: seq[:sequence_comp])
+    ActiveRecord::Base.establish_connection
+    sql = "INSERT IGNORE INTO sequences (id, sequence_comp, created_at, updated_at) VALUES (1, compress('AGCCTTTGACATCCTAGGACGACTTCTGGAGACAGATTTCTTCCCTTCGGGGACCTAGTGAC'), NOW(), NOW()), (2, compress('TGGTCTTGACATAGTAAGAACTTTCCAGAGATGGATTGGTGCCTTCGGGAACTTACAT'), NOW(), NOW()), (3, compress('TGGCCTTGACATGCAGAGAACTTTCCAGAGATGGATTGGTGCCTTCGGGAACTCTGAC'), NOW(), NOW()), (4, compress('AGGTCTTGACATCCCAGTGACCGTCCTAGAGATAGGATTTTTCTTCGGAACACAGAC'), NOW(), NOW()), (5, compress('TACTCTTGACATCCAGAGAACTTAGCAGAGATGCTTTGGTGCCTTCGGTCTGAGAC'), NOW(), NOW())" 
+    ActiveRecord::Base.connection.execute(sql)
+    
+    # sequences_array = [{:id=>1, :sequence_comp => "AGCCTTTGACATCCTAGGACGACTTCTGGAGACAGATTTCTTCCCTTCGGGGACCTAGTGAC"},
+    # {:id=>2, :sequence_comp => "TGGTCTTGACATAGTAAGAACTTTCCAGAGATGGATTGGTGCCTTCGGGAACTTACAT"},
+    # {:id=>3, :sequence_comp => "TGGCCTTGACATGCAGAGAACTTTCCAGAGATGGATTGGTGCCTTCGGGAACTCTGAC"},
+    # {:id=>4, :sequence_comp => "AGGTCTTGACATCCCAGTGACCGTCCTAGAGATAGGATTTTTCTTCGGAACACAGAC"},
+    # {:id=>5, :sequence_comp => "TACTCTTGACATCCAGAGAACTTAGCAGAGATGCTTTGGTGCCTTCGGTCTGAGAC"}]
+    # sequences_array.each do |seq|
+    #   puts "RRR: seq" + seq.inspect
+    #   Sequence.create!(id: seq[:id], sequence_comp: seq[:sequence_comp])
       puts "EEE: Sequence.last" + Sequence.last.inspect
        
-    end
+    # end
     
     
     # @sequence_uniq_info = Array.new
