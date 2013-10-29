@@ -43,6 +43,7 @@ group :test do
 	gem 'launchy'
   gem 'seed_dump'
   gem 'selenium-webdriver'
+  gem "codeclimate-test-reporter", require: nil
 end
 
 group :doc do

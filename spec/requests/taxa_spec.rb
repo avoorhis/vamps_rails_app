@@ -1,6 +1,6 @@
 require 'spec_helper'
-require 'create_ranks_w_data_helper'
-require 'create_sequences_helper'
+require 'create_ranks_w_data_helper.rb'
+# require 'create_sequences_helper'
 include TaxaCountHelper
 
 describe "Taxa" do
@@ -49,35 +49,37 @@ describe "Taxa" do
     visit "/visualization"      
   end
   
-  it "should show taxonomy" do
-    puts "Ura1"
-    # puts @taxa.inspect
-  end
+  # it "should show taxonomy" do
+  #   puts "Ura1"
+  #   # puts @taxa.inspect
+  # end
   
   it "creates correct counts per dataset" do
     # puts "HERE1: @tax_hash_obj = " +  @tax_hash_obj.inspect
     
     @tax_hash_obj.taxa_count_per_d.should == {2=>{3=>{3=>{16=>{18=>{129=>{129=>{4=>{:datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, 5=>{65=>{129=>{129=>{129=>{4=>{:datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>11, 4=>4}}, 4=>{32=>{5=>{52=>{76=>{129=>{4=>{:datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>13, 4=>6}}}
-
+  
   end
   
   it "gives correct taxa per dataset counts" do
     a = @tax_hash_obj.get_cnts_per_dataset_ids_by_tax_ids(@tax_hash, [2])
     a.should == {3=>13, 4=>6}
-
+  
     a = @tax_hash_obj.get_cnts_per_dataset_ids_by_tax_ids(@tax_hash, [2, 3])
     a.should == {3=>11, 4=>4}
-
+  
     a = @tax_hash_obj.get_cnts_per_dataset_ids_by_tax_ids(@tax_hash, [2, 3, 3, 16, 18, 129, 129, 4])
     a.should == {3=>8, 4=>4}
     
   end
 
   it "shows correct numbers on the tax_table page", :js=> true do
+    # ActiveRecord::Base.logger = Logger.new(STDOUT) if defined?(ActiveRecord::Base)
+    
     puts "-" * 5
     
     project      = Project.first
-    puts "\nURA: "
+    puts "\nURA0: "
     project_name = project.project
     dataset      = project.datasets
 
@@ -86,18 +88,8 @@ describe "Taxa" do
     sql = "INSERT IGNORE INTO sequences (id, sequence_comp, created_at, updated_at) VALUES (1, compress('AGCCTTTGACATCCTAGGACGACTTCTGGAGACAGATTTCTTCCCTTCGGGGACCTAGTGAC'), NOW(), NOW()), (2, compress('TGGTCTTGACATAGTAAGAACTTTCCAGAGATGGATTGGTGCCTTCGGGAACTTACAT'), NOW(), NOW()), (3, compress('TGGCCTTGACATGCAGAGAACTTTCCAGAGATGGATTGGTGCCTTCGGGAACTCTGAC'), NOW(), NOW()), (4, compress('AGGTCTTGACATCCCAGTGACCGTCCTAGAGATAGGATTTTTCTTCGGAACACAGAC'), NOW(), NOW()), (5, compress('TACTCTTGACATCCAGAGAACTTAGCAGAGATGCTTTGGTGCCTTCGGTCTGAGAC'), NOW(), NOW())" 
     ActiveRecord::Base.connection.execute(sql)
     
-    # sequences_array = [{:id=>1, :sequence_comp => "AGCCTTTGACATCCTAGGACGACTTCTGGAGACAGATTTCTTCCCTTCGGGGACCTAGTGAC"},
-    # {:id=>2, :sequence_comp => "TGGTCTTGACATAGTAAGAACTTTCCAGAGATGGATTGGTGCCTTCGGGAACTTACAT"},
-    # {:id=>3, :sequence_comp => "TGGCCTTGACATGCAGAGAACTTTCCAGAGATGGATTGGTGCCTTCGGGAACTCTGAC"},
-    # {:id=>4, :sequence_comp => "AGGTCTTGACATCCCAGTGACCGTCCTAGAGATAGGATTTTTCTTCGGAACACAGAC"},
-    # {:id=>5, :sequence_comp => "TACTCTTGACATCCAGAGAACTTAGCAGAGATGCTTTGGTGCCTTCGGTCTGAGAC"}]
-    # sequences_array.each do |seq|
-    #   puts "RRR: seq" + seq.inspect
-    #   Sequence.create!(id: seq[:id], sequence_comp: seq[:sequence_comp])
-      puts "EEE: Sequence.last" + Sequence.last.inspect
+      # puts "EEE: Sequence.last" + Sequence.last.inspect
        
-    # end
-    
     
     # @sequence_uniq_info = Array.new
     # @sequence_uniq_info << FactoryGirl.create(:sequence_uniq_info, :sequence_id=>1, :taxonomy_id=>96)
@@ -129,16 +121,16 @@ describe "Taxa" do
     # Sequence.delete(4)
     # 
     # @sequence_pdr_info << FactoryGirl.create(:sequence_pdr_info, dataset_id: 4, sequence_id: 4, seq_count: 4)
-    puts "\nDDD: Dataset.all = " + Dataset.all.inspect
-    
-    puts "\n@sequence_pdr_info = " + @sequence_pdr_info.inspect
-    puts "\n@sequence_pdr_info.find(2) = " + @sequence_pdr_info.find(2).inspect
-    puts "\n@sequence_pdr_info.find(2).sequence_uniq_info = " + @sequence_pdr_info.find(2).sequence_uniq_info.inspect
-    puts "\nFFF: SequenceUniqInfo.all = " + SequenceUniqInfo.all.inspect
-    puts "\nFFF: Sequence.all = " + Sequence.all.inspect
-    puts "\nSSS1: SequencePdrInfo.find(2) = " + SequencePdrInfo.find(2).inspect
-    puts "\nSSS: SequencePdrInfo.find(2).sequence_uniq_info = " + SequencePdrInfo.find(2).sequence_uniq_info.inspect
-    puts "\nTTT: SequencePdrInfo.find(2).sequence_uniq_info.taxonomy_id = " + SequencePdrInfo.find(2).sequence_uniq_info.taxonomy_id.inspect
+    # puts "\nDDD: Dataset.all = " + Dataset.all.inspect
+    # 
+    # puts "\n@sequence_pdr_info = " + @sequence_pdr_info.inspect
+    # puts "\n@sequence_pdr_info.find(2) = " + @sequence_pdr_info.find(2).inspect
+    # puts "\n@sequence_pdr_info.find(2).sequence_uniq_info = " + @sequence_pdr_info.find(2).sequence_uniq_info.inspect
+    # puts "\nFFF: SequenceUniqInfo.all = " + SequenceUniqInfo.all.inspect
+    # puts "\nFFF: Sequence.all = " + Sequence.all.inspect
+    # puts "\nSSS1: SequencePdrInfo.find(2) = " + SequencePdrInfo.find(2).inspect
+    # puts "\nSSS: SequencePdrInfo.find(2).sequence_uniq_info = " + SequencePdrInfo.find(2).sequence_uniq_info.inspect
+    # puts "\nTTT: SequencePdrInfo.find(2).sequence_uniq_info.taxonomy_id = " + SequencePdrInfo.find(2).sequence_uniq_info.taxonomy_id.inspect
     
     # todo: fix the factory, see http://luisalima.github.io/
     # @sequence_uniq_info = Array.new
@@ -148,10 +140,21 @@ describe "Taxa" do
 
     
     # puts "@ranks = " + @ranks.inspect
+    puts "\nURA55"
+    require 'create_ranks_w_data_helper.rb'
+    
+    puts "\nDDD: Domain.all = " + Domain.all.inspect
+    puts "\nCCC: Klass.all = " + Klass.all.inspect
 
     puts "-" * 5
     puts page.body
-    page.choose('tax_id_2')
+    # find(:xpath, "//input[@name='proceed' and @value='save-user-verification']").click
+    # 
+    # //*[@id="tax_id_2"]
+    find(:xpath, "//*[@id=\"basic_taxonomy_selector\"]/label[10]").click
+    
+    # page.choose('Class')
+    # page.choose('tax_id_11')
     check(project_name)
     find_button('Submit').click
     

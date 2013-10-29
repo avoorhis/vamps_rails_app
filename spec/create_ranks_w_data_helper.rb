@@ -1,3 +1,5 @@
+# ActiveRecord::Base.logger = Logger.new(STDOUT) if defined?(ActiveRecord::Base)
+
 # Rank.delete_all
 # Taxonomy.delete_all
 # Domain.delete_all
@@ -47,15 +49,15 @@ phylum_arr.each do |my_hash|
    @phylums.push(FactoryGirl.create(:phylum, phylum: my_hash[:phylum]))       
 end
 
-klass_arr        = [{:klass => "Bacteroidia"},
-{:klass => "Bacilli"},
-{:klass => "Gammaproteobacteria"},
-{:klass => "Betaproteobacteria"},
-{:klass => "Alphaproteobacteria"},
-{:klass => "Clostridia"}]
+klass_arr        = [{id: 1, :klass => "Bacteroidia"},
+{id: 2, :klass => "Bacilli"},
+{id: 3, :klass => "Gammaproteobacteria"},
+{id: 4, :klass => "Betaproteobacteria"},
+{id: 5, :klass => "Alphaproteobacteria"},
+{id: 32, :klass => "Clostridia"}]
 @klasses = Array.new
 klass_arr.each do |my_hash|
-   @klasses.push(FactoryGirl.create(:klass, klass: my_hash[:klass]))       
+   @klasses.push(FactoryGirl.create(:klass, id: my_hash[:id], klass: my_hash[:klass]))       
 end
 
 order_arr        = [{:order => "Bacteroidales"},
@@ -104,3 +106,5 @@ strain_arr       = [{:strain => "DSM 5456"},
 strain_arr.each do |my_hash|
    @strains.push(FactoryGirl.create(:strain, strain: my_hash[:strain]))       
 end
+
+puts "HERE, URA!"
