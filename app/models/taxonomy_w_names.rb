@@ -51,7 +51,7 @@ class TaxonomyWNames
   
   def make_taxon_strings_by_t_id(ranks_to_use, taxonomy_id_strings_upto_rank)
     all_taxa = get_all_taxa_from_db(ranks_to_use)
-    puts "AAA: all_taxa = " + all_taxa.inspect
+    # puts "AAA: all_taxa = " + all_taxa.inspect
     # puts "AAA: ranks_to_use = " + ranks_to_use.inspect
     # puts "AAA: taxonomy_id_strings_upto_rank = " + taxonomy_id_strings_upto_rank.inspect
     # taxon_strings_upto_rank = Hash.new{|hash, key| hash[key] = []}
@@ -80,12 +80,12 @@ class TaxonomyWNames
   def make_taxon_string_arr(ranks_to_use, all_taxa, taxon_ids_arr)
     taxon_arr = []
     (0...ranks_to_use.size).each do |i|
-      puts "\nIII: i = #{i.inspect}"
-      puts "ranks_to_use[#{i}] = " + ranks_to_use[i].inspect
-      puts "taxon_ids_arr[#{i}] = " + taxon_ids_arr[i].inspect
-      puts "\nLLL: all_taxa[ranks_to_use[i]].select{|t| t.id == taxon_ids_arr[i]} = " + all_taxa[ranks_to_use[i]].select{|t| t.id == taxon_ids_arr[i]}.inspect
+      # puts "\nIII: i = #{i.inspect}"
+      # puts "ranks_to_use[#{i}] = " + ranks_to_use[i].inspect
+      # puts "taxon_ids_arr[#{i}] = " + taxon_ids_arr[i].inspect
+      # puts "\nLLL: all_taxa[ranks_to_use[i]].select{|t| t.id == taxon_ids_arr[i]} = " + all_taxa[ranks_to_use[i]].select{|t| t.id == taxon_ids_arr[i]}.inspect
       taxon = all_taxa[ranks_to_use[i]].select{|t| t.id == taxon_ids_arr[i]}[0][ranks_to_use[i]]  
-      puts "taxon = " + taxon.inspect
+      # puts "taxon = " + taxon.inspect
       taxon_arr << taxon
       # ranks_to_use[2] = "klass"
       # taxon_ids_arr[2] = 32

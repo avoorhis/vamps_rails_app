@@ -34,8 +34,8 @@ module TaxaCountHelper
     dat_seq_cnts = Array.new
     
     my_pdrs.each do |v|
-      puts "HERE: v = " + v.inspect
-      puts "HERE:  v.sequence_uniq_info = " +  v.sequence_uniq_info.inspect
+      # puts "HERE: v = " + v.inspect
+      # puts "HERE:  v.sequence_uniq_info = " +  v.sequence_uniq_info.inspect
       # HERE:  v.sequence_uniq_info = #<SequenceUniqInfo id: 1001, sequence_id: 1001, taxonomy_id: 96, gast_distance: #<BigDecimal:103a8ee28,'0.0',9(18)>, refssu_id: 0, refssu_count: 1263, rank_id: 5, refhvr_ids: "v4v5_FT014", created_at: "2013-08-19 13:11:00", updated_at: "2013-08-19 13:11:00">
       
       interm_hash = Hash.new

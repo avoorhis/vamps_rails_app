@@ -14,16 +14,8 @@ describe "Taxa" do
 
     @projects   = @user.projects
       
-    # TODO: DRY: the same in taxonomy_w_names_spec.rb
-    # @taxonomies = Array.new
-    # @taxonomies << FactoryGirl.create(:taxonomy, id: 82, domain_id: 2, phylum_id: 3, klass_id: 3, order_id: 16, family_id: 18, genus_id: 129, species_id: 129, strain_id: 4)
-    # @taxonomies << FactoryGirl.create(:taxonomy, id: 96, domain_id: 2, phylum_id: 4, klass_id: 32, order_id: 5, family_id: 52, genus_id: 76, species_id: 129, strain_id: 4)
-    # @taxonomies << FactoryGirl.create(:taxonomy, id: 137, domain_id: 2, phylum_id: 3, klass_id: 5, order_id: 65, family_id: 129, genus_id: 129, species_id: 129, strain_id: 4)
-    # @taxonomies = Array.new(3) { FactoryGirl.create(:taxonomy) } 
     @taxonomies = create_taxonomies
-    puts "@taxonomies = " + @taxonomies.inspect
     @dat_counts_seq = [{:dataset_id=>3, :sequence_id=>1, :seq_count=>2, :taxonomy_id=>96}, {:dataset_id=>3, :sequence_id=>4, :seq_count=>8, :taxonomy_id=>82}, {:dataset_id=>3, :sequence_id=>5, :seq_count=>3, :taxonomy_id=>137}, {:dataset_id=>4, :sequence_id=>1, :seq_count=>2, :taxonomy_id=>96}, {:dataset_id=>4, :sequence_id=>4, :seq_count=>4, :taxonomy_id=>82}]
-    # puts "@dat_counts_seq = " + @dat_counts_seq.inspect
     
     @tax_hash_obj = TaxaCount.new
     @tax_hash     = @tax_hash_obj.create(@taxonomies, @dat_counts_seq)
@@ -79,10 +71,10 @@ describe "Taxa" do
     
     # ActiveRecord::Base.logger = Logger.new(STDOUT) if defined?(ActiveRecord::Base)
     
-    puts "-" * 5
+    # puts "-" * 5
     
     project      = Project.first
-    puts "\nURA0: "
+    # puts "\nURA0: "
     project_name = project.project
     dataset      = project.datasets
 
@@ -91,17 +83,12 @@ describe "Taxa" do
     sql = "INSERT IGNORE INTO sequences (id, sequence_comp, created_at, updated_at) VALUES (1, compress('AGCCTTTGACATCCTAGGACGACTTCTGGAGACAGATTTCTTCCCTTCGGGGACCTAGTGAC'), NOW(), NOW()), (2, compress('TGGTCTTGACATAGTAAGAACTTTCCAGAGATGGATTGGTGCCTTCGGGAACTTACAT'), NOW(), NOW()), (3, compress('TGGCCTTGACATGCAGAGAACTTTCCAGAGATGGATTGGTGCCTTCGGGAACTCTGAC'), NOW(), NOW()), (4, compress('AGGTCTTGACATCCCAGTGACCGTCCTAGAGATAGGATTTTTCTTCGGAACACAGAC'), NOW(), NOW()), (5, compress('TACTCTTGACATCCAGAGAACTTAGCAGAGATGCTTTGGTGCCTTCGGTCTGAGAC'), NOW(), NOW())" 
     ActiveRecord::Base.connection.execute(sql)
     
-      # puts "EEE: Sequence.last" + Sequence.last.inspect
-       
-    
     @sequence_uniq_info = Array.new
     @sequence_uniq_info << FactoryGirl.create(:sequence_uniq_info, :sequence_id=>1, :taxonomy_id=>96)
     @sequence_uniq_info << FactoryGirl.create(:sequence_uniq_info, :sequence_id=>4, :taxonomy_id=>82)
     @sequence_uniq_info << FactoryGirl.create(:sequence_uniq_info, :sequence_id=>5, :taxonomy_id=>137)
     
     @sequence_uniq_info = SequenceUniqInfo.all
-        
-    puts "\n@sequence_uniq_info = " + @sequence_uniq_info.inspect
         
     SequencePdrInfo.create(dataset_id: 3, sequence_id: 1, seq_count: 2)
     SequencePdrInfo.create(dataset_id: 3, sequence_id: 4, seq_count: 8)
@@ -114,7 +101,7 @@ describe "Taxa" do
     find(:xpath, "//*[@id=\"basic_taxonomy_selector\"]/label[10]").click
     check(project_name)
     find_button('Submit').click
-    puts page.body
+    # puts page.body
     
     page.should have_content("Total count")    
     

@@ -25,7 +25,7 @@ describe "Projects and Datasets list" do
   end
 
   it "should have ranks" do
-    puts page.body
+    # puts page.body
     page.should have_content("Domain")
     # 
     # page.html.should include('_Stockton')
