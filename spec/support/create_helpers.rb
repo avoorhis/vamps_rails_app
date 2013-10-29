@@ -109,7 +109,6 @@ module CreateHelpers
        @strains.push(FactoryGirl.create(:strain, strain: my_hash[:strain]))       
     end
 
-    puts "HERE, URA!"
   end
 end
 

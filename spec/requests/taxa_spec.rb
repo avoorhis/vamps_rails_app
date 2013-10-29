@@ -27,9 +27,6 @@ describe "Taxa" do
     @tax_hash_obj = TaxaCount.new
     @tax_hash     = @tax_hash_obj.create(@taxonomies, @dat_counts_seq)
     
-    # puts "HERE0: @tax_hash_obj = " +  @tax_hash_obj.inspect
-    # puts "@tax_hash_obj.taxa_count_per_d = " + @tax_hash_obj.taxa_count_per_d.inspect
-    
     ranks_array = [{:rank => "NA", :rank_number => 10},
     {:rank => "class", :rank_number => 2},
     {:rank => "domain", :rank_number => 0},
@@ -57,7 +54,6 @@ describe "Taxa" do
   
   it "creates correct counts per dataset" do
     puts "\nSTART1: creates correct counts per dataset"
-    # puts "HERE1: @tax_hash_obj = " +  @tax_hash_obj.inspect
     
     @tax_hash_obj.taxa_count_per_d.should == {2=>{3=>{3=>{16=>{18=>{129=>{129=>{4=>{:datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, 5=>{65=>{129=>{129=>{129=>{4=>{:datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>11, 4=>4}}, 4=>{32=>{5=>{52=>{76=>{129=>{4=>{:datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>13, 4=>6}}}
   
@@ -97,19 +93,15 @@ describe "Taxa" do
       # puts "EEE: Sequence.last" + Sequence.last.inspect
        
     
-    # @sequence_uniq_info = Array.new
-    # @sequence_uniq_info << FactoryGirl.create(:sequence_uniq_info, :sequence_id=>1, :taxonomy_id=>96)
-    # @sequence_uniq_info << FactoryGirl.create(:sequence_uniq_info, :sequence_id=>4, :taxonomy_id=>82)
-    # @sequence_uniq_info << FactoryGirl.create(:sequence_uniq_info, :sequence_id=>5, :taxonomy_id=>137)
+    @sequence_uniq_info = Array.new
+    @sequence_uniq_info << FactoryGirl.create(:sequence_uniq_info, :sequence_id=>1, :taxonomy_id=>96)
+    @sequence_uniq_info << FactoryGirl.create(:sequence_uniq_info, :sequence_id=>4, :taxonomy_id=>82)
+    @sequence_uniq_info << FactoryGirl.create(:sequence_uniq_info, :sequence_id=>5, :taxonomy_id=>137)
     
-    SequenceUniqInfo.create(:sequence_id=>1, :taxonomy_id=>96, :gast_distance => 0.0, :refssu_id => 0, :refssu_count => 4, :rank_id => 4, :refhvr_ids => "v6_AO871", :created_at => Time.now, :updated_at => Time.now)
-    SequenceUniqInfo.create(:sequence_id=>4, :taxonomy_id=>82, :gast_distance => 0.0, :refssu_id => 0, :refssu_count => 4, :rank_id => 4, :refhvr_ids => "v6_AO871", :created_at => Time.now, :updated_at => Time.now)
-    SequenceUniqInfo.create(:sequence_id=>5, :taxonomy_id=>137, :gast_distance => 0.0, :refssu_id => 0, :refssu_count => 4, :rank_id => 4, :refhvr_ids => "v6_AO871", :created_at => Time.now, :updated_at => Time.now)
     @sequence_uniq_info = SequenceUniqInfo.all
         
     puts "\n@sequence_uniq_info = " + @sequence_uniq_info.inspect
         
-    # @sequence_pdr_info = Array.new
     SequencePdrInfo.create(dataset_id: 3, sequence_id: 1, seq_count: 2)
     SequencePdrInfo.create(dataset_id: 3, sequence_id: 4, seq_count: 8)
     SequencePdrInfo.create(dataset_id: 3, sequence_id: 5, seq_count: 3)
@@ -117,41 +109,6 @@ describe "Taxa" do
     SequencePdrInfo.create(dataset_id: 4, sequence_id: 4, seq_count: 4)
 
     @sequence_pdr_info = SequencePdrInfo.all
-    # @sequence_pdr_info << FactoryGirl.create(:sequence_pdr_info, dataset_id: 3, sequence_id: 1, seq_count: 2)
-    # Sequence.delete(4)    
-    # @sequence_pdr_info << FactoryGirl.create(:sequence_pdr_info, dataset_id: 3, sequence_id: 4, seq_count: 8)
-    # Sequence.delete(5)    
-    # @sequence_pdr_info << FactoryGirl.create(:sequence_pdr_info, dataset_id: 3, sequence_id: 5, seq_count: 3)
-    # Sequence.delete(1)    
-    # @sequence_pdr_info << FactoryGirl.create(:sequence_pdr_info, dataset_id: 4, sequence_id: 1, seq_count: 2)
-    # Sequence.delete(4)
-    # 
-    # @sequence_pdr_info << FactoryGirl.create(:sequence_pdr_info, dataset_id: 4, sequence_id: 4, seq_count: 4)
-    # puts "\nDDD: Dataset.all = " + Dataset.all.inspect
-    # 
-    # puts "\n@sequence_pdr_info = " + @sequence_pdr_info.inspect
-    # puts "\n@sequence_pdr_info.find(2) = " + @sequence_pdr_info.find(2).inspect
-    # puts "\n@sequence_pdr_info.find(2).sequence_uniq_info = " + @sequence_pdr_info.find(2).sequence_uniq_info.inspect
-    # puts "\nFFF: SequenceUniqInfo.all = " + SequenceUniqInfo.all.inspect
-    # puts "\nFFF: Sequence.all = " + Sequence.all.inspect
-    # puts "\nSSS1: SequencePdrInfo.find(2) = " + SequencePdrInfo.find(2).inspect
-    # puts "\nSSS: SequencePdrInfo.find(2).sequence_uniq_info = " + SequencePdrInfo.find(2).sequence_uniq_info.inspect
-    # puts "\nTTT: SequencePdrInfo.find(2).sequence_uniq_info.taxonomy_id = " + SequencePdrInfo.find(2).sequence_uniq_info.taxonomy_id.inspect
-    
-    # todo: fix the factory, see http://luisalima.github.io/
-    # @sequence_uniq_info = Array.new
-    # @sequence_uniq_info << FactoryGirl.create(:sequence_uniq_info, :sequence_id=>1, :taxonomy_id=>96)
-    # @sequence_uniq_info << FactoryGirl.create(:sequence_uniq_info, :sequence_id=>4, :taxonomy_id=>82)
-    # @sequence_uniq_info << FactoryGirl.create(:sequence_uniq_info, :sequence_id=>5, :taxonomy_id=>137)
-
-    
-    # puts "@ranks = " + @ranks.inspect
-    puts "\nURA55"
-    
-    puts "\nDDD: Domain.all = " + Domain.all.inspect
-    puts "\nCCC: Klass.all = " + Klass.all.inspect
-
-    puts "-" * 5
     # class
     find(:xpath, "//*[@id=\"basic_taxonomy_selector\"]/label[10]").click
     check(project_name)
