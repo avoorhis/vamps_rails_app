@@ -1,10 +1,11 @@
 require 'spec_helper'
-require 'create_ranks_w_data_helper.rb'
 # require 'create_sequences_helper'
 include TaxaCountHelper
+include CreateHelpers
 
 describe "Taxa" do
   before(:each) do
+    create_ranks_w_data
     Taxonomy.delete_all
     
     @user = FactoryGirl.create(:user)
@@ -55,6 +56,7 @@ describe "Taxa" do
   # end
   
   it "creates correct counts per dataset" do
+    puts "\nSTART1: creates correct counts per dataset"
     # puts "HERE1: @tax_hash_obj = " +  @tax_hash_obj.inspect
     
     @tax_hash_obj.taxa_count_per_d.should == {2=>{3=>{3=>{16=>{18=>{129=>{129=>{4=>{:datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, :datasets_ids=>{3=>8, 4=>4}}, 5=>{65=>{129=>{129=>{129=>{4=>{:datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>3}}, :datasets_ids=>{3=>11, 4=>4}}, 4=>{32=>{5=>{52=>{76=>{129=>{4=>{:datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>2, 4=>2}}, :datasets_ids=>{3=>13, 4=>6}}}
@@ -62,6 +64,8 @@ describe "Taxa" do
   end
   
   it "gives correct taxa per dataset counts" do
+    puts "\nSTART2: gives correct taxa per dataset counts"
+    
     a = @tax_hash_obj.get_cnts_per_dataset_ids_by_tax_ids(@tax_hash, [2])
     a.should == {3=>13, 4=>6}
   
@@ -74,6 +78,8 @@ describe "Taxa" do
   end
 
   it "shows correct numbers on the tax_table page", :js=> true do
+    puts "\nSTART3: shows correct numbers on the tax_table page"
+    
     # ActiveRecord::Base.logger = Logger.new(STDOUT) if defined?(ActiveRecord::Base)
     
     puts "-" * 5
@@ -141,29 +147,18 @@ describe "Taxa" do
     
     # puts "@ranks = " + @ranks.inspect
     puts "\nURA55"
-    require 'create_ranks_w_data_helper.rb'
     
     puts "\nDDD: Domain.all = " + Domain.all.inspect
     puts "\nCCC: Klass.all = " + Klass.all.inspect
 
     puts "-" * 5
-    puts page.body
-    # find(:xpath, "//input[@name='proceed' and @value='save-user-verification']").click
-    # 
-    # //*[@id="tax_id_2"]
+    # class
     find(:xpath, "//*[@id=\"basic_taxonomy_selector\"]/label[10]").click
-    
-    # page.choose('Class')
-    # page.choose('tax_id_11')
     check(project_name)
     find_button('Submit').click
+    puts page.body
     
     page.should have_content("Total count")    
-    # HERE: v = #<SequencePdrInfo id: 1, dataset_id: 3, sequence_id: 1, seq_count: 2, classifier: "GAST", created_at: "2013-10-25 21:15:46", updated_at: "2013-10-25 21:15:46">
-    # 
-    # An error occurred in an after hook
-    #   NoMethodError: undefined method `taxonomy_id' for nil:NilClass
-    #   occurred at /Users/ashipunova/work/bpc/vamps_rails_app/app/helpers/taxa_count_helper.rb:49:in `block in create_dat_seq_cnts'
     
   end
 
