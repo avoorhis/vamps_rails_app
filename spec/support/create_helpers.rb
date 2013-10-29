@@ -1,5 +1,12 @@
 module CreateHelpers
 
+  def create_user_and_login
+    user = FactoryGirl.create(:user)
+    user.confirm!    
+    login_as(user, :scope => :user)
+    user    
+  end
+  
   def create_taxonomies
     taxonomies = Array.new
     taxonomies << FactoryGirl.create(:taxonomy, id: 82, domain_id: 2, phylum_id: 3, klass_id: 3, order_id: 16, family_id: 18, genus_id: 129, species_id: 129, strain_id: 4)
@@ -7,20 +14,7 @@ module CreateHelpers
     taxonomies << FactoryGirl.create(:taxonomy, id: 137, domain_id: 2, phylum_id: 3, klass_id: 5, order_id: 65, family_id: 129, genus_id: 129, species_id: 129, strain_id: 4)    
   end
   
-  def create_ranks_w_data
-    # ActiveRecord::Base.logger = Logger.new(STDOUT) if defined?(ActiveRecord::Base)
-
-    # Rank.delete_all
-    # Taxonomy.delete_all
-    # Domain.delete_all
-    # Phylum.delete_all
-    # Klass.delete_all
-    # Family.delete_all
-    # Order.delete_all
-    # Genus.delete_all
-    # Species.delete_all
-    # Strain.delete_all
-
+  def create_ranks
     ranks_array = [{:rank => "NA", :rank_number => 10},
     {:rank => "class", :rank_number => 2},
     {:rank => "domain", :rank_number => 0},
@@ -31,12 +25,19 @@ module CreateHelpers
     {:rank => "species", :rank_number => 6},
     {:rank => "strain", :rank_number => 7}
     ]
-
-    @ranks = Array.new
+    Rank.delete_all
+    ranks = Array.new
     ranks_array.each do |my_hash|
-       @ranks.push(FactoryGirl.create(:rank, rank: my_hash[:rank], rank_number: my_hash[:rank_number]))       
+       ranks.push(FactoryGirl.create(:rank, rank: my_hash[:rank], rank_number: my_hash[:rank_number]))       
     end
+    return ranks
+  end
+  
+  def create_ranks_w_data
+    # ActiveRecord::Base.logger = Logger.new(STDOUT) if defined?(ActiveRecord::Base)
 
+    create_ranks
+    
     domain_arr = [{:domain => "Archaea"},
     {:domain => "Bacteria"},
     {:domain => "Eukarya"},

@@ -4,15 +4,10 @@ include CreateHelpers
 describe "Projects and Datasets list" do
   before(:each) do
     Rank.delete_all
-    User.delete_all
     Project.delete_all
-    @user = FactoryGirl.create(:user)
-    @user.confirm!    
-    login_as(@user, :scope => :user)
-
-    @projects = @user.projects
+    user      = create_user_and_login  
+    @projects = user.projects
     @ranks    = FactoryGirl.create(:rank)
-    # @taxa     = Array.new(3) { FactoryGirl.build(:taxon) } 
             
     visit "/visualization"      
   end

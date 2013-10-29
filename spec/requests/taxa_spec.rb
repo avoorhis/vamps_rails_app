@@ -1,42 +1,19 @@
 require 'spec_helper'
-# require 'create_sequences_helper'
-include TaxaCountHelper
-include CreateHelpers
 
 describe "Taxa" do
   before(:each) do
     create_ranks_w_data
-    Taxonomy.delete_all
     
-    @user = FactoryGirl.create(:user)
-    @user.confirm!    
-    login_as(@user, :scope => :user)
+    user = create_user_and_login
 
-    @projects   = @user.projects
+    @projects       = user.projects
       
-    @taxonomies = create_taxonomies
+    @taxonomies     = create_taxonomies
     @dat_counts_seq = [{:dataset_id=>3, :sequence_id=>1, :seq_count=>2, :taxonomy_id=>96}, {:dataset_id=>3, :sequence_id=>4, :seq_count=>8, :taxonomy_id=>82}, {:dataset_id=>3, :sequence_id=>5, :seq_count=>3, :taxonomy_id=>137}, {:dataset_id=>4, :sequence_id=>1, :seq_count=>2, :taxonomy_id=>96}, {:dataset_id=>4, :sequence_id=>4, :seq_count=>4, :taxonomy_id=>82}]
     
     @tax_hash_obj = TaxaCount.new
     @tax_hash     = @tax_hash_obj.create(@taxonomies, @dat_counts_seq)
     
-    ranks_array = [{:rank => "NA", :rank_number => 10},
-    {:rank => "class", :rank_number => 2},
-    {:rank => "domain", :rank_number => 0},
-    {:rank => "family", :rank_number => 4},
-    {:rank => "genus", :rank_number => 5},
-    {:rank => "order", :rank_number => 3},
-    {:rank => "phylum", :rank_number => 1},
-    {:rank => "species", :rank_number => 6},
-    {:rank => "strain", :rank_number => 7}
-    ]
-
-    Rank.delete_all
-    @ranks = Array.new
-    ranks_array.each do |my_hash|
-       @ranks.push(FactoryGirl.create(:rank, rank: my_hash[:rank], rank_number: my_hash[:rank_number]))       
-    end
-
     visit "/visualization"      
   end
   

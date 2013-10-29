@@ -3,9 +3,7 @@ require 'spec_helper'
 
 describe "User registration" do
   before(:each) do
-    Rank.delete_all
-    @ranks    = FactoryGirl.create(:rank)
-    # @taxa     = Array.new(3) { FactoryGirl.build(:taxon) } 
+    create_ranks
     
     visit "/users/sign_up"      
     find_field('Username').value    
@@ -57,13 +55,8 @@ end
 describe "User login_as" do
 
   before(:each) do
-    User.delete_all
-    Rank.delete_all
-    @user = FactoryGirl.create(:user)
-    @user.confirm!
-    login_as(@user, :scope => :user)
-    @ranks    = FactoryGirl.create(:rank)
-    # @taxa     = Array.new(3) { FactoryGirl.build(:taxon) } 
+    @user  = create_user_and_login
+    create_ranks
     
   end
   
@@ -101,9 +94,7 @@ end
   
 describe "User not logged in" do
   before(:each) do
-    Rank.delete_all
-    @ranks    = FactoryGirl.create(:rank)
-    # @taxa     = Array.new(3) { FactoryGirl.build(:taxon) } 
+    create_ranks
   end  
   
   it "should not sign in if wrong credentials" do
@@ -119,7 +110,6 @@ describe "User not logged in" do
   end
 
   it "should redirect to sign in if not logged in" do
-    Rank.delete_all
     visit "/visualization"
     # puts page.body
     
