@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'create_ranks_w_data_helper'
+include CreateHelpers
 
 describe "Projects and Datasets list" do
   before(:each) do
