@@ -55,9 +55,8 @@ end
 describe "User login_as" do
 
   before(:each) do
-    @user  = create_user_and_login
-    create_ranks
-    
+    @user = create_user_and_login
+    create_ranks    
   end
   
   it "has a valid factory" do
