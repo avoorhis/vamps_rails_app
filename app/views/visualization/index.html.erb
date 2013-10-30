@@ -44,7 +44,7 @@
               <%= project.project %>
               (<%= link_to "?", controller: "projects", action: "show", id: project.id %>)           
             </label> 
-            <div class="hidden" style='display:none;' >
+            <div class="hidden display_none" >
               <table>
                 <tr><td>Name:</td><td><%= project.project %></td></tr>
                 <tr><td>Title:</td><td><%= project.title %></td></tr>
@@ -54,7 +54,7 @@
       
             <ul>
               <% project_dataset_div = project.id.to_s+'_ds_div' %>
-              <div id='<%= project_dataset_div %>' style='display:none;'>  
+              <div id='<%= project_dataset_div %>' class='display_none'>  
                 <% dataset_hash.each do |dataset| %>
                   <li>
                   <label class="dataset-select">

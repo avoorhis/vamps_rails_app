@@ -4,7 +4,7 @@
 <%= render "downloads" %>
 
 <div  id='bars_table_div' >
-<table id ='bars_table' style=''>
+<table id ='bars_table'>
 <% puts 'tax '+@taxonomy_by_site_hash.inspect %>
 <% @ordered_projects.each do |pj| %>       
   <% pj[:datasets].each do |ds|	%>

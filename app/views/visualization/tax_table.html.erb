@@ -7,9 +7,9 @@
 
   <tr>
     <th></th>
-    <th style='text-align:right;'>Projects:</th>    
+    <th class='td-text-right'>Projects:</th>    
     <% @choosen_projects_w_d.each do |project| %>
-  	  <th style="text-align:center;" colspan="<%= project[:datasets].length %>"> <%= project[:pname] %> </th>   
+  	  <th class="td-text-center" colspan="<%= project[:datasets].length %>"> <%= project[:pname] %> </th>   
     <% end %>
   </tr>
   <tr><td class='td-text-center'>n</td><th class='td-text-right' >Datasets:</th>
@@ -30,16 +30,16 @@
       <tr>
         <td class='td-text-right'><%= n %></td><td nowrap='nowrap' class='td-text-left'  ><%=  data[0].join(";") %></td>  
         <% data[1].each do |d_id, cnt|%>
-            <td style='text-align:right;padding:1px 3px;'><%= cnt %></td>      
+            <td class = "td-text-right"><%= cnt %></td>      
         <% end %>        
       </tr>
     <% end %>
     
     <tr>
       <td></td>
-      <td style='text-align:right;padding:1px 3px;'>Total count</td>
+      <td class = "td-text-right">Total count</td>
       <% @counts_per_dataset_id.each do |id, d_cnt| %>
-      <td style='text-align:right;padding:1px 3px;'><%= d_cnt %></td>      
+      <td class = "td-text-right"><%= d_cnt %></td>      
   	<% end %>
 
 

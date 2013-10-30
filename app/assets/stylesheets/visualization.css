@@ -93,3 +93,7 @@ table.nodata td{
 	padding:2px 3px 1px 3px;
 }
 
+.display_none{
+/*    hidden*/
+    display:none;
+}
