@@ -106,12 +106,11 @@ class VisualizationController < ApplicationController
   def make_taxon_strings_w_counts_per_d(taxonomy_by_t_id_upto_rank, tax_hash_obj, taxonomy_per_d)
     # todo: move to an object?
     taxon_strings_w_counts_per_d = Hash.recursive
-    # {|hash, key| hash[key] = []}
     taxonomy_by_t_id_upto_rank.each do |taxonomy_id, taxonomy_hash|
       taxon_strings_w_counts_per_d[taxonomy_hash[:taxon_string]] = fill_zeros(tax_hash_obj.get_cnts_per_dataset_ids_by_tax_ids(taxonomy_per_d, taxonomy_hash[:tax_ids]))
     end
     # puts "\nPPP, taxon_strings_w_counts_per_d = " + taxon_strings_w_counts_per_d.inspect
-    # PPP, taxon_strings_w_counts_per_d = {["Bacteria", "Proteobacteria"]=>{3=>11, 4=>4}, ["Bacteria", "Actinobacteria"]=>{3=>2, 4=>2}, ["Bacteria", "Bacteroidetes"]=>{3=>306, 4=>33}}
+    # PPP, taxon_strings_w_counts_per_d = {82=>["Bacteria", "Proteobacteria", "Gammaproteobacteria", {3=>8, 4=>4}], 96=>["Bacteria", "Actinobacteria", "class_NA", {3=>2, 4=>2}], 137=>["Bacteria", "Proteobacteria", "Alphaproteobacteria", {3=>3}]}
     
     return taxon_strings_w_counts_per_d
   end

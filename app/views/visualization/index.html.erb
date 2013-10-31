@@ -6,6 +6,44 @@
 <% if flash[:notice] %>
     <div class="notice"><%= flash[:notice] %></div>
 <% end %>
+
+<div id="choose_viz" class="grid_1 prefix_1">
+  
+  choose_viz
+</div>
+
+<div id="projects" class="grid_6">
+    <%= link_to "Projects", projects_path %> 
+    <ul>
+    <% @datasets_by_project_all.each do |project, dataset_hash| %>
+      <% if not dataset_hash.blank? then %>              
+        <li>
+          <label class="project-select" >
+            <a href='#'  id="<%= project.project+'_toggle' %>" onclick="toggle_selected_datasets('<%= project.id %>','<%= project.project %>'); return false;" ><img alt='plus' src='assets/tree_plus.gif' /></a>
+            <%= check_box_tag project.project+"--pj-id", project.id, false, {:onclick=>"open_datasets('#{project.id}','#{project.project}')", :name => "project_ids[]"} %>
+            
+            <%= project.project %>
+            (<%= link_to "?", controller: "projects", action: "show", id: project.id %>)           
+          </label> 
+          <table class="hidden display_none">
+            <tr><td>Name:</td><td><%= project.project %></td></tr>
+            <tr><td>Title:</td><td><%= project.title %></td></tr>
+            <tr><td>Description:</td><td><%= project.project_description %></td></tr>
+          </table>          
+        </li>
+      <% end %>
+    <% end %>
+</div>
+
+<div id="taxonomy" class="grid_3">
+  HERE: Basic Taxonomy
+    <div id='basic_taxonomy_selector' >
+      <%= render "simple_taxonomy" %>    
+    </div>
+  
+</div>
+
+<hr/>
 <center>
 <table>
 

@@ -9,7 +9,7 @@
 .barChartContainer {
 	
 	padding:0px 0 0px 0;
-	width: 800px;
+/*  width: 800px;*/
 	
   /* border:1px solid green; */ 
     /*visibility:hidden;*/
@@ -27,7 +27,7 @@ table.barChart tr {
 
 .barChartWrapper {
 	position: relative;
-	width:25px;
+/*  width:25px;*/
 	top:0px;
 	padding: 1px 0px 1px 0px;
 	
@@ -43,7 +43,7 @@ table.barChart tr {
 	position: absolute;
 	top: 0px;
 	left:0px;
-	width:900px;
+/*  width:900px;*/
 	padding-right:0px;
 	margin-left:-1px;
 	border:1px solid black;

@@ -4,57 +4,70 @@
   <meta http-equiv="Cache-control" content="public">
   
   <title>VampsApp7</title>
-  <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
+  <%= stylesheet_link_tag "reset", "960_12_col", "application" %>
   <%= csrf_meta_tags %>
   
 
 </head>
 <body>
-<div id="headerBar">
-<img src='/assets/helix90_1.png'>
-<span>Visualization and Analysis<br>of Microbial Population Structures</span>
-</div>
+  <div id="container" class="container_12">
+    <div id="headerBar">
+      <div id="header_image" class="grid_7">
+        <img src='/assets/helix90_1.png'>
+      </div> <!-- end header_image -->
+      <div id="header_slogan" class="grid_5">
+        <p>Visualization and Analysis<br>
+                of Microbial Population Structures</p>
+      </div> <!-- end header_slogan -->
+    	
+      <div id="head_menu" class="grid_10 prefix_2">
 
-<div id="contentWrapper">
+      	<ul class="head_menu">
+          <li><%= render 'devise/menu/login_items' %></li>
+      	  <li><%= link_to "VAMPS Home", root_path %></li>
+      	  <li><%= link_to "Overview", overview_path %></li>
+      	  <li><a href="http://www.mbl.edu/jbpc/">JBPC Home</a></li>
+      	  <li><%= link_to "Community Visualization", visualization_index_path %></li>
+      	  <li><a href="#">Search</a></li>
+      	  <li><a href="#">Uploads</a></li>
+      	  <li><a href="#">Downloads</a></li>
+      	</ul>
+      </div> <!-- end head_menu -->
 
-	<ul class="left_menu">
-
-    <li class=""><%= render 'devise/menu/login_items' %></li>
-	  <li class=""><%= link_to "VAMPS Home", root_path %></li>
-	  <li class=""><%= link_to "Overview", overview_path %></li>
-	  <li class=""><a href="http://www.mbl.edu/jbpc/">JBPC Home</a></li>
-	  <li class=""><%= link_to "Community Visualization", visualization_index_path %></li>
-	  <li class=""><a href="#">Search</a></li>
-	  <li class=""><a href="#">Uploads</a></li>
-	  <li class=""><a href="#">Downloads</a></li>
-	</ul>
-
-	<ul class="hmenu">
+    	<div class="clear"></div>      
+    	
+      <div id="registration_items" class="grid_10">
+    		  <%= render 'devise/menu/registration_items' %>
+      </div> <!-- end registration_items -->
+      <div class="clear"></div>       
+  
+    	<div id="notices" class="grid_2 suffix_10">
 		  <p class="notice"><%= notice %></p>
 		  <p class="alert"><%= alert %></p>
-		  <%= render 'devise/menu/registration_items' %>
-	</ul>
+  </div> <!-- end notices -->
+    </div> <!-- end headerBar -->
+    <div class="clear"></div>       
+  
+    <div id="main_content" class="grid_12">
+	    <%= yield %>
+    </div> <!-- end main_content -->
 
-	<%= yield %>
-
-</div>
-
-<div id='footerBar' class="standard">
-    <hr>
-	The VAMPS project is under the direction of Mitchell Sogin, David Mark Welch, and Susan Huse 
-	<br />
-	and is funded through the <a href="http://www.sloan.org/" target="_blank">
-	Alfred P. Sloan Foundation</a>, the <a href="http://www.nsf.gov/">National Science Foundation</a>,<br />
-	and the <a href="http://astrobiology.nasa.gov/nai/" target="_blank">NASA Astrobiology Institute</a>.
-	<br />
-	Unless otherwise stated, all material &copy;2009 Bay Paul Center, MBL. 
-	<br />
-	<br />
-	<br />
-</div>
+    <div id='footerBar' class="standard grid_12">
+        <hr>
+    	The VAMPS project is under the direction of Mitchell Sogin, David Mark Welch, and Susan Huse 
+    	<br />
+    	and is funded through the <a href="http://www.sloan.org/" target="_blank">
+    	Alfred P. Sloan Foundation</a>, the <a href="http://www.nsf.gov/">National Science Foundation</a>,<br />
+    	and the <a href="http://astrobiology.nasa.gov/nai/" target="_blank">NASA Astrobiology Institute</a>.
+    	<br />
+    	Unless otherwise stated, all material &copy;2009 Bay Paul Center, MBL. 
+    	<br />
+    	<br />
+    	<br />
+    </div>
 
 
-
+  </div> <!-- end container -->
 </body>
 <%= javascript_include_tag "jquery", "application", "data-turbolinks-track" => true %>
 

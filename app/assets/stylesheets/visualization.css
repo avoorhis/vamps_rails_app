@@ -21,7 +21,7 @@
 	font-size:10px;
 	padding:10px;
 	border:1px solid red;
-	width:1000px;
+/*  width:1000px;*/
 	background:white;
 }
 #bars_table{
@@ -30,7 +30,7 @@
 }
 #bars_table td {
 	line-height:0px;
-	width:900px;
+/*  width:900px;*/
 }
 .bars_each_div{
 	height:15px;
@@ -43,14 +43,14 @@ table.nodata td{
 
 }
 #json_sample_treebox{
-	width:250px; 
+/*  width:250px; */
 	height:400px;
 	background-color:#f5f5f5;
 	border :1px solid red; 
 	overflow:auto;
 }
 #basic_taxonomy_selector{
-	width:250px; 
+/*  width:250px; */
 	height:400px;
 	background-color:#f5f5f5;
 	border :1px solid red;
@@ -63,7 +63,7 @@ table.nodata td{
 }
 
 #xml_sample_treebox{
-    width:250px; 
+/*    width:250px; */
     height:400px;
     background-color:#f5f5f5;
     border :1px solid red; 
@@ -71,11 +71,11 @@ table.nodata td{
 }
 
 .wide{
-    width:200px
+/*    width:200px*/
 }
 
 .no_bullets{
-	width:400px;
+/*  width:400px;*/
 	height:500px;
 	overflow:auto;
 }
