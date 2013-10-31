@@ -1,4 +1,5 @@
 require 'spec_helper'
+include CreateHelpers
 
 describe "Taxa" do
   before(:each) do
@@ -41,26 +42,10 @@ describe "Taxa" do
     project      = Project.first
     project_name = project.project
     dataset      = project.datasets
-
-    Sequence.delete_all
-    ActiveRecord::Base.establish_connection
-    sql = "INSERT IGNORE INTO sequences (id, sequence_comp, created_at, updated_at) VALUES (1, compress('AGCCTTTGACATCCTAGGACGACTTCTGGAGACAGATTTCTTCCCTTCGGGGACCTAGTGAC'), NOW(), NOW()), (2, compress('TGGTCTTGACATAGTAAGAACTTTCCAGAGATGGATTGGTGCCTTCGGGAACTTACAT'), NOW(), NOW()), (3, compress('TGGCCTTGACATGCAGAGAACTTTCCAGAGATGGATTGGTGCCTTCGGGAACTCTGAC'), NOW(), NOW()), (4, compress('AGGTCTTGACATCCCAGTGACCGTCCTAGAGATAGGATTTTTCTTCGGAACACAGAC'), NOW(), NOW()), (5, compress('TACTCTTGACATCCAGAGAACTTAGCAGAGATGCTTTGGTGCCTTCGGTCTGAGAC'), NOW(), NOW())" 
-    ActiveRecord::Base.connection.execute(sql)
-    
-    @sequence_uniq_info = Array.new
-    @sequence_uniq_info << FactoryGirl.create(:sequence_uniq_info, :sequence_id=>1, :taxonomy_id=>96)
-    @sequence_uniq_info << FactoryGirl.create(:sequence_uniq_info, :sequence_id=>4, :taxonomy_id=>82)
-    @sequence_uniq_info << FactoryGirl.create(:sequence_uniq_info, :sequence_id=>5, :taxonomy_id=>137)
+    create_seq_info
     
     @sequence_uniq_info = SequenceUniqInfo.all
-        
-    SequencePdrInfo.create(dataset_id: 3, sequence_id: 1, seq_count: 2)
-    SequencePdrInfo.create(dataset_id: 3, sequence_id: 4, seq_count: 8)
-    SequencePdrInfo.create(dataset_id: 3, sequence_id: 5, seq_count: 3)
-    SequencePdrInfo.create(dataset_id: 4, sequence_id: 1, seq_count: 2)
-    SequencePdrInfo.create(dataset_id: 4, sequence_id: 4, seq_count: 4)
-
-    @sequence_pdr_info = SequencePdrInfo.all
+    @sequence_pdr_info  = SequencePdrInfo.all
     # class
     find(:xpath, "//*[@id=\"basic_taxonomy_selector\"]/label[10]").click
     check(project_name)
