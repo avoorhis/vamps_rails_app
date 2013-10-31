@@ -25,11 +25,11 @@
 	
     <% n = 0 %>
     
-    <% @taxonomy_w_cnts_by_d.each do |taxonomy_id, data| %>
+    <% @taxonomy_w_cnts_by_d.each do |taxonomy, cnts_per_d| %>
       <% n += 1 %>
       <tr>
-        <td class='td-text-right'><%= n %></td><td nowrap='nowrap' class='td-text-left'  ><%=  data[0].join(";") %></td>  
-        <% data[1].each do |d_id, cnt|%>
+        <td class='td-text-right'><%= n %></td><td nowrap='nowrap' class='td-text-left'  ><%=  taxonomy.join(";") %></td>  
+        <% cnts_per_d.each do |d_id, cnt|%>
             <td class = "td-text-right"><%= cnt %></td>      
         <% end %>        
       </tr>
