@@ -36,23 +36,38 @@ describe "Taxa" do
     a.should == {3=>8, 4=>4}
   end
 
+  # it "shows redirect ot the tax_table page", :js=> true do
+  #   check(Project.first.project)
+  #   create_seq_info
+  #   find_button('Submit').click
+  #   page.should have_content("Total count")    
+  # end
+
   it "shows correct numbers on the tax_table page", :js=> true do
     # ActiveRecord::Base.logger = Logger.new(STDOUT) if defined?(ActiveRecord::Base)
     
-    project      = Project.first
-    project_name = project.project
-    dataset      = project.datasets
+    check(Project.first.project)
     create_seq_info
     
-    @sequence_uniq_info = SequenceUniqInfo.all
-    @sequence_pdr_info  = SequencePdrInfo.all
     # class
-    find(:xpath, "//*[@id=\"basic_taxonomy_selector\"]/label[10]").click
-    check(project_name)
+    page.choose('tax_id_2')
     find_button('Submit').click
-    # puts page.body
+    puts page.body
     
+    page.should have_content("Bacteria;Proteobacteria;Gammaproteobacteria")    
     page.should have_content("Total count")    
+    page.should have_content("13")    
+    
+  end
+
+  it "shows only one of each taxonomy on the tax_table page", :js=> true do 
+    check(Project.first.project)
+    create_seq_info
+    find_button('Submit').click
+    puts page.body
+    
+    # page.should have_css("td.td-text-left", :count => 2)
+    page.all("td.td-text-left").count.should eql(2)
     
   end
 

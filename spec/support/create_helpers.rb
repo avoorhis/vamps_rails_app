@@ -126,7 +126,6 @@ module CreateHelpers
     sql = "INSERT IGNORE INTO sequences (id, sequence_comp, created_at, updated_at) VALUES (1, compress('AGCCTTTGACATCCTAGGACGACTTCTGGAGACAGATTTCTTCCCTTCGGGGACCTAGTGAC'), NOW(), NOW()), (2, compress('TGGTCTTGACATAGTAAGAACTTTCCAGAGATGGATTGGTGCCTTCGGGAACTTACAT'), NOW(), NOW()), (3, compress('TGGCCTTGACATGCAGAGAACTTTCCAGAGATGGATTGGTGCCTTCGGGAACTCTGAC'), NOW(), NOW()), (4, compress('AGGTCTTGACATCCCAGTGACCGTCCTAGAGATAGGATTTTTCTTCGGAACACAGAC'), NOW(), NOW()), (5, compress('TACTCTTGACATCCAGAGAACTTAGCAGAGATGCTTTGGTGCCTTCGGTCTGAGAC'), NOW(), NOW())" 
     ActiveRecord::Base.connection.execute(sql)
 
-    # @sequence_uniq_info = Array.new
     FactoryGirl.create(:sequence_uniq_info, :sequence_id=>1, :taxonomy_id=>96)
     FactoryGirl.create(:sequence_uniq_info, :sequence_id=>4, :taxonomy_id=>82)
     FactoryGirl.create(:sequence_uniq_info, :sequence_id=>5, :taxonomy_id=>137)
