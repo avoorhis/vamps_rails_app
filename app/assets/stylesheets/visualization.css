@@ -1,60 +1,6 @@
-/*
-  Place all the styles related to the matching controller here.
-  They will automatically be included in application.css.
-*/
-
-
-
-#tax_table_div{
-	margin:10px 0 0 10px;
-	
-}
-.standard_table{
-	background:white;
-
-}
-.no_bullets ul{
-	list-style-type: none;
-	
-}
-#bars_table_div{
-	font-size:10px;
-	padding:10px;
-	border:1px solid red;
-/*  width:1000px;*/
-	background:white;
-}
-#bars_table{
-	border-collapse:collapse;
-	border:1px solid black;
-}
-#bars_table td {
-	line-height:0px;
-/*  width:900px;*/
-}
-.bars_each_div{
-	height:15px;
-	border:none;
-	margin:0px 0 0 0px;
-}
-table.nodata td{
-	border:none;
-	padding:5px 5px;
-
-}
-#json_sample_treebox{
-/*  width:250px; */
-	height:400px;
-	background-color:#f5f5f5;
-	border :1px solid red; 
-	overflow:auto;
-}
-#basic_taxonomy_selector{
-/*  width:250px; */
-	height:400px;
-	background-color:#f5f5f5;
-	border :1px solid red;
-	font-size:small;
+.display_none{
+/*    hidden*/
+    display:none;
 }
 
 #choose_viz{
@@ -62,38 +8,9 @@ table.nodata td{
     padding:5px 5px 5px 5px;
 }
 
-#xml_sample_treebox{
-/*    width:250px; */
-    height:400px;
-    background-color:#f5f5f5;
-    border :1px solid red; 
-    overflow:auto;
-}
-
-.wide{
-/*    width:200px*/
-}
-
-.no_bullets{
-/*  width:400px;*/
-	height:500px;
-	overflow:auto;
-}
-
-.td-text-center{
-	text-align:center;
-	padding:2px 3px 1px 3px;
-}
-.td-text-left{
-	text-align:left;
-	padding:2px 3px 1px 3px;
-}
-.td-text-right{
-	text-align:right;
-	padding:2px 3px 1px 3px;
-}
-
-.display_none{
-/*    hidden*/
-    display:none;
+#basic_taxonomy_selector{
+/*  height:400px;*/
+	background:#f5f5f5;
+/*  border :1px solid red;*/
+	font-size:small;
 }

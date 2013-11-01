@@ -1,17 +1,19 @@
-$footer_gold: #FFCC00;
-$header_blue: #00CCFF;
-
-html, body { 
+html, body {
     background: #ccc;
-}
+}    
 
 #headerBar {
     position: relative; 
     width: 100%; /* for IE 6 */
+/*    background: white;      */
 }
 
+/*#header_image {
+    background: white;      
+}
+*/
 #header_slogan {
-    height:90px;    
+    height:64px;    
     font-size: medium;
     background: #00CCFF;    
     
@@ -52,8 +54,12 @@ html, body {
 }
 
 #footerBar {
-    height: 12ex;
+    height: 10ex;
     background: #FFCC00;
     font-size: x-small;
     text-align: center;
+}
+
+#main_content {
+    min-height: 10ex;
 }
