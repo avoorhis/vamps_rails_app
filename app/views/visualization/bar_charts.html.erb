@@ -3,44 +3,43 @@
 <%= render "debug" %>
 <%= render "downloads" %>
 
-<div  id='bars_table_div' >
-<table id ='bars_table'>
-<% puts 'tax '+@taxonomy_by_site_hash.inspect %>
-<% @ordered_projects.each do |pj| %>       
-  <% pj[:datasets].each do |ds|	%>
-    <tr id=''><td nowrap='nowrap'><%= pj[:pname] %>--<%= ds[:dname] %></td>
-	<td>
-	<!-- # see: app/helpers/visualization_helper.rb -->
-	<% puts 'ds '+ds.inspect %>
-	<% ds_info = get_retmat(pj[:pname], ds[:dname])  %>	
-<% puts 'retmat '+ds_info.inspect %>
-	<div class='bars_each_div' > 
-		
-	<% if ds_info[:retmat].any? and ds_info[:total] > 0 %>
-		
-		<table class='barChart' >
-		<% ds_info[:retmat].each do |tax, value| %>
-		  <% if (value*100 / ds_info[:total]) > 0.1 then %>							
-			<tr>
-				<td><%= tax %></td>
-				<td><%= value %></td>
-				<td><%= string_2_color(tax) %></td>
-				<td><%= "http://www.google.com" %></td>
-				<td><%= ds_info[:total] %></td>
-				<td><%= ds[:dname] %></td>
-			</tr>
-		  <% end %>			
-		<% end %>
-	<% else %>
-		<table class='nodata'>		
-		<tr><td>No Data</td></tr>
-	<% end %>
-	</table>
-	</div>
-	</td>
-</tr>
-<% end %>	
-<% end %>
-</table>	
+<div id='bars_table_div' >
+<table id ='bars_table standard_table'>
+  
+  <tr>	
+  
+    <th>Project--Dataset</th>
+    <th>Counts</th>
+    <th>Bar Graph (click on a colored bar to open the legend for that bar)</th>
+  </tr>
+  	<% @choosen_projects_w_d.each do |project| %>
+  		<% project[:datasets].each do |d| %>
+      <tr>
+  		  <td class='td-text-left' > <%= "#{project[:pname]}--#{d[:dataset]}" %> </td> 
+  		  <td>Total: <%= @counts_per_dataset_id[d[:id]]%></td>
+  		  <td>
+  		    <div class='bars_each_div'> 
+  		      <table class='barChart standard_table'>
+  		        <% @taxonomy_w_cnts_by_d.each do |taxonomy, cnts_per_d| %>
+  		          <% if (cnts_per_d[d[:id]]*100 / @counts_per_dataset_id[d[:id]]) > 0.1 then %>							
+  		          <tr>
+          				<td><%= taxonomy.join(";") %></td>
+          				<td><%= cnts_per_d[d[:id]] %></td>
+          				<td><%= string_2_color(taxonomy.join(";")) %></td>
+          				<td><%= "http://www.google.com" %></td>
+          				<td><%= @counts_per_dataset_id[d[:id]] %></td>
+          				<td><%= d[:dataset] %></td>
+          			</tr>          			
+                <% end %>        		  
+              <% end %>
+        		</table>
+  		    </div>
+  		  </td>
+      </tr>
+  		<% end %>
+  	<% end %>
+  
+  </table>
+  
 </div>	   
 		
