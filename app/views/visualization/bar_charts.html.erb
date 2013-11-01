@@ -18,7 +18,7 @@
   		  <td>Total: <%= @counts_per_dataset_id[d[:id]]%></td>
   		  <td>
   		    <div class='bars_each_div'> 
-  		      <table class='barChart standard_table'>
+  		      <table class='barChart'>
   		        <% @taxonomy_w_cnts_by_d.each do |taxonomy, cnts_per_d| %>
   		          <% if (cnts_per_d[d[:id]]*100 / @counts_per_dataset_id[d[:id]]) > 0.1 then %>							
   		          <tr>

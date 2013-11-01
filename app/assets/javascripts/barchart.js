@@ -31,7 +31,7 @@ Example Usage:
 var BarChart = new Class({
 	options: {
 		barChartHeight: 13,  // Height of your bar chart
-		barChartWidth: 800,  // width of your bar chart
+		barChartWidth: 700,  // width of your bar chart
     	td_label_index: 0,    // which TD contains the label			
     	td_index: 1,          // which TD contains the data	
     	td_color_index: 2,    // and which td contains the color; form= '#000000'
@@ -234,7 +234,7 @@ var BarChart = new Class({
 					'title': '<div style="padding:10px;"> \
 					   <table> \
 					   <tr> \
-					       <td style="background:'+colors[piece]+';width:10px;" width="2"><span></span></td> \
+					       <td style="background:'+colors[piece]+';width:1.2ex;" width="2"><span></span></td> \
 					       <td>Count: ' +values[piece]+ ' ('+pct.round(2)+'%)</td> \
 					   </tr> \
 					   <tr> \

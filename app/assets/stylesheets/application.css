@@ -151,11 +151,13 @@ h2 {
 
 /*=== bars table ===*/
 #bars_table td {
-/*  line-height:0px;*/
-  font-size:small;
+  font-size:small;  
 }
 
-/*.bars_each_div {
-    height:2ex;
+.bars_each_div {
+    height:3ex;    
 }
-*/
+
+.barChart {
+    visibility: hidden;
+}
