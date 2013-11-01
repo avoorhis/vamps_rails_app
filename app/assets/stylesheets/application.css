@@ -149,3 +149,13 @@ h2 {
     border:1px solid #3BBFCE;	
 }
 
+/*=== bars table ===*/
+#bars_table td {
+/*  line-height:0px;*/
+  font-size:small;
+}
+
+/*.bars_each_div {
+    height:2ex;
+}
+*/
