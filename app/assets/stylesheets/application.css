@@ -5,13 +5,15 @@ html, body {
 #headerBar {
     position: relative; 
     width: 100%; /* for IE 6 */
-/*    background: white;      */
 }
 
-/*#header_image {
-    background: white;      
+#header_banner {
+    background: white; 
+    width: 940px;
+    height:64px;    
+         
 }
-*/
+
 #header_slogan {
     height:64px;    
     font-size: medium;

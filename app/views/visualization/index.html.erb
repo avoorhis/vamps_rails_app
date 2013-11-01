@@ -7,20 +7,25 @@
 <% if flash[:notice] %>
     <div class="notice"><%= flash[:notice] %></div>
 <% end %>
+<div class="clear"></div>      
 
-<div id="choose_viz" class="grid_2">
-    <% ['heatmap', 'tax_table', 'bar_charts'].each do |view| %>
-      <%= radio_button_tag(:view, view, view == "tax_table") %>
-      <%= label_tag("view_#{view}", view.tr('_', ' ').capitalize) %>
-      <br>
-    <% end %>
-    <hr>
+<div class="grid_2">
+  Choose:  
+  <div id="choose_viz" >
+      <% ['heatmap', 'tax_table', 'bar_charts'].each do |view| %>
+        <%= radio_button_tag(:view, view, view == "tax_table") %>
+        <%= label_tag("view_#{view}", view.tr('_', ' ').capitalize) %>
+        <br>
+      <% end %>
+      <hr>
 
-  <%= button_tag "Submit" %>  
+    <%= button_tag "Submit" %>  
+  </div>
 </div>
 
 <div id="projects" class="grid_6">
-    <%= link_to "Projects", projects_path %> 
+  <%= link_to "Projects", projects_path %>   
+  
     <ul>
     <% @datasets_by_project_all.each do |project, dataset_hash| %>
       <% if not dataset_hash.blank? then %>              
@@ -40,10 +45,14 @@
         </li>
       <% end %>
     <% end %>
+    </ul>
 </div>
 
-<div id="basic_taxonomy_selector" class="grid_3">
+<div class="grid_3">
+  Basic Taxonomy  
+  <div id="basic_taxonomy_selector">
       <%= render "simple_taxonomy" %>    
+  </div>
 </div>
 
 
