@@ -1,5 +1,3 @@
-<%= stylesheet_link_tag "visualization" %>
-
 <h1><center>Community Visualization</center></h1>
 
 
@@ -42,6 +40,21 @@
             <tr><td>Title:</td><td><%= project.title %></td></tr>
             <tr><td>Description:</td><td><%= project.project_description %></td></tr>
           </table>          
+
+          <ul>
+            <% project_dataset_div = project.id.to_s+'_ds_div' %>
+            <div id='<%= project_dataset_div %>' class='display_none'>  
+              <% dataset_hash.each do |dataset| %>
+                <li>
+                <label class="dataset-select">
+                <%= check_box_tag 'dataset_ids[]', dataset.id, false, :onclick=>"check_project('#{project.id}','#{project.project}')" %>
+                <%= dataset.dataset %>
+                </label>
+                </li>
+              <% end %>
+            </div>
+          </ul>
+
         </li>
       <% end %>
     <% end %>
