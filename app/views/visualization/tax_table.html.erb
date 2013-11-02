@@ -1,50 +1,60 @@
 <h1>Tax Table</h1>
 
 <%= render "debug" %>
+<div class="grid_1 alpha">
+  Choose:  
+      <% ['heatmap', 'tax_table', 'bar_charts'].each do |view| %>
+        <% params[:view] = view %>
+        <%= button_to view.tr('_', ' ').capitalize, { action: "parse_view", params: params } %>
+      <% end %>
+</div>
 
-<div  id='tax_table_div' >
-<table class='standard_table'>
+<div class="grid_11 omega">
 
-  <tr>
-    <th></th>
-    <th class='td-text-right'>Projects:</th>    
-    <% @choosen_projects_w_d.each do |project| %>
-  	  <th class="td-text-center" colspan="<%= project[:datasets].length %>"> <%= project[:pname] %> </th>   
-    <% end %>
-  </tr>
-  <tr><td class='td-text-center'>n</td><th class='td-text-right' >Datasets:</th>
-    <!-- TODO: benchmark w and w/o loop, refactor-->
-	<% @choosen_projects_w_d.each do |project| %>
-		<% project[:datasets].each do |d| %>
-		  <td class='td-text-center' > <%= d[:dataset] %> </td> 
-		<% end %>
-	<% end %>
+  <div  id='tax_table_div' >
+  <table class='standard_table'>
 
-    
-    </tr>
-	
-    <% n = 0 %>
-    
-    <% @taxonomy_w_cnts_by_d.each do |taxonomy, cnts_per_d| %>
-      <% n += 1 %>
-      <tr>
-        <td class='td-text-right'><%= n %></td><td nowrap='nowrap' class='td-text-left'  ><%=  taxonomy.join(";") %></td>  
-        <% cnts_per_d.each do |d_id, cnt|%>
-            <td class = "td-text-right"><%= cnt %></td>      
-        <% end %>        
-      </tr>
-    <% end %>
-    
     <tr>
-      <td></td>
-      <td class = "td-text-right">Total count</td>
-      <% @counts_per_dataset_id.each do |id, d_cnt| %>
-      <td class = "td-text-right"><%= d_cnt %></td>      
+      <th></th>
+      <th class='td-text-right'>Projects:</th>    
+      <% @choosen_projects_w_d.each do |project| %>
+    	  <th class="td-text-center" colspan="<%= project[:datasets].length %>"> <%= project[:pname] %> </th>   
+      <% end %>
+    </tr>
+    <tr><td class='td-text-center'>n</td><th class='td-text-right' >Datasets:</th>
+      <!-- TODO: benchmark w and w/o loop, refactor-->
+  	<% @choosen_projects_w_d.each do |project| %>
+  		<% project[:datasets].each do |d| %>
+  		  <td class='td-text-center' > <%= d[:dataset] %> </td> 
+  		<% end %>
   	<% end %>
 
-
+    
       </tr>
+	
+      <% n = 0 %>
+    
+      <% @taxonomy_w_cnts_by_d.each do |taxonomy, cnts_per_d| %>
+        <% n += 1 %>
+        <tr>
+          <td class='td-text-right'><%= n %></td><td nowrap='nowrap' class='td-text-left'  ><%=  taxonomy.join(";") %></td>  
+          <% cnts_per_d.each do |d_id, cnt|%>
+              <td class = "td-text-right"><%= cnt %></td>      
+          <% end %>        
+        </tr>
+      <% end %>
+    
+      <tr>
+        <td></td>
+        <td class = "td-text-right">Total count</td>
+        <% @counts_per_dataset_id.each do |id, d_cnt| %>
+        <td class = "td-text-right"><%= d_cnt %></td>      
+    	<% end %>
 
 
-</table>	
+        </tr>
+
+
+  </table>	
+  </div>
 </div>

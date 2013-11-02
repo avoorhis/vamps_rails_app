@@ -45,7 +45,7 @@ class VisualizationController < ApplicationController
       render :bar_charts 
     else params[:view]   == "tax_table"
       #default
-      render "tax_table"
+      render :tax_table
     end    
   end
   
