@@ -1,13 +1,7 @@
 <h1>Tax Table</h1>
 
 <%= render "debug" %>
-<div class="grid_1 alpha">
-  Choose:  
-      <% ['heatmap', 'tax_table', 'bar_charts'].each do |view| %>
-        <%= button_to view.tr('_', ' ').capitalize, { action: "what_to_show", view: view} %>
-        <!-- No route matches {:action=>"what_to_show", :view=>"heatmap", :controller=>"visualization"} -->
-      <% end %>
-</div>
+<%= render "to_render" %>
 
 <div class="grid_11 omega">
 

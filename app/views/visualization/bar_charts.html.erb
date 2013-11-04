@@ -2,14 +2,7 @@
 
 <%= render "debug" %>
 <%= render "downloads" %>
-
-<div class="grid_1">
-  Choose:  
-      <% ['heatmap', 'tax_table', 'bar_charts'].each do |view| %>
-        <% params[:view] = view %>
-        <%= button_to view.tr('_', ' ').capitalize, { action: "parse_view", params: params } %>
-      <% end %>
-</div>
+<%= render "to_render" %>
 
 <table id ='bars_table' class="standard_table">
   
