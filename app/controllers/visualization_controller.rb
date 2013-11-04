@@ -3,8 +3,10 @@ class VisualizationController < ApplicationController
   before_filter :authenticate_user!
   require 'benchmark'  
   include TaxaCountHelper
-  
-  
+  @@counts_per_dataset_id = Hash.new
+  @@choosen_projects_w_d  = Hash.new
+  @@taxonomy_w_cnts_by_d  = Hash.new
+    
   # Andy, I'm collecting all project ids togeteher, is it okay? E.g.: "project_ids"=>["6", "8"], "dataset_ids"=>["3", "4", "238", "239"]
 
   def index
@@ -21,7 +23,7 @@ class VisualizationController < ApplicationController
     end
     
     result = Benchmark.measure do
-      @choosen_projects_w_d  = get_choosen_projects_w_d()
+      @@choosen_projects_w_d  = get_choosen_projects_w_d()
     end
     puts "get_choosen_projects_w_d() result " + result.to_s
     
@@ -33,20 +35,28 @@ class VisualizationController < ApplicationController
     puts "SequencePdrInfo.where(dataset_id: params[\"dataset_ids\"].uniq) result " + result.to_s
     
     result = Benchmark.measure do
-      @counts_per_dataset_id = get_counts_per_dataset_id(my_pdrs)
+      @@counts_per_dataset_id = get_counts_per_dataset_id(my_pdrs)
     end
     puts "get_counts_per_dataset_id(my_pdrs) result " + result.to_s
     
     create_taxonomy_w_counts_to_show(Rank.find(params[:tax_id]).rank_number, my_pdrs)
     
-    if params[:view]     == "heatmap"
-      render :heatmap    
-    elsif  params[:view] == "bar_charts"
-      render :bar_charts 
-    else params[:view]   == "tax_table"
-      #default
-      render :tax_table
-    end    
+    @counts_per_dataset_id = @@counts_per_dataset_id
+    @choosen_projects_w_d  = @@choosen_projects_w_d
+    
+    what_to_show(params[:view])
+  end
+
+  def what_to_show(to_render = params[:view])
+    puts "TTT1: to_render = " + to_render.inspect
+    
+    puts "TTT: params = " + params.inspect
+    puts "RRR: @@counts_per_dataset_id = " + @@counts_per_dataset_id.inspect
+    @counts_per_dataset_id = @@counts_per_dataset_id
+    @choosen_projects_w_d  = @@choosen_projects_w_d
+    @taxonomy_w_cnts_by_d  = @@taxonomy_w_cnts_by_d
+    
+    render to_render
   end
   
   private
@@ -149,10 +159,10 @@ class VisualizationController < ApplicationController
     puts "taxon_strings_upto_rank_obj.create(rank_number, @taxonomies) result " + result.to_s
     
     result = Benchmark.measure do
-      @taxonomy_w_cnts_by_d = make_taxon_strings_w_counts_per_d(taxonomy_by_t_id_upto_rank, tax_hash_obj, taxonomy_per_d)
+      @@taxonomy_w_cnts_by_d = make_taxon_strings_w_counts_per_d(taxonomy_by_t_id_upto_rank, tax_hash_obj, taxonomy_per_d)
     end
     puts "make_taxon_strings_w_counts_per_d(taxonomy_by_t_id_upto_rank, tax_hash_obj, taxonomy_per_d) result " + result.to_s
-    @taxonomy_w_cnts_by_d
+    @@taxonomy_w_cnts_by_d
   end
 end
 

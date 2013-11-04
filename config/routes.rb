@@ -13,6 +13,8 @@ VampsApp7::Application.routes.draw do
   get  'pages/faq',      as: :faq
   get  'pages/contact',  as: :contact
 
+  resources :visualization
+
   post 'visualization/tax_table',  as: :tax_table
   #get 'visualization/heatmap',    as: :heatmap
   post 'visualization/heatmap',    as: :heatmap
@@ -20,7 +22,9 @@ VampsApp7::Application.routes.draw do
   post 'visualization/parse_view'
   #get 'visualization/generate_data_download'
   #match /visualization/generate_data_download/:id => "visualization#generate_data_download"
-  resources :visualization
+  
+  match '/visualization/what_to_show/:view', :controller => 'visualization', :action => 'what_to_show', via: [:get, :post]
+  
   get "downloads/generate_data_download"
   
   resources :sequence

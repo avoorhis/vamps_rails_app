@@ -4,8 +4,8 @@
 <div class="grid_1 alpha">
   Choose:  
       <% ['heatmap', 'tax_table', 'bar_charts'].each do |view| %>
-        <% params[:view] = view %>
-        <%= button_to view.tr('_', ' ').capitalize, { action: "parse_view", params: params } %>
+        <%= button_to view.tr('_', ' ').capitalize, { action: "what_to_show", view: view} %>
+        <!-- No route matches {:action=>"what_to_show", :view=>"heatmap", :controller=>"visualization"} -->
       <% end %>
 </div>
 
