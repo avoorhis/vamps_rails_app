@@ -1,7 +1,5 @@
 class VisualizationController < ApplicationController
   
-  caches_page :index
-  # todo: cach expiring after a db update
   before_filter :authenticate_user!
   require 'benchmark'  
   include TaxaCountHelper

@@ -1,4 +1,6 @@
 <h1>Heatmap</h1>
 
 <%= render "debug" %>
-<%= render "to_render" %>
+<% cache("to_render") do %>
+  <%= render "to_render" %>
+<% end %>

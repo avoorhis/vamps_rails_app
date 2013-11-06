@@ -1,7 +1,9 @@
 <h1>Tax Table</h1>
 
 <%= render "debug" %>
-<%= render "to_render" %>
+<% cache("to_render") do %>
+  <%= render "to_render" %>
+<% end %>
 
 <div class="grid_11 omega">
 

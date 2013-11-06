@@ -11,6 +11,8 @@
 </head>
 <body>
   <div id="container" class="container_12">
+    <% cache("header") do %>
+    
     <div id="headerBar">
       <div id="header_banner">      
         <div id="header_image" class="grid_7 alpha">
@@ -49,12 +51,15 @@
   </div> <!-- end notices -->
     </div> <!-- end headerBar -->
     <div class="clear"></div>       
-  
+    <% end %>
+    
     <div id="main_content" class="grid_12">
 	    <%= yield %>
     </div> <!-- end main_content -->
     <div class="clear"></div>       
 
+    <% cache("footer") do %>
+    
     <div id='footerBar' class="grid_12">
         <hr>
     	The VAMPS project is under the direction of Mitchell Sogin, David Mark Welch, and Susan Huse 
@@ -68,6 +73,7 @@
     	<br />
     	<br />
     </div>
+    <% end %>
 
 
   </div> <!-- end container -->

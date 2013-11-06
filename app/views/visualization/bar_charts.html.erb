@@ -2,7 +2,9 @@
 
 <%= render "debug" %>
 <%= render "downloads" %>
-<%= render "to_render" %>
+<% cache("to_render") do %>
+  <%= render "to_render" %>
+<% end %>
 
 <table id ='bars_table' class="standard_table">
   
