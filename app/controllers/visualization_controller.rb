@@ -1,6 +1,8 @@
 class VisualizationController < ApplicationController
   
   before_filter :authenticate_user!
+  protect_from_forgery except: :parse_view
+  
   require 'benchmark'  
   include TaxaCountHelper
   @@counts_per_dataset_id = Hash.new

@@ -94,7 +94,8 @@ describe "User login_as" do
     visit "/visualization"
     page.should have_content("Logged in as #{@user.username}")
     click_link "Logout"    
-    visit "/pages/overview"        
+    visit "/visualization"
+    # visit "/pages/overview"        
     # visit "/"        
     puts page.body
     

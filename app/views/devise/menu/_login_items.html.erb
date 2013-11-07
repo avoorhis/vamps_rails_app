@@ -1,14 +1,14 @@
 <% if user_signed_in? %>
-  <li>
+  <!-- <li> -->
     <% cache("logout") do %>
       <%= link_to('Logout', destroy_user_session_path, :method => :delete) %>        
     <% end %>  
       
-  </li>
+  <!-- </li> -->
 <% else %>
-  <li>
+  <!-- <li> -->
     <% cache("login") do %>
       <%= link_to('Login', new_user_session_path)  %>
     <% end %>  
-  </li>
+  <!-- </li> -->
 <% end %>
