@@ -23,7 +23,7 @@ VampsApp7::Application.routes.draw do
   #get 'visualization/generate_data_download'
   #match /visualization/generate_data_download/:id => "visualization#generate_data_download"
   
-  match '/visualization/what_to_show/:view', :controller => 'visualization', :action => 'what_to_show', via: [:get, :post]
+  post '/visualization/what_to_show/:view', :controller => 'visualization', :action => 'what_to_show'
   
   get "downloads/generate_data_download"
   
