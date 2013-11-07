@@ -1,4 +1,5 @@
 require 'spec_helper'
+include CreateHelpers
 # Capybara.default_wait_time = 5
 
 describe "User registration" do
@@ -88,6 +89,21 @@ describe "User login_as" do
     
   end
   
+  it "should show whether a user is logged in" do
+    puts "HERE: @user = " + @user.inspect
+    visit "/visualization"
+    page.should have_content("Logged in as #{@user.username}")
+    click_link "Logout"    
+    visit "/pages/overview"        
+    # visit "/"        
+    puts page.body
+    
+    page.should have_no_content("Logged in as #{@user.username}")
+    page.should have_content("You need to sign in or sign up before continuing.")
+    puts page.body
+    
+  end
+  
   
 end
   
@@ -115,6 +131,7 @@ describe "User not logged in" do
     page.should have_content("Sign in")
   end
 
-  it "should not create a new user if validation failed"
+  # it "should not create a new user if validation failed"
+  
   
 end

@@ -24,10 +24,14 @@
                   of Microbial Population Structures</p>
         </div> <!-- end header_slogan -->
     	</div> <!-- end header_banner -->
+    <% end %> <!--cache("header")-->
+    	
       <div id="head_menu" class="grid_10 prefix_2">
 
       	<ul class="head_menu">
           <li><%= render 'devise/menu/login_items' %></li>
+          <% cache("static_menu") do %>
+          
       	  <li><%= link_to "VAMPS Home", root_path %></li>
       	  <li><%= link_to "Overview", overview_path %></li>
       	  <li><a href="http://www.mbl.edu/jbpc/">JBPC Home</a></li>
@@ -35,6 +39,8 @@
       	  <li><a href="#">Search</a></li>
       	  <li><a href="#">Uploads</a></li>
       	  <li><a href="#">Downloads</a></li>
+      	  <% end %> <!--cache("static_menu")-->
+          
       	</ul>
       </div> <!-- end head_menu -->
 
@@ -51,7 +57,6 @@
   </div> <!-- end notices -->
     </div> <!-- end headerBar -->
     <div class="clear"></div>       
-    <% end %>
     
     <div id="main_content" class="grid_12">
 	    <%= yield %>

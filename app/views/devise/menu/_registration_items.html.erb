@@ -1,9 +1,16 @@
 <% if user_signed_in? %>
   <!-- <li> -->
-  <%= link_to('Logged in as ' + current_user.username, edit_user_registration_path) %>
+HERE1 user_signed_in
+  <% cache("user_signed_in") do %>
+    
+    <%= link_to('Logged in as ' + current_user.username, edit_user_registration_path) %>
+    <% end %>
   <!-- </li> -->
 <% else %>
   <!-- <li> -->
+    <% cache("user_signed_out") do %>
+    HERE2 user_signed_out
   <%= link_to('Register', new_user_registration_path)  %>
+  <% end %>
   <!-- </li> -->
 <% end %>

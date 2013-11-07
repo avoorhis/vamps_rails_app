@@ -4,8 +4,7 @@ source 'https://rubygems.org'
 gem 'rails', '4.0.0'
 gem 'webrick', '1.3.1'
 
-gem 'actionpack-page_caching'
-gem 'actionpack-action_caching'
+gem 'cache_digests'
 
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
