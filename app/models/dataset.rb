@@ -7,7 +7,7 @@ class Dataset < ActiveRecord::Base
 
   validates :dataset, :dataset_description, :presence => true, :format => /\A[\w ,.]+\z/
   validates :dataset, :dataset, :presence => true, :format => /\A\w+\z/
-  validates :project_id, :presence => true
+  validates :project_id, :presence => true, :format => /\d+/
   validates_uniqueness_of :project_id, :scope => :dataset
 
 end
