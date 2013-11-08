@@ -1,5 +1,5 @@
 class Project < ActiveRecord::Base
-	belongs_to :user
+	belongs_to :user, touch: true
 	has_many   :datasets
   has_many   :sequence_pdr_infos, :through => :datasets
 
@@ -7,7 +7,7 @@ class Project < ActiveRecord::Base
 
   validates :project, :presence => true, uniqueness: true, :format => /\A\w+\z/
   validates :title, :project_description, :presence => true, :format => /\A[\w ,\.]+\z/
-  validates :user_id, :presence => true, :format => /\d+/ 
+  validates :user_id, :presence => true, :format => /\A\d+\z/ 
   validates :rev_project_name, uniqueness: true, :format => /\A\w+\z/
   
 end

@@ -15,6 +15,8 @@ class VisualizationController < ApplicationController
     @datasets_by_project_all = make_datasets_by_project_hash()
     @domains  = Domain.all
     @ranks    = Rank.all.sorted    
+    fresh_when(@domains)
+    fresh_when(@ranks)    
   end
 
   def parse_view
@@ -45,15 +47,11 @@ class VisualizationController < ApplicationController
     
     @counts_per_dataset_id = @@counts_per_dataset_id
     @choosen_projects_w_d  = @@choosen_projects_w_d
-    
+
     what_to_show(params[:view])
   end
 
   def what_to_show(to_render = params[:view])
-    puts "TTT1: to_render = " + to_render.inspect
-    
-    puts "TTT: params = " + params.inspect
-    puts "RRR: @@counts_per_dataset_id = " + @@counts_per_dataset_id.inspect
     @counts_per_dataset_id = @@counts_per_dataset_id
     @choosen_projects_w_d  = @@choosen_projects_w_d
     @taxonomy_w_cnts_by_d  = @@taxonomy_w_cnts_by_d

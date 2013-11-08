@@ -1,7 +1,7 @@
 class SequenceUniqInfo < ActiveRecord::Base
-  belongs_to :rank
-  belongs_to :taxonomy
-  belongs_to :sequence
+  belongs_to :rank,     touch: true
+  belongs_to :taxonomy, touch: true
+  belongs_to :sequence, touch: true
   # refssu_id?
   
   has_one  :domain      , :through => :taxonomy

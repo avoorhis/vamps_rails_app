@@ -1,4 +1,5 @@
 require 'spec_helper'
+include CreateHelpers
 
 describe "TaxonomyWNames" do
   before(:each) do

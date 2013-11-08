@@ -14,7 +14,10 @@ Warden.test_mode!
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
-Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
+# Dir[Rails.root.join("spec/support/*.rb")].each { |f| puts "URA: f = #{f}; " + File.basename(f, ".rb").camelize  }
+Dir[Rails.root.join("spec/support/*.rb")].each { |f| require f }
+# Dir[Rails.root.join("spec/support/*.rb")].each { |f| include File.basename(f, ".rb").camelize }
+# wrong argument type String (expected Module) 
 
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.

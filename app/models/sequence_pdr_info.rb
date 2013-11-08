@@ -1,6 +1,6 @@
 class SequencePdrInfo < ActiveRecord::Base
-  belongs_to :sequence
-  belongs_to :dataset
+  belongs_to :sequence, touch: true
+  belongs_to :dataset, touch: true
 
   has_many :projects,           :through => :dataset
   has_one  :sequence_uniq_info, :through => :sequence

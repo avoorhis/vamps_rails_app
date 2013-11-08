@@ -1,3 +1,3 @@
 class Genus < ActiveRecord::Base
-  belongs_to :taxonomies  
+  has_many :taxonomies
 end
