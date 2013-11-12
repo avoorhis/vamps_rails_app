@@ -6,7 +6,7 @@ class Taxonomy < ActiveRecord::Base
 	
 	belongs_to :domain      , touch: true
 	belongs_to :phylum      , touch: true
-	belongs_to :klass       , touch: true
+	belongs_to :klass       #, touch: true
 	belongs_to :order       , touch: true
 	belongs_to :family      , touch: true
 	belongs_to :genus       , touch: true
