@@ -32,7 +32,6 @@ describe "Taxa" do
   end
 
   it "shows correct numbers on the tax_table page", :js=> true do
-    puts "lane 47"
     # ActiveRecord::Base.logger = Logger.new(STDOUT) if defined?(ActiveRecord::Base)
     find(:css, 'label.project-select input', match: :first).click
     create_seq_info
@@ -49,10 +48,6 @@ describe "Taxa" do
   end
 
   it "shows only one of each taxonomy on the tax_table page", :js=> true do 
-    puts "lane 65"
-    puts "Project.first.project = " + Project.first.project
-    
-    puts "@projects.first.project = " +@projects.first.project
     
     # ActiveRecord::Base.logger = Logger.new(STDOUT) if defined?(ActiveRecord::Base)
     find(:css, 'label.project-select input', match: :first).click

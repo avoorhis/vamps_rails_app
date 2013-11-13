@@ -27,26 +27,23 @@ describe "User registration" do
     expect(page).to have_content("A message with a confirmation link has been sent to your email address. Please open the link to activate your account")
   end
   
+  subject(:last_user) {User.last}
   it "should confirm registration and logs in" do
-    user = User.last
-    visit "/users/confirmation?confirmation_token=" + user.confirmation_token
+    visit "/users/confirmation?confirmation_token=" + last_user.confirmation_token
     # puts page.body
     
     expect(page).to have_content("Your account was successfully confirmed. You are now signed in.")
-    expect(page).to have_content("Logged in as " + user.username)
+    expect(page).to have_content("Logged in as " + last_user.username)
   end
   
   it "should still be possible log in after logout" do
-    user = User.last
-    user.confirm!
-    user.save!
+    last_user.confirm!
+    last_user.save!
     click_link "Login"            
     find_field('Username').value    
-    fill_in "Username", :with => user.username
+    fill_in "Username", :with => last_user.username
     fill_in "Password", :with => '12345678'
-    # click_button "Sign in"
     find_button('Sign in').click
-    # puts user.inspect
     
     expect(page).to have_no_content("Invalid username or password.")
   end
@@ -66,8 +63,7 @@ describe "User login_as" do
 
   it "should sign in as an existing user and displays the user's username" do
     visit root_path
-    expect(page).to have_content("Logged in as " + @user.username)
-    
+    expect(page).to have_content("Logged in as " + @user.username)    
   end
   
   it "should show visualization if logged in" do
@@ -90,18 +86,18 @@ describe "User login_as" do
   end
   
   it "should show whether a user is logged in" do
-    puts "HERE: @user = " + @user.inspect
+    # puts "HERE: @user = " + @user.inspect
     visit "/visualization"
     expect(page).to have_content("Logged in as #{@user.username}")
     click_link "Logout"    
     visit "/visualization"
     # visit "/pages/overview"        
     # visit "/"        
-    puts page.body
+    # puts page.body
     
     expect(page).to have_no_content("Logged in as #{@user.username}")
     expect(page).to have_content("You need to sign in or sign up before continuing.")
-    puts page.body
+    # puts page.body
     
   end
   
