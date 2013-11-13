@@ -17,7 +17,7 @@ describe "TaxonomyWNames" do
     taxon_strings_upto_rank = @taxon_strings_upto_rank_obj.create(2, @taxonomies)
     # puts "URA test: taxon_strings_upto_rank = " + taxon_strings_upto_rank.inspect
 
-    taxon_strings_upto_rank.should == {82=>{:taxon_string=>["Bacteria", "Proteobacteria", "Gammaproteobacteria"], :tax_ids=>[2, 3, 3]}, 96=>{:taxon_string=>["Bacteria", "Actinobacteria", "Clostridia"], :tax_ids=>[2, 4, 6]}, 137=>{:taxon_string=>["Bacteria", "Proteobacteria", "Alphaproteobacteria"], :tax_ids=>[2, 3, 5]}}
+    expect(taxon_strings_upto_rank).to eq({82=>{:taxon_string=>["Bacteria", "Proteobacteria", "Gammaproteobacteria"], :tax_ids=>[2, 3, 3]}, 96=>{:taxon_string=>["Bacteria", "Actinobacteria", "Clostridia"], :tax_ids=>[2, 4, 6]}, 137=>{:taxon_string=>["Bacteria", "Proteobacteria", "Alphaproteobacteria"], :tax_ids=>[2, 3, 5]}})
     
   end
   

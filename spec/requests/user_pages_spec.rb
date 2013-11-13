@@ -23,8 +23,8 @@ describe "User registration" do
   it "should create a user and displays a confirmation link" do
     # puts page.body
     
-    page.should have_no_content("Welcome! You have signed up successfully.")
-    page.should have_content("A message with a confirmation link has been sent to your email address. Please open the link to activate your account")
+    expect(page).to have_no_content("Welcome! You have signed up successfully.")
+    expect(page).to have_content("A message with a confirmation link has been sent to your email address. Please open the link to activate your account")
   end
   
   it "should confirm registration and logs in" do
@@ -32,8 +32,8 @@ describe "User registration" do
     visit "/users/confirmation?confirmation_token=" + user.confirmation_token
     # puts page.body
     
-    page.should have_content("Your account was successfully confirmed. You are now signed in.")
-    page.should have_content("Logged in as " + user.username)
+    expect(page).to have_content("Your account was successfully confirmed. You are now signed in.")
+    expect(page).to have_content("Logged in as " + user.username)
   end
   
   it "should still be possible log in after logout" do
@@ -48,7 +48,7 @@ describe "User registration" do
     find_button('Sign in').click
     # puts user.inspect
     
-    page.should have_no_content("Invalid username or password.")
+    expect(page).to have_no_content("Invalid username or password.")
   end
   
 end
@@ -61,46 +61,46 @@ describe "User login_as" do
   end
   
   it "has a valid factory" do
-    @user.should be_valid    
+    expect(@user).to be_valid    
   end
 
   it "should sign in as an existing user and displays the user's username" do
     visit root_path
-    page.should have_content("Logged in as " + @user.username)
+    expect(page).to have_content("Logged in as " + @user.username)
     
   end
   
   it "should show visualization if logged in" do
     visit "/visualization"  
-    page.should have_content("Community Visualization")
+    expect(page).to have_content("Community Visualization")
   end
   
   
   it "should redirect to home if sign out" do
     visit "/"
     
-    page.should have_content("Logged in as " + @user.username)
-    page.should have_no_content("Login")
+    expect(page).to have_content("Logged in as " + @user.username)
+    expect(page).to have_no_content("Login")
     
     click_link "Logout"            
     # puts page.body
-    page.should have_content("Login")
-    page.should have_content("Signed out successfully.")
+    expect(page).to have_content("Login")
+    expect(page).to have_content("Signed out successfully.")
     
   end
   
   it "should show whether a user is logged in" do
     puts "HERE: @user = " + @user.inspect
     visit "/visualization"
-    page.should have_content("Logged in as #{@user.username}")
+    expect(page).to have_content("Logged in as #{@user.username}")
     click_link "Logout"    
     visit "/visualization"
     # visit "/pages/overview"        
     # visit "/"        
     puts page.body
     
-    page.should have_no_content("Logged in as #{@user.username}")
-    page.should have_content("You need to sign in or sign up before continuing.")
+    expect(page).to have_no_content("Logged in as #{@user.username}")
+    expect(page).to have_content("You need to sign in or sign up before continuing.")
     puts page.body
     
   end
@@ -122,14 +122,14 @@ describe "User not logged in" do
     # click_button "Sign in"
     # puts page.body
     
-    page.should have_content("Invalid username or password")
+    expect(page).to have_content("Invalid username or password")
   end
 
   it "should redirect to sign in if not logged in" do
     visit "/visualization"
     # puts page.body
     
-    page.should have_content("Sign in")
+    expect(page).to have_content("Sign in")
   end
 
   # it "should not create a new user if validation failed"
