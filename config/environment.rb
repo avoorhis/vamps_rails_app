@@ -2,9 +2,9 @@
 require File.expand_path('../application', __FILE__)
 
 # Initialize the Rails application.
-VampsApp7::Application.initialize!
+VampsApp::Application.initialize!
 
-VampsApp7::Application.configure do
+VampsApp::Application.configure do
   config.action_mailer.default_url_options = { :host => 'localhost:3000' }  
 end
 
