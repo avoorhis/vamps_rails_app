@@ -4,15 +4,16 @@
 	
   DEBUG:
   <table class='debug_table'>
-  <tr><td>Domains:</td><td><%= @domains %></td></tr>
+  <tr><td>Domains:</td><td><%= @selected_domains %></td></tr>
   
-  <tr><td>Rank:</td><td><%= 'Rank Number: '%><%=@rank_number %> - <%= 'Tax Rank: '%><%=@rank_name  %></td></tr>
+  <tr><td>Rank:</td><td><%= 'Rank Number: '%><%= @selected_rank_number %> - <%= 'Tax Rank: '%><%=@selected_rank %></td></tr>
   
   <tr><td>NAs:</td><td><%= @nas %></td></tr>
   
   <tr><td class="wide">Datasets:</td><td><%= @datasets %></td></tr>
 
   <tr><td class="wide">Query:</td><td><%= @taxQuery %></td></tr>
+  <tr><td class="wide">Params:</td><td><%= params %></td></tr>
  <!--   <tr><td>Tax:</td><td><%= @taxonomy_by_site %></td></tr> -->
   </table>
  

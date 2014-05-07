@@ -28,7 +28,7 @@ module VampsApp
         ENV[key.to_s] = value
       end if File.exists?(env_file)
     end
-    
+ 
     config.active_record.schema_format setting = :sql # http://guides.rubyonrails.org/migrations.html#types-of-schema-dumps
     #config.action_view.JavaScript_expansions[:defaults] = %w(jquery rails application) 
     
@@ -41,7 +41,7 @@ module VampsApp
         :routing_specs => false,
         :controller_specs => true,
         :request_specs => true 
-      g.fixture_replacement :factory_girl, :dir => "spec/factories"      
+       g.fixture_replacement :factory_girl, :dir => "spec/factories"      
     end
   end
 end
