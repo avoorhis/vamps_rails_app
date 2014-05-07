@@ -11,7 +11,10 @@ h2 {
     font-size: x-large;    
     margin:2ex 2ex 2ex 0ex;
 }
+.main_left_navigation_div {
+    background-color: #D6D1B9; 
 
+}
 .standard {
     font-size: medium;
     font-family: Arial,Helvetica,Sans Serif;
@@ -161,3 +164,4 @@ h2 {
 .barChart {
     visibility: hidden;
 }
+

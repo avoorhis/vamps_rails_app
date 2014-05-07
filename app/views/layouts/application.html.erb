@@ -4,12 +4,15 @@
   <meta http-equiv="Cache-control" content="public">
   
   <title>VampsApp</title>
-  <%= stylesheet_link_tag "reset", "960_12_col", "application" %>
+  <%= stylesheet_link_tag "reset", "960_12_col", "application", "navigation" %>
   <%= csrf_meta_tags %>
   
 
 </head>
 <body>
+  <div id='navigation'>
+  <%= render_navigation(context: :main_left) %>
+  </div>
   <div id="container" class="container_12">
   
     <% cache("header") do %>

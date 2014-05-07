@@ -1,0 +1,13 @@
+/*
+<ul>
+ <li id="menu_home"><a href="/">VAMPS Home</a></li>
+ <li id="menu_overview"><a href="/pages/overview">Overview</a></li>
+ <li id="menu_jbpc"><a href="http://www.mbl.edu/jbpc/">JBPC Home</a></li>
+ <li class="current simple-navigation-active-leaf" id="menu_cv"><a class="current" href="/visualization">Community Visualization</a></li>
+ </ul>
+*/
+
+#navigation {
+    float:left;
+    background-color: #fffad9;
+}

@@ -28,6 +28,8 @@ gem 'jbuilder', '~> 1.2'
 
 gem 'database_cleaner'
 gem 'rinruby'
+gem "simple-navigation"
+
 group :development, :test do
    gem 'factory_girl_rails', :require => false
    gem 'webrat'

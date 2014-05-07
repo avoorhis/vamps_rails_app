@@ -196,6 +196,8 @@ GEM
       multi_json (~> 1.0)
       rubyzip (< 1.0.0)
       websocket (~> 1.0.4)
+    simple-navigation (3.13.0)
+      activesupport (>= 2.3.2)
     simplecov (0.7.1)
       multi_json (~> 1.0)
       simplecov-html (~> 0.7.1)
@@ -268,6 +270,7 @@ DEPENDENCIES
   sdoc
   seed_dump
   selenium-webdriver
+  simple-navigation
   sqlite3
   therubyracer
   turbolinks
