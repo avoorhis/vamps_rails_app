@@ -12,6 +12,11 @@ class VisualizationController < ApplicationController
   # Andy, I'm collecting all project ids togeteher, is it okay? E.g.: "project_ids"=>["6", "8"], "dataset_ids"=>["3", "4", "238", "239"]
 
   def index
+    # this list needs to be limited if user doesn't have full permissions
+    # Also the presented project list should be encapsulated to
+    # reflect what is potentially being requested
+    # if metadata then only projects with metadata
+    # if geo-distribution then only project with lan/lon
     @datasets_by_project_all = make_datasets_by_project_hash()
     @domains  = Domain.all
     @ranks    = Rank.all.sorted    
@@ -88,8 +93,13 @@ class VisualizationController < ApplicationController
   end  
   
   def make_datasets_by_project_hash()
-    projects = Project.all    
-    datasets = Dataset.all        
+    if current_user.admin?
+      projects = Project.all    
+      datasets = Dataset.all
+    else
+    
+    end
+    
     datasets_by_project = Hash.new
     projects.each do |p|
       datasets_by_project[p] = datasets.select{|d| d.project_id == p.id}

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140507163645) do
+ActiveRecord::Schema.define(version: 20140508143750) do
 
   create_table "datasets", force: true do |t|
     t.string  "dataset",              limit: 64,  default: "", null: false
@@ -142,12 +142,13 @@ ActiveRecord::Schema.define(version: 20140507163645) do
   add_index "phylums", ["phylum"], name: "phylum", unique: true, using: :btree
 
   create_table "projects", force: true do |t|
-    t.string  "project",             limit: 32, default: "", null: false
-    t.string  "title",               limit: 64, default: "", null: false
-    t.string  "project_description",            default: "", null: false
-    t.string  "rev_project_name",    limit: 32, default: "", null: false
-    t.string  "funding",             limit: 64, default: "", null: false
+    t.string  "project",             limit: 32, default: "",    null: false
+    t.string  "title",               limit: 64, default: "",    null: false
+    t.string  "project_description",            default: "",    null: false
+    t.string  "rev_project_name",    limit: 32, default: "",    null: false
+    t.string  "funding",             limit: 64, default: "",    null: false
     t.integer "user_id"
+    t.boolean "public",                         default: false
   end
 
   add_index "projects", ["project"], name: "project", unique: true, using: :btree

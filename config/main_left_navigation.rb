@@ -42,11 +42,11 @@ SimpleNavigation::Configuration.run do |navigation|
         primary.item :menu_overview, 'Overview', overview_path
         primary.item :menu_jbpc, 'JBPC Home', "http://www.mbl.edu/jbpc/"
         primary.item :menu_cv, 'Community Visualization', visualization_index_path
-        primary.item :menu_search, 'Search', root_path
-        primary.item :menu_upload, 'Uploads', root_path
-        primary.item :menu_download, 'Downloads', root_path
-        primary.item :menu_otu, 'OTUs', root_path
-        primary.item :menu_oligotype, 'Oligotyping', root_path
+        primary.item :menu_search, 'Search', ''
+        primary.item :menu_upload, 'Uploads', ''
+        #primary.item :menu_download, 'Downloads', download_path
+        primary.item :menu_otu, 'OTUs', ''
+        primary.item :menu_oligotype, 'Oligotyping', ""
     end
     # Add an item to the primary navigation. The following params apply:
     # key - a symbol which uniquely defines your navigation item in the scope of the primary_navigation

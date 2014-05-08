@@ -8,6 +8,34 @@
 */
 
 #navigation {
-    float:left;
-    background-color: #fffad9;
+    position:absolute;
+    margin-top:100px;
+
 }
+#navigation ul{margin:0;padding:0;list-style-type:none;display:block;
+font:bold 16px Helvetica, Verdana, Arial, sans-serif;line-height:165%;
+width:220px;}
+
+#navigation ul li{margin:0;padding:0;border-top:1px solid #4D0000;
+border-bottom:1px solid #761A1A;}
+
+#navigation ul li a{display:block;text-decoration:none;color:#fff;
+background:#081993;padding:0 0 0 20px;width:200px;}
+
+#navigation ul li a:hover{
+background:#1028D3 url("vert-one_arrow-2.gif") no-repeat 0 9px;}
+
+#navigation ul li a.current,ul li a.current:hover{
+background:#933 url("vert-one_arrow-2.gif") no-repeat 0 9px;}
+
+
+/*
+#navigation ul li a{display:block;text-decoration:none;color:#fff;
+background:#600;padding:0 0 0 20px;width:200px;}
+
+#navigation ul li a:hover{
+background:#900 url("vert-one_arrow-2.gif") no-repeat 0 9px;}
+
+#navigation ul li a.current,ul li a.current:hover{
+background:#933 url("vert-one_arrow-2.gif") no-repeat 0 9px;}
+*/

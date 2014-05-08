@@ -11,10 +11,7 @@ h2 {
     font-size: x-large;    
     margin:2ex 2ex 2ex 0ex;
 }
-.main_left_navigation_div {
-    background-color: #D6D1B9; 
 
-}
 .standard {
     font-size: medium;
     font-family: Arial,Helvetica,Sans Serif;
@@ -27,16 +24,16 @@ h2 {
 }
 
 #header_banner {
-    background: white; 
+    background: #FDFDFD;
     width: 940px;
-    height:64px;    
+    height:90px;    
          
 }
 
 #header_slogan {
     height:64px;    
     font-size: medium;
-    background: #00CCFF;    
+    background: #00CCFF;   
     
 }
 
@@ -50,8 +47,8 @@ h2 {
     height: 26px;
     
     position: absolute; 
-    top: 63px; 
-    width: 100%; 
+    top: 64px; 
+    right: 100px;
     
     list-style-type: none;
     font-weight: bold;
