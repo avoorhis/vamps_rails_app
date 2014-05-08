@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140508143750) do
+ActiveRecord::Schema.define(version: 20140508170309) do
 
   create_table "datasets", force: true do |t|
     t.string  "dataset",              limit: 64,  default: "", null: false
@@ -281,5 +281,20 @@ ActiveRecord::Schema.define(version: 20140508143750) do
   add_index "users", ["institution"], name: "institution", length: {"institution"=>15}, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["username"], name: "username", unique: true, using: :btree
+
+  create_table "users_projects", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "project_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "users_projects", ["project_id"], name: "users_projects_fk_project_id", using: :btree
+  add_index "users_projects", ["user_id"], name: "users_projects_fk_users_id", using: :btree
+
+  create_table "users_projects_orig", force: true do |t|
+    t.integer "user_id"
+    t.integer "project_id"
+  end
 
 end

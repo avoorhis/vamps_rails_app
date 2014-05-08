@@ -93,17 +93,28 @@ class VisualizationController < ApplicationController
   end  
   
   def make_datasets_by_project_hash()
+    puts 'IN  make_datasets_by_project_hash'
     if current_user.admin?
-      projects = Project.all    
-      datasets = Dataset.all
+        projects = Project.all    
+        datasets = Dataset.all
     else
-    
+        public_projects = Project.where('public is true')
+        if current_user =='guest'
+            projects = public_projects
+            datasets = Dataset.joins('JOIN projects ON projects.id=datasets.id where public is true')
+        else
+            user_project = Project.joins("JOIN users_projects on projects.id=users_projects.project_id where users_projects.user_id=#{current_user.id}")
+            projects = user_project + public_projects
+            datasets = Dataset.all
+        end
     end
-    
+        
     datasets_by_project = Hash.new
     projects.each do |p|
-      datasets_by_project[p] = datasets.select{|d| d.project_id == p.id}
+        datasets_by_project[p] = datasets.select{|d| d.project_id == p.id}
     end
+    projects = ''
+    datasets = ''
     return datasets_by_project
   end
   
