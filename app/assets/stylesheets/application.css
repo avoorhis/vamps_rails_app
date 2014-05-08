@@ -24,16 +24,16 @@ h2 {
 }
 
 #header_banner {
-    background: white; 
+    background: #FDFDFD;
     width: 940px;
-    height:64px;    
+    height:90px;    
          
 }
 
 #header_slogan {
     height:64px;    
     font-size: medium;
-    background: #00CCFF;    
+    background: #00CCFF;   
     
 }
 
@@ -47,8 +47,8 @@ h2 {
     height: 26px;
     
     position: absolute; 
-    top: 63px; 
-    width: 100%; 
+    top: 64px; 
+    right: 100px;
     
     list-style-type: none;
     font-weight: bold;
@@ -161,3 +161,4 @@ h2 {
 .barChart {
     visibility: hidden;
 }
+

@@ -10,7 +10,7 @@ FactoryGirl.define do
     sequence_uniq_info.gast_distance 0.0
     sequence_uniq_info.refssu_id     0
     sequence_uniq_info.refssu_count  4
-    sequence_uniq_info.rank_id       4
+    sequence_uniq_info.rank_id       5
     sequence_uniq_info.refhvr_ids    "v6_AO871"
     sequence_uniq_info.created_at    Time.now
     sequence_uniq_info.updated_at    Time.now

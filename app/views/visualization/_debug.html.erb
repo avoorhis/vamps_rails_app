@@ -4,15 +4,24 @@
 	
   DEBUG:
   <table class='debug_table'>
-  <tr><td>Domains:</td><td><%= @domains %></td></tr>
+  <tr><td>Selected Domains:</td><td><%= @selected_domains %></td></tr>
   
-  <tr><td>Rank:</td><td><%= 'Rank Number: '%><%=@rank_number %> - <%= 'Tax Rank: '%><%=@rank_name  %></td></tr>
+  <tr><td>Selected Rank:</td><td><%= 'Rank Number: '%><%= @selected_rank_number %> - <%= 'Tax Rank: '%><%=@selected_rank %></td></tr>
   
-  <tr><td>NAs:</td><td><%= @nas %></td></tr>
+  <tr><td>Selected NAs:</td><td><%= @nas %></td></tr>
   
-  <tr><td class="wide">Datasets:</td><td><%= @datasets %></td></tr>
+  <tr><td class="wide">Selected Datasets:</td><td><%= @datasets %></td></tr>
 
   <tr><td class="wide">Query:</td><td><%= @taxQuery %></td></tr>
+  <tr><td class="wide">Params:</td><td>
+    <div style='height:100px;overflow:auto;'>
+    <%= params %>
+    </div></td></tr>
+    
+  <tr><td class="wide">taxonomy_w_cnts_by_d:</td><td>
+    <div style='height:100px;overflow:auto;'>
+    <%= @taxonomy_w_cnts_by_d %>
+    </div></td></tr>
  <!--   <tr><td>Tax:</td><td><%= @taxonomy_by_site %></td></tr> -->
   </table>
  

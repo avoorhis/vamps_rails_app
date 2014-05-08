@@ -3,4 +3,5 @@
       <% ['heatmap', 'tax_table', 'bar_charts'].each do |view| %>
         <%= button_to view.tr('_', ' ').capitalize, { action: "what_to_show", view: view} %>
       <% end %>
+      
 </div>

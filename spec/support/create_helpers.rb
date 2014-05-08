@@ -10,7 +10,7 @@ module CreateHelpers
   def create_taxonomies
     taxonomies = Array.new
     taxonomies << FactoryGirl.create(:taxonomy, id: 82, domain_id: 2, phylum_id: 3, klass_id: 3, order_id: 16, family_id: 18, genus_id: 129, species_id: 129, strain_id: 4)
-    taxonomies << FactoryGirl.create(:taxonomy, id: 96, domain_id: 2, phylum_id: 4, klass_id: 32, order_id: 5, family_id: 52, genus_id: 76, species_id: 129, strain_id: 4)
+    taxonomies << FactoryGirl.create(:taxonomy, id: 96, domain_id: 2, phylum_id: 4, klass_id: 6, order_id: 5, family_id: 52, genus_id: 76, species_id: 129, strain_id: 4)
     taxonomies << FactoryGirl.create(:taxonomy, id: 137, domain_id: 2, phylum_id: 3, klass_id: 5, order_id: 65, family_id: 129, genus_id: 129, species_id: 129, strain_id: 4)    
   end
   
@@ -65,7 +65,7 @@ module CreateHelpers
     {id: 3, :klass => "Gammaproteobacteria"},
     {id: 4, :klass => "Betaproteobacteria"},
     {id: 5, :klass => "Alphaproteobacteria"},
-    {id: 32, :klass => "Clostridia"}]
+    {id: 6, :klass => "Clostridia"}]
     @klasses = Array.new
     klass_arr.each do |my_hash|
        @klasses.push(FactoryGirl.create(:klass, id: my_hash[:id], klass: my_hash[:klass]))       

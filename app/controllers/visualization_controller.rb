@@ -12,6 +12,11 @@ class VisualizationController < ApplicationController
   # Andy, I'm collecting all project ids togeteher, is it okay? E.g.: "project_ids"=>["6", "8"], "dataset_ids"=>["3", "4", "238", "239"]
 
   def index
+    # this list needs to be limited if user doesn't have full permissions
+    # Also the presented project list should be encapsulated to
+    # reflect what is potentially being requested
+    # if metadata then only projects with metadata
+    # if geo-distribution then only project with lan/lon
     @datasets_by_project_all = make_datasets_by_project_hash()
     @domains  = Domain.all
     @ranks    = Rank.all.sorted    
@@ -21,6 +26,11 @@ class VisualizationController < ApplicationController
 
   def parse_view
     # todo: simplify, comment, see https://codeclimate.com/repos/526bee0356b1022c5301920b/VisualizationController
+    @domains  = Domain.all
+    @ranks    = Rank.all.sorted
+    @selected_rank = Rank.find(params['tax_id']).rank
+    @selected_rank_number = Rank.find(params['tax_id']).rank_number
+    @selected_domains = params['domains']
     unless (params.has_key?(:dataset_ids))
       dataset_not_choosen()
       return      
@@ -29,19 +39,19 @@ class VisualizationController < ApplicationController
     result = Benchmark.measure do
       @@choosen_projects_w_d  = get_choosen_projects_w_d()
     end
-    puts "get_choosen_projects_w_d() result " + result.to_s
+    puts "BENCHMARK: get_choosen_projects_w_d() result " + result.to_s
     
     my_pdrs = Hash.new
     result = Benchmark.measure do
       my_pdrs = SequencePdrInfo.taxonomy_ids.where(dataset_id: params["dataset_ids"].uniq)
     end
     # puts "PPP: my_pdrs = " + my_pdrs.inspect
-    puts "SequencePdrInfo.where(dataset_id: params[\"dataset_ids\"].uniq) result " + result.to_s
+    puts "BENCHMARK: SequencePdrInfo.where(dataset_id: params[\"dataset_ids\"].uniq) result " + result.to_s
     
     result = Benchmark.measure do
       @@counts_per_dataset_id = get_counts_per_dataset_id(my_pdrs)
     end
-    puts "get_counts_per_dataset_id(my_pdrs) result " + result.to_s
+    puts "BENCHMARK: get_counts_per_dataset_id(my_pdrs) result " + result.to_s
     
     create_taxonomy_w_counts_to_show(Rank.find(params[:tax_id]).rank_number, my_pdrs)
     
@@ -83,12 +93,28 @@ class VisualizationController < ApplicationController
   end  
   
   def make_datasets_by_project_hash()
-    projects = Project.all    
-    datasets = Dataset.all        
+    puts 'IN  make_datasets_by_project_hash'
+    if current_user.admin?
+        projects = Project.all    
+        datasets = Dataset.all
+    else
+        public_projects = Project.where('public is true')
+        if current_user =='guest'
+            projects = public_projects
+            datasets = Dataset.joins('JOIN projects ON projects.id=datasets.id where public is true')
+        else
+            user_project = Project.joins("JOIN users_projects on projects.id=users_projects.project_id where users_projects.user_id=#{current_user.id}")
+            projects = user_project + public_projects
+            datasets = Dataset.all
+        end
+    end
+        
     datasets_by_project = Hash.new
     projects.each do |p|
-      datasets_by_project[p] = datasets.select{|d| d.project_id == p.id}
+        datasets_by_project[p] = datasets.select{|d| d.project_id == p.id}
     end
+    projects = ''
+    datasets = ''
     return datasets_by_project
   end
   
@@ -126,12 +152,13 @@ class VisualizationController < ApplicationController
   end
   
   def fill_zeros(cnts_per_dataset_ids_by_tax_ids)
-    # puts "VVV: params[\"dataset_ids\"] = " + params["dataset_ids"].inspect
-    # puts "VVV1: cnts_per_dataset_ids_by_tax_ids = " + cnts_per_dataset_ids_by_tax_ids.inspect
+     #puts "VVV: params[\"dataset_ids\"] = " + params["dataset_ids"].inspect
+     #puts "VVV1: cnts_per_dataset_ids_by_tax_ids = " + cnts_per_dataset_ids_by_tax_ids.inspect
+    
     params[:dataset_ids].each do |d_id|
       cnts_per_dataset_ids_by_tax_ids[d_id.to_i] = 0 unless cnts_per_dataset_ids_by_tax_ids[d_id.to_i].is_a? Numeric
     end
-    # puts "WWW: cnts_per_dataset_ids_by_tax_ids = " + cnts_per_dataset_ids_by_tax_ids.inspect
+    #puts "WWW: cnts_per_dataset_ids_by_tax_ids = " + cnts_per_dataset_ids_by_tax_ids.inspect
     return cnts_per_dataset_ids_by_tax_ids
   end
  
@@ -144,7 +171,7 @@ class VisualizationController < ApplicationController
     result = Benchmark.measure do
       taxonomy_per_d         = get_taxonomy_per_d(my_pdrs, tax_hash_obj)
     end
-    puts "get_taxonomy_per_d(my_pdrs, tax_hash_obj) result " + result.to_s
+    puts "BENCHMARK: get_taxonomy_per_d(my_pdrs, tax_hash_obj) result " + result.to_s
     
     # 1) make taxonomy_id strings from Taxonomy by rank
     # 2) get taxon names
@@ -156,12 +183,12 @@ class VisualizationController < ApplicationController
       taxonomy_by_t_id_upto_rank = taxonomy_by_t_id_upto_rank_obj.create(rank_number, @taxonomies)
     end
     
-    puts "taxon_strings_upto_rank_obj.create(rank_number, @taxonomies) result " + result.to_s
+    puts "BENCHMARK: taxon_strings_upto_rank_obj.create(rank_number, @taxonomies) result " + result.to_s
     
     result = Benchmark.measure do
       @@taxonomy_w_cnts_by_d = make_taxon_strings_w_counts_per_d(taxonomy_by_t_id_upto_rank, tax_hash_obj, taxonomy_per_d)
     end
-    puts "make_taxon_strings_w_counts_per_d(taxonomy_by_t_id_upto_rank, tax_hash_obj, taxonomy_per_d) result " + result.to_s
+    puts "BENCHMARK: make_taxon_strings_w_counts_per_d(taxonomy_by_t_id_upto_rank, tax_hash_obj, taxonomy_per_d) result " + result.to_s
     @@taxonomy_w_cnts_by_d
   end
 end

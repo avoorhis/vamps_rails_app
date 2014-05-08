@@ -1,4 +1,4 @@
-VampsApp7::Application.routes.draw do
+VampsApp::Application.routes.draw do
 
   # get "home/index"
   

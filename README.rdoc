@@ -7,6 +7,7 @@ Things you may want to cover:
 
 * Ruby version
 ruby-1.9.3-p448
+vampsdev:  ruby 2.1.1p76 (2014-02-24 revision 45161) [x86_64-linux]
 
 * System dependencies
 see Gemfile and run bundle (install)
@@ -18,6 +19,8 @@ see Gemfile and run bundle (install)
 * Database initialization
 rake db:migrate:reset
 rake db:migrate:reset RAILS_ENV=test
+on vampsdev db:migrate:reset did not work for development
+so I just ran:
 rake mysql_db:restore
 
 * How to run the test suite

@@ -17,8 +17,8 @@
     <% @choosen_projects_w_d.each do |project| %>
       <% project[:datasets].each do |d| %>
       <tr>
-        <td class='td-text-left' > <%= "#{project[:pname]}--#{d[:dataset]}" %> </td> 
-        <td>Total: <%= @counts_per_dataset_id[d[:id]]%></td>
+        <td class='td-text-left' nowrap > <%= "#{project[:pname]}--#{d[:dataset]}" %> </td> 
+        <td nowrap >Total: <%= @counts_per_dataset_id[d[:id]]%></td>
         <td>
           <div class='bars_each_div'> 
             <table class='barChart'>

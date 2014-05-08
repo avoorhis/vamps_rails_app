@@ -15,8 +15,8 @@ gem 'nokogiri'
 gem 'yaml_db', github: 'jetthoughts/yaml_db', ref: 'fb4b6bd7e12de3cffa93e0a298a1e5253d7e92ba'
 gem 'protected_attributes'
 gem 'colorize'
-# See https://github.com/sstephenson/execjs#readme for more supported runtimes
-# gem 'therubyracer', platforms: :ruby
+# See https://github.com/sstephenson/execjs #readme for more supported runtimes
+gem 'therubyracer', platforms: :ruby
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
@@ -28,6 +28,8 @@ gem 'turbolinks'
 gem 'jbuilder', '~> 1.2'
 
 gem 'database_cleaner'
+gem 'rinruby'
+gem "simple-navigation"
 
 group :development, :test do
    gem 'factory_girl_rails', :require => false
