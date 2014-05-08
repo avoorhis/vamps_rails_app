@@ -7,6 +7,7 @@
 # Ignore private configuration
 /config/local_env.yml
 /config/initializers/secret_token.rb
+/config/database.yml
 
 # Ignore bundler config.
 /.bundle

@@ -1,15 +1,16 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.0.0'
-gem 'webrick', '1.3.1'
+gem 'rails', '>= 4.0.0'
+
+gem 'webrick', '>= 1.3.1'
 
 gem 'cache_digests'
 
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
 gem 'mysql2'
-gem 'devise', '3.0.0.rc'
+gem 'devise', '>= 3.0.0.rc'
 gem 'nokogiri'
 gem 'yaml_db', github: 'jetthoughts/yaml_db', ref: 'fb4b6bd7e12de3cffa93e0a298a1e5253d7e92ba'
 gem 'protected_attributes'
