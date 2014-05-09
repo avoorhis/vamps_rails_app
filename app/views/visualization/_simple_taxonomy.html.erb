@@ -1,3 +1,6 @@
+
+<div style='background:tan;width:100%;font-size:large;border-bottom:1px solid grey;padding-left:3px;'>Basic Taxonomy</div>
+<br>
 <%= radio_button_tag 'toggle' , 'toggle', false, :onclick =>
 	"toggleAll('domain_select');return false;"%>Toggle Domains
 <% @domains.each do |domain| %>

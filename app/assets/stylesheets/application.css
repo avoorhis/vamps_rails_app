@@ -44,26 +44,28 @@ h2 {
 }
 
 .head_menu {
-    height: 26px;
     
     position: absolute; 
     top: 64px; 
     right: 100px;
-    
+    height: 18px;
     list-style-type: none;
     font-weight: bold;
+    padding: .2em;
+    border:1px solid gray;
 }
 .head_menu li {
     float: left;
+    
 }
 
 .head_menu a {
     display: block;
-    padding: 0.5ex;    
+      
     text-decoration: none;
     color: black;
     background: white;
-    border: 1px solid grey;
+    
 }
 
 .head_menu a:hover {
@@ -104,13 +106,28 @@ h2 {
 
 #basic_taxonomy_selector{
 	background:#f5f5f5;
-/*  border :1px solid red;*/
 	font-size:small;
+	padding: 2px;
+	width:200px;
+	height:400px;
+	border:1px solid grey;
 }
-
+#custom_taxonomy_selector{
+	background:#f5f5f5;
+	font-size:small;
+	padding: 2px;
+    width:200px;
+	height:400px;
+	border:1px solid grey;
+}
+#custom_taxonomy_selector li{
+    padding-left: 2px;
+    list-style-type: none;
+   
+}
 #projects ul li {
 /*    list-style-position: inside !important;*/
-    padding-left: 2em
+    padding-left: 2em;
 }
 
 /*=== Tax table ===*/

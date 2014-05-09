@@ -64,9 +64,13 @@
 </div>
 
 <div class="grid_3">
-  Basic Taxonomy  
-  <div id="basic_taxonomy_selector">
+  <%= button_tag 'Toggle Taxonomy Selector' ,  :onclick =>"toggleTaxSelection();return false;"%>
+  <br>
+  <div id="basic_taxonomy_selector" style='display:none;'>
       <%= render "simple_taxonomy" %>    
+  </div> 
+  <div id="custom_taxonomy_selector" style='display:block;'>
+      <%= render "custom_taxonomy" %>    
   </div>
 </div>
 

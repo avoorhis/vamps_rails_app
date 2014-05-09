@@ -11,6 +11,22 @@ function toggleAll(name)
    		{	boxes[i].checked = !boxes[i].checked ; }
 }
 
+function toggleTaxSelection()
+{
+    custom_div = document.getElementById('custom_taxonomy_selector')
+    basic_div = document.getElementById('basic_taxonomy_selector')
+    if(custom_div.style.display=='none'){
+        custom_div.style.display='block';        
+        basic_div.style.display='none';
+       
+    }else{
+        custom_div.style.display='none';
+        basic_div.style.display='block';
+    }
+    
+  
+  
+}
 // function getDatasets(form)
 // {
 
@@ -58,7 +74,46 @@ function toggleAll(name)
 // OPEN_DATASETS
 //
 
+function open_this_taxon(rank,id,name)
+{
+    alert('open_this_taxon rank='+rank+' name='+name)
+}
+function toggle_lower_taxa(rank,id,name)
+{
+    alert('toggle_lower_taxa id='+id)
+    
+    if(rank==0){
+        // get list phylum level for this name
+        // select distinct phylum from taxonomies 
+        // JOIN phylums on phylum_id=phylums.id
+        // where domain_id='id'
+        // Phylum.joins("JOIN taxonomies ON phylum_id = phylums.id").where("domain_id=3").distinct
+    }else if(rank==1){
+        // Klass.joins("JOIN taxonomies ON klass_id = klasses.id").where("phylum_id=3").distinct
+    }else if(rank==2){
+        // Order.joins("JOIN taxonomies ON order_id = orders.id").where("klass_id=3").distinct
+    }else if(rank==3){
+        // Family.joins("JOIN taxonomies ON family_id = families.id").where("order_id=3").distinct
+    }else if(rank==4){
+        // Genus.joins("JOIN taxonomies ON genus_id = genus.id").where("family_id=3").distinct
+    }else if(rank==5){
+        // Species.joins("JOIN taxonomies ON species_id = species.id").where("genus_id=3").distinct
+    }else if(rank==6){
+        // Strain.joins("JOIN taxonomies ON strain_id = strain.id").where("species_id=3").distinct
+    }else{
+        // ERROR
+    }
+params = 'rank='+rank
+params += '&id='+id
+params += '&name='+name
 
+$.ajax({
+  url: "/visualization_controller/show_hide_subitem",
+  data: params
+  dataType: 'script'
+})
+    
+}
 function open_datasets(pid, project)
 {
   
