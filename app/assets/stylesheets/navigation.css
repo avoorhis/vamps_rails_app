@@ -9,8 +9,7 @@
 
 #navigation {
     position:absolute;
-    margin-top:100px;
-
+    margin-top:1em;
 }
 #navigation ul{margin:0;padding:0;list-style-type:none;display:block;
 font:bold 16px Helvetica, Verdana, Arial, sans-serif;line-height:165%;

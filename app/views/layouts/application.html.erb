@@ -10,9 +10,6 @@
 
 </head>
 <body>
-  <div id='navigation'>
-  <%= render_navigation(context: :main_left) %>
-  </div>
   <div id="container" class="container_12">
   
 <!--    <% cache("header") do %>  -->
@@ -61,9 +58,15 @@
 		  <p class="alert"><%= alert %></p>
   </div> <!-- end notices -->
     </div> <!-- end headerBar -->
+    <div class="clear"></div>    
+       
+    <div id='navigation' class="grid_3">
+    <%= render_navigation(context: :main_left) %>
+    </div>
+    
     <div class="clear"></div>       
     
-    <div id="main_content" class="grid_12">
+    <div id="main_content" class="grid_9 prefix_3 ">
 	    <%= yield %>
     </div> <!-- end main_content -->
     <div class="clear"></div>       
